@@ -12,9 +12,9 @@ shot() { # name width height path scale
 }
 for lang in ko en zh; do
   p=/; [ "$lang" != ko ] && p=/$lang/
-  shot "$lang-360" 360 7600 "$p" 1
-  shot "$lang-360x115" 360 8400 "$p" 1.15
-  shot "$lang-768" 768 6000 "$p" 1
-  shot "$lang-1280" 1280 5200 "$p" 1
+  shot "$lang-360" 360 9800 "$p" 1
+  shot "$lang-360x115" 360 11000 "$p" 1.15
+  shot "$lang-768" 768 7600 "$p" 1
+  shot "$lang-1280" 1280 6600 "$p" 1
 done
 echo "saved to $OUT"

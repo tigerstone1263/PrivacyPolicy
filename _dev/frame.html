@@ -6,6 +6,11 @@ const q = new URLSearchParams(location.search);
 const f = document.createElement('iframe');
 f.width = q.get('w') || 360; f.height = q.get('h') || 900;
 f.src = q.get('p') || '/';
-if (q.get('scale')) f.onload = () => { f.contentDocument.documentElement.style.fontSize = (100 * q.get('scale')) + '%'; };
+f.onload = () => {
+  const d = f.contentDocument;
+  // 무한 애니메이션이 있으면 헤드리스 가상 시간이 끝나지 않는다 — 촬영 중에는 끈다
+  const st = d.createElement('style'); st.textContent = '*{animation:none!important;transition:none!important}.reveal{opacity:1!important;transform:none!important}'; d.head.appendChild(st);
+  if (q.get('scale')) d.documentElement.style.fontSize = (100 * q.get('scale')) + '%';
+};
 document.body.appendChild(f);
 </script></body></html>

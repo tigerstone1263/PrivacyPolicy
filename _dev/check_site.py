@@ -217,6 +217,45 @@ def check_lang_banner(lang, p):
             fail(f"[ko] 안내 띠에 {target} 링크 없음")
 
 
+CHIP_CLASSES = ["c-interval", "c-scale", "c-chord", "c-melody", "c-prog", "c-rhythm"]
+
+
+def check_design(lang, p, html):
+    """디자인 골격: 상단 내비, 카테고리 색 칩, 등장 애니메이션 스크립트, 구역 머리말."""
+    import re
+    if not any(t == "nav" and "topnav" in (a.get("class") or "") and a.get("aria-label") for t, a in p.attrs_all):
+        fail(f"[{lang}] aria-label 있는 상단 내비(.topnav) 없음")
+    if not any(t == "a" and a.get("href") == "#cta" and "nav-cta" in (a.get("class") or "") for t, a in p.attrs_all):
+        fail(f"[{lang}] 내비 다운로드 버튼(#cta) 없음")
+    chips = [a.get("class", "") for t, a in p.attrs_all if t == "li" and "chip" in (a.get("class") or "").split()]
+    got = [next((c for c in CHIP_CLASSES if c in cls.split()), None) for cls in chips]
+    if got != CHIP_CLASSES:
+        fail(f"[{lang}] 칩 카테고리 색 순서 불일치: {got}")
+    if not any(t == "script" and a.get("src") == "/assets/js/reveal.js" and "defer" in a for t, a in p.attrs_all):
+        fail(f"[{lang}] reveal.js(defer) 없음")
+    # 첫 화면 폰 두 장은 표시 크기(≤270px)에 맞는 작은 이미지를 srcset 으로, 앞 폰은 우선 로드
+    for t, a in p.attrs_all:
+        if t == "img" and "phone" in (a.get("class") or "").split():
+            if "480w" not in (a.get("srcset") or "") or not a.get("sizes"):
+                fail(f"[{lang}] 히어로 폰 이미지에 srcset/sizes 없음: {a.get('src')}")
+            if "phone-front" in a.get("class") and a.get("fetchpriority") != "high":
+                fail(f"[{lang}] 앞 폰(LCP)에 fetchpriority=high 없음")
+    for sec in ("audience", "features", "game", "faq"):
+        m = re.search(rf'<section id="{sec}".*?</h2>', html, re.S)
+        if not m or 'class="eyebrow"' not in m.group(0):
+            fail(f"[{lang}] {sec} 구역 제목 위에 eyebrow 없음")
+
+
+def check_reveal_needs_js():
+    """등장 애니메이션은 <html class="js"> 일 때만 숨긴다 — JS 가 없으면 내용이 처음부터 보여야 한다."""
+    import re
+    css = (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8")
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
+        if ".reveal" in sel and "opacity: 0" in body and not all(part.strip().startswith(".js ") for part in sel.split(",")):
+            fail(f"JS 없이도 숨겨지는 reveal 규칙: {sel.strip()}")
+
+
 def check_mascot(lang, html):
     """마스코트 그림은 앱 원본 소리여야 한다 (생성 그림은 생김새가 달라 사용자 반려)."""
     import re
@@ -376,9 +415,11 @@ def main():
             check_lang_meta(lang, p)
             check_meta(lang, p)
             check_lang_banner(lang, p)
+            check_design(lang, p, (ROOT / rel).read_text(encoding="utf-8"))
     check_sitemap()
     check_shot_resolution()
     check_mascot_matches_app()
+    check_reveal_needs_js()
     if "--no-layout" not in sys.argv:
         check_layout()
     if errors:
