@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#fff}iframe{border:0;display:block}</style></head>
+<body><script>
+// 로컬 스크린샷용: ?w=360&h=2000&p=/en/&scale=1.15 → 그 폭의 iframe 으로 페이지를 띄운다
+const q = new URLSearchParams(location.search);
+const f = document.createElement('iframe');
+f.width = q.get('w') || 360; f.height = q.get('h') || 900;
+f.src = q.get('p') || '/';
+if (q.get('scale')) f.onload = () => { f.contentDocument.documentElement.style.fontSize = (100 * q.get('scale')) + '%'; };
+document.body.appendChild(f);
+</script></body></html>
