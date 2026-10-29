@@ -16,7 +16,6 @@ f.onload = async () => {
   const vw = d.documentElement.clientWidth;
   if (d.documentElement.scrollWidth > vw + 1) bad.push('가로 스크롤 ' + d.documentElement.scrollWidth + '>' + vw);
   for (const el of d.querySelectorAll('h1,h2,h3,p,li,td,th,summary,a')) {
-    if (el.closest('.table-wrap') && el.tagName !== 'TD' && el.tagName !== 'TH') continue;
     if (el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).display !== 'inline')
       bad.push('넘침 <' + el.tagName.toLowerCase() + '> ' + el.textContent.trim().slice(0, 30));
   }

@@ -126,22 +126,22 @@ def check_page(lang, rel):
     return p
 
 
-SECTIONS = ["hero", "audience", "features", "game", "plans", "faq", "cta", "footer"]
+SECTIONS = ["hero", "audience", "features", "game", "faq", "cta", "footer"]
 
 
 def check_sections(lang, html):
+    """요금 비교 구역은 두지 않는다 (설치 전환 목적 — 사용자 결정). 구독 안내는 FAQ 에서만."""
     import re
-    ids = [i for i in re.findall(r'<(?:section|footer)[^>]*\bid="([\w-]+)"', html) if i in SECTIONS]
+    ids = [i for i in re.findall(r'<(?:section|footer)[^>]*\bid="([\w-]+)"', html)]
+    ids = [i for i in ids if i in SECTIONS or i == "plans"]
     if ids != SECTIONS:
         fail(f"[{lang}] 구역 순서/개수 불일치: {ids}")
-    plans = re.search(r'id="plans".*?</section>', html, re.S)
-    rows = len(re.findall(r"<tr class=\"benefit\"", plans.group(0))) if plans else 0
-    if rows != 5:
-        fail(f"[{lang}] 구독 비교 행 {rows}개 (5개여야 함)")
     faq = re.search(r'id="faq".*?</section>', html, re.S)
     n = len(re.findall(r"<details", faq.group(0))) if faq else 0
     if not 5 <= n <= 7:
         fail(f"[{lang}] FAQ {n}개 (5~7개여야 함)")
+    if faq and not re.search(r"(인피니트 노트|Infinite Note|无限音符)", faq.group(0)):
+        fail(f"[{lang}] FAQ 에 구독 안내가 없음 (무료 표현만 남으면 오해)")
 
 
 HTML_LANG = {"ko": "ko", "en": "en", "zh": "zh-Hans"}
