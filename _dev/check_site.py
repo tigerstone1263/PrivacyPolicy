@@ -221,6 +221,41 @@ def check_lang_js():
         fail(r.stdout.strip() or r.stderr.strip())
 
 
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+LAYOUTS = [(360, 1), (360, 1.15), (320, 1), (768, 1), (1280, 1)]
+
+
+def check_layout():
+    """실제 Chrome 으로 언어 × 폭마다 글자 넘침·가로 스크롤·배지 튀어나옴을 측정한다."""
+    import html as htmllib
+    import re
+    import socket
+    import subprocess
+    import tempfile
+    sock = socket.socket(); sock.bind(("127.0.0.1", 0)); port = sock.getsockname()[1]; sock.close()
+    server = subprocess.Popen([sys.executable, "-m", "http.server", str(port), "-b", "127.0.0.1"],
+                              cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        import time; time.sleep(0.8)
+        for lang in PAGES:
+            path = "/" if lang == "ko" else f"/{lang}/"
+            for w, scale in LAYOUTS:
+                with tempfile.TemporaryDirectory() as prof:
+                    url = f"http://127.0.0.1:{port}/_dev/layout_check.html?w={w}&p={path}&scale={scale}"
+                    out = subprocess.run([CHROME, "--headless=new", "--disable-gpu", f"--user-data-dir={prof}",
+                                          "--lang=ko-KR", "--virtual-time-budget=8000", "--dump-dom", url],
+                                         capture_output=True, text=True, timeout=60).stdout
+                m = re.search(r'<pre id="result">(.*?)</pre>', out, re.S)
+                res = htmllib.unescape(m.group(1)) if m else "결과 없음"
+                if res == "pending" or res == "결과 없음":
+                    fail(f"[{lang} {w}px x{scale}] 레이아웃 측정 실패")
+                    continue
+                for item in json.loads(res):
+                    fail(f"[{lang} {w}px x{scale}] {item}")
+    finally:
+        server.terminate()
+
+
 def main():
     check_policy_files()
     check_lang_js()
@@ -233,6 +268,8 @@ def main():
             check_lang_meta(lang, p)
             check_meta(lang, p)
     check_sitemap()
+    if "--no-layout" not in sys.argv:
+        check_layout()
     if errors:
         print("\n".join(errors))
         sys.exit(1)

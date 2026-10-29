@@ -29,15 +29,22 @@ def svg_width(path, height):
     return round(float(m.group(1)) / float(m.group(2)) * height)
 
 
+def png_width(path, height):
+    import struct
+    w, h = struct.unpack(">II", path.read_bytes()[16:24])
+    return round(w / h * height)
+
+
 def badges(lang, s, zone):
     aw = svg_width(ROOT / "assets" / "badges" / f"appstore-{lang}.svg", 48)
+    pw = png_width(ROOT / "assets" / "badges" / f"play-{lang}.png", 48)
     apple = (
         f'<a class="badge badge-apple" href="{app_store_url(zone)}">'
         f'<img src="/assets/badges/appstore-{lang}.svg" alt="{s["badge_apple_alt"]}" width="{aw}" height="48"></a>'
     )
     play = (
         f'<a class="badge badge-play" href="{play_url(zone)}">'
-        f'<img src="/assets/badges/play-{lang}.png" alt="{s["badge_play_alt"]}" width="165" height="64"></a>'
+        f'<img src="/assets/badges/play-{lang}.png" alt="{s["badge_play_alt"]}" width="{pw}" height="48"></a>'
     )
     return apple + play  # 모든 언어 App Store 먼저 (zh 는 spec 상 필수)
 

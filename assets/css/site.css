@@ -27,6 +27,9 @@ body {
   overflow-wrap: anywhere;
 }
 
+/* keep-all 은 띄어쓰기 없는 중국어 문장의 줄바꿈을 막는다 */
+html[lang^="zh"] body { word-break: normal; overflow-wrap: break-word; }
+
 img { max-width: 100%; height: auto; display: block; }
 
 /* 테두리를 폭 밖에 두어 스크린샷 비율이 찌그러지지 않게 한다 */
@@ -88,14 +91,12 @@ a { color: inherit; }
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 12px;
+  gap: 10px 12px;
 }
 
 .badge { flex-shrink: 0; }
 .badge img { height: 48px; width: auto; max-width: none; }
 
-/* Google 배지 PNG 는 사방에 여백이 있어 키우고 여백만큼 당긴다 */
-.badge-play img { height: 64px; margin: -8px -8px; }
 
 .hero-phone { display: flex; justify-content: center; position: relative; }
 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head>
+<body><pre id="result">pending</pre><script>
+// ?w=360&p=/zh/&scale=1.15 → 그 폭으로 페이지를 띄우고 넘치는 글자·튀어나온 배지를 JSON 으로 적는다.
+const q = new URLSearchParams(location.search);
+const f = document.createElement('iframe');
+f.width = q.get('w') || 360; f.height = 900; f.style.border = 0;
+f.src = q.get('p') || '/';
+f.onload = async () => {
+  const d = f.contentDocument;
+  if (q.get('scale')) d.documentElement.style.fontSize = (100 * q.get('scale')) + '%';
+  await d.fonts.ready; await new Promise(r => setTimeout(r, 400));
+  const bad = [];
+  const vw = d.documentElement.clientWidth;
+  if (d.documentElement.scrollWidth > vw + 1) bad.push('가로 스크롤 ' + d.documentElement.scrollWidth + '>' + vw);
+  for (const el of d.querySelectorAll('h1,h2,h3,p,li,td,th,summary,a')) {
+    if (el.closest('.table-wrap') && el.tagName !== 'TD' && el.tagName !== 'TH') continue;
+    if (el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).display !== 'inline')
+      bad.push('넘침 <' + el.tagName.toLowerCase() + '> ' + el.textContent.trim().slice(0, 30));
+  }
+  for (const box of d.querySelectorAll('.badges')) {
+    const b = box.getBoundingClientRect();
+    for (const img of box.querySelectorAll('img')) {
+      const r = img.getBoundingClientRect();
+      if (r.left < b.left - 1) bad.push('배지가 왼쪽으로 튀어나옴 ' + Math.round(b.left - r.left) + 'px');
+    }
+  }
+  document.getElementById('result').textContent = JSON.stringify(bad);
+};
+document.body.appendChild(f);
+</script></body></html>
