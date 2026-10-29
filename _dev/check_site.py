@@ -27,7 +27,9 @@ class Page(HTMLParser):
         self.scripts = []
         self.text = []
         self.attrs_all = []
+        self.title_text = []
         self._skip = 0
+        self._in_title = False
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -38,12 +40,18 @@ class Page(HTMLParser):
             self.scripts.append(a.get("src"))
         if tag in ("script", "style"):
             self._skip += 1
+        if tag == "title":
+            self._in_title = True
 
     def handle_endtag(self, tag):
+        if tag == "title":
+            self._in_title = False
         if tag in ("script", "style"):
             self._skip -= 1
 
     def handle_data(self, data):
+        if self._in_title:
+            self.title_text.append(data)
         if not self._skip:
             self.text.append(data)
 
@@ -129,6 +137,50 @@ def check_lang_meta(lang, p):
         fail(f"[{lang}] lang.js 없음")
 
 
+def check_meta(lang, p):
+    metas = {(a.get("property") or a.get("name")): a.get("content") for t, a in p.attrs_all if t == "meta"}
+    for k in ("description", "og:title", "og:description", "og:image", "og:url", "twitter:card", "apple-itunes-app"):
+        if not metas.get(k):
+            fail(f"[{lang}] meta {k} 없음")
+    if metas.get("twitter:card") != "summary_large_image":
+        fail(f"[{lang}] twitter:card 값 오류")
+    if "app-id=6739764701" not in (metas.get("apple-itunes-app") or ""):
+        fail(f"[{lang}] apple-itunes-app app-id 오류")
+    img = (metas.get("og:image") or "").replace("https://tigerstone1263.com", "")
+    if img and not (ROOT / img.lstrip("/")).exists():
+        fail(f"[{lang}] og:image 파일 없음: {img}")
+    links = {a.get("rel"): a.get("href") for t, a in p.attrs_all if t == "link"}
+    if links.get("canonical") != HREFLANG[HTML_LANG[lang]]:
+        fail(f"[{lang}] canonical 오류: {links.get('canonical')}")
+    for rel in ("icon", "apple-touch-icon"):
+        href = links.get(rel)
+        if not href or not (ROOT / href.lstrip("/")).exists():
+            fail(f"[{lang}] {rel} 없음")
+    if not "".join(p.title_text).strip():
+        fail(f"[{lang}] title 없음")
+
+
+def check_sitemap():
+    f = ROOT / "sitemap.xml"
+    if not f.exists():
+        fail("sitemap.xml 없음")
+        return
+    xml = f.read_text(encoding="utf-8")
+    for url in ("https://tigerstone1263.com/", "https://tigerstone1263.com/en/", "https://tigerstone1263.com/zh/"):
+        if f"<loc>{url}</loc>" not in xml:
+            fail(f"sitemap 에 {url} 없음")
+    if not (ROOT / "robots.txt").exists():
+        fail("robots.txt 없음")
+
+
+def check_zh_spacing():
+    import re
+    d = json.loads((DEV / "strings" / "zh.json").read_text(encoding="utf-8"))
+    for k, v in d.items():
+        if re.search(r"[\u4e00-\u9fff，、。](</span>)? (<span[^>]*>)?[\u4e00-\u9fff]", v):
+            fail(f"[zh] {k}: 한자 사이에 공백")
+
+
 def check_string_keys():
     keys = {}
     for lang in PAGES:
@@ -173,11 +225,14 @@ def main():
     check_policy_files()
     check_lang_js()
     check_string_keys()
+    check_zh_spacing()
     check_build_rejects_missing_key()
     for lang, rel in PAGES.items():
         p = check_page(lang, rel)
         if p:
             check_lang_meta(lang, p)
+            check_meta(lang, p)
+    check_sitemap()
     if errors:
         print("\n".join(errors))
         sys.exit(1)
