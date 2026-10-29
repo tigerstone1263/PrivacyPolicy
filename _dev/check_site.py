@@ -183,6 +183,21 @@ def check_meta(lang, p):
         fail(f"[{lang}] title 없음")
 
 
+SHOTS = ["phone-hero", "feat-ear", "feat-staff", "feat-create", "game-map"]
+
+
+def check_shot_resolution():
+    """폰 화면은 최대 300 CSS px 로 보이므로 2~3배 화면에서 선명하려면 폭 720px 이상, 파일은 250KB 이하."""
+    from PIL import Image
+    for n in SHOTS:
+        f = ROOT / "assets" / "img" / f"{n}.webp"
+        w = Image.open(f).size[0]
+        if w < 720:
+            fail(f"{n}.webp 폭 {w}px (720 이상이어야 선명)")
+        if f.stat().st_size > 250_000:
+            fail(f"{n}.webp {f.stat().st_size // 1000}KB (250KB 이하)")
+
+
 def check_sitemap():
     f = ROOT / "sitemap.xml"
     if not f.exists():
@@ -314,6 +329,7 @@ def main():
             check_lang_meta(lang, p)
             check_meta(lang, p)
     check_sitemap()
+    check_shot_resolution()
     if "--no-layout" not in sys.argv:
         check_layout()
     if errors:
