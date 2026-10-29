@@ -53,6 +53,14 @@ def badges(lang, s, zone):
     return apple + play  # 모든 언어 App Store 먼저 (zh 는 spec 상 필수)
 
 
+# 루트(한국어) 페이지에만 넣는 언어 안내 띠. 문구는 안내받을 사람의 언어로 쓴다.
+LANG_BANNER = """<div id="lang-banner" class="lang-banner" hidden>
+  <p data-for="en" lang="en">This page is also available in English. <a class="lang-banner-link" href="/en/" lang="en" data-lang="en">View in English →</a></p>
+  <p data-for="zh" lang="zh-Hans">本页面也有中文版。<a class="lang-banner-link" href="/zh/" lang="zh-Hans" data-lang="zh">查看中文版 →</a></p>
+  <button type="button" class="lang-banner-close" aria-label="닫기 / Close">×</button>
+</div>"""
+
+
 def computed(lang, s):
     return {
         "lang": lang,
@@ -60,6 +68,7 @@ def computed(lang, s):
         "badges_cta": badges(lang, s, "footer-cta"),
         "url": SITE + "/" + ("" if lang == "ko" else f"{lang}/"),
         "site": SITE,
+        "lang_banner": LANG_BANNER if lang == "ko" else "",
         **{f"cur_{l}": 'aria-current="true"' if l == lang else "" for l in LANGS},
     }
 

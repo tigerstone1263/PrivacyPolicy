@@ -202,6 +202,21 @@ def check_shot_resolution():
 APP_SORI = Path.home() / "abp" / "absolute_ear" / "assets" / "images" / "mascot" / "sori.webp"
 
 
+def check_lang_banner(lang, p):
+    """루트(한국어) 페이지에만 숨겨진 안내 띠가 있고, 띠의 링크는 고른 언어를 기억하는 data-lang 링크여야 한다."""
+    banner = [a for t, a in p.attrs_all if t == "div" and a.get("id") == "lang-banner"]
+    if lang != "ko":
+        if banner:
+            fail(f"[{lang}] 안내 띠는 루트 페이지에만 있어야 함")
+        return
+    if len(banner) != 1 or "hidden" not in banner[0]:
+        fail("[ko] 숨겨진 #lang-banner 없음")
+    for target in ("en", "zh"):
+        if not any(t == "a" and a.get("data-lang") == target and a.get("href") == f"/{target}/" and a.get("class") == "lang-banner-link"
+                   for t, a in p.attrs_all):
+            fail(f"[ko] 안내 띠에 {target} 링크 없음")
+
+
 def check_mascot(lang, html):
     """마스코트 그림은 앱 원본 소리여야 한다 (생성 그림은 생김새가 달라 사용자 반려)."""
     import re
@@ -360,6 +375,7 @@ def main():
         if p:
             check_lang_meta(lang, p)
             check_meta(lang, p)
+            check_lang_banner(lang, p)
     check_sitemap()
     check_shot_resolution()
     check_mascot_matches_app()

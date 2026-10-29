@@ -1,5 +1,7 @@
-// 언어 선택: 고른 언어는 기억하고, 루트(/)에 처음 온 방문자만 브라우저 언어로 보낸다.
-// 언어 링크는 /?lang=ko 처럼 고른 언어를 URL 에 싣는다 — 저장소가 막혀도, 새 탭으로 열어도 지켜진다.
+// 언어 선택.
+// - 브라우저 언어만으로는 이동하지 않는다: 검색 로봇이 / 를 리디렉션으로 보면 한국어 페이지가 색인에서 빠진다.
+//   대신 루트(/)에서 브라우저 언어가 한국어가 아니면 그 언어로 가는 안내 띠를 보여 준다.
+// - 방문자가 직접 고른 언어(언어 링크의 ?lang=, 저장값)만 이동 근거가 된다.
 (function () {
   var KEY = 'ae-lang';
   var PATHS = { ko: '/', en: '/en/', zh: '/zh/' };
@@ -23,21 +25,32 @@
     return 'en';
   }
 
+  var suggest = null;
   if (location.pathname === '/') {
     var m = /[?&]lang=(ko|en|zh)\b/.exec(location.search);
-    var target;
-    if (m) {
-      target = m[1];
-      save(target);
-    } else {
-      target = saved();
-      if (!PATHS[target]) target = detect();
-    }
-    if (target !== 'ko') {
-      var rest = location.search.replace(/([?&])lang=(ko|en|zh)(&|$)/, '$1').replace(/[?&]$/, '');
-      location.replace(PATHS[target] + rest + location.hash);
+    var chosen = m ? m[1] : saved();
+    if (m) save(chosen);
+    if (PATHS[chosen]) {
+      if (chosen !== 'ko') {
+        var rest = location.search.replace(/([?&])lang=(ko|en|zh)(&|$)/, '$1').replace(/[?&]$/, '');
+        location.replace(PATHS[chosen] + rest + location.hash);
+      }
+    } else if (detect() !== 'ko') {
+      suggest = detect();
     }
   }
+
+  function showBanner() {
+    var el = document.getElementById('lang-banner');
+    if (!suggest || !el) return;
+    el.setAttribute('data-suggest', suggest);
+    el.hidden = false;
+    var close = el.querySelector('.lang-banner-close');
+    if (close) close.addEventListener('click', function () { el.hidden = true; save('ko'); });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBanner);
+  else showBanner();
 
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[data-lang]');

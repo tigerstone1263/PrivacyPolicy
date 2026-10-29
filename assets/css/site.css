@@ -44,6 +44,29 @@ a { color: inherit; }
   padding: 0 20px;
 }
 
+/* ---------- 언어 안내 띠 (루트에서 브라우저 언어가 한국어가 아닐 때) ---------- */
+.lang-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  background: var(--green-text);
+  color: #fff;
+  font-size: 0.95rem;
+}
+.lang-banner[hidden] { display: none; }
+.lang-banner p { display: none; margin: 0; flex: 1; }
+.lang-banner[data-suggest="en"] p[data-for="en"],
+.lang-banner[data-suggest="zh"] p[data-for="zh"] { display: block; }
+.lang-banner a { font-weight: 700; white-space: nowrap; }
+.lang-banner-close {
+  flex: 0 0 auto;
+  width: 36px; height: 36px;
+  border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer;
+}
+
 /* ---------- 캔버스(히어로) ---------- */
 .canvas {
   background:
