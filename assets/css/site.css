@@ -8,6 +8,7 @@
   --muted: #5d6275;
   --green: #2eb086;
   --green-deep: #1a9c72;
+  --green-text: #0f7454; /* 흰·연초록 바탕 위 작은 글씨용 (대비 4.5 이상) */
   --radius: 28px;
   --wrap: 1120px;
 }
@@ -27,6 +28,9 @@ body {
 }
 
 img { max-width: 100%; height: auto; display: block; }
+
+/* 테두리를 폭 밖에 두어 스크린샷 비율이 찌그러지지 않게 한다 */
+.phone, .shot { box-sizing: content-box; max-width: calc(100% - 20px); }
 
 a { color: inherit; }
 
@@ -87,12 +91,24 @@ a { color: inherit; }
   gap: 4px 12px;
 }
 
-.badge img { height: 48px; width: auto; }
+.badge { flex-shrink: 0; }
+.badge img { height: 48px; width: auto; max-width: none; }
 
 /* Google 배지 PNG 는 사방에 여백이 있어 키우고 여백만큼 당긴다 */
 .badge-play img { height: 64px; margin: -8px -8px; }
 
-.hero-phone { display: flex; justify-content: center; }
+.hero-phone { display: flex; justify-content: center; position: relative; }
+
+/* 헤드폰 쓴 소리가 폰 왼쪽 아래에 걸터앉는다 */
+.hero-sori {
+  position: absolute;
+  width: min(170px, 42vw);
+  left: calc(50% - min(250px, 62vw) / 2 - min(80px, 18vw));
+  bottom: -18px;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.3));
+}
+
+.cta-sori { width: 140px; margin: 0 auto 8px; }
 
 .phone {
   width: min(250px, 62vw);
@@ -142,9 +158,9 @@ a { color: inherit; }
   box-shadow: 0 18px 40px rgba(29, 32, 48, 0.18);
 }
 .feature p { color: var(--muted); }
-.eyebrow { margin: 0 0 6px; color: var(--green-deep) !important; font-weight: 700; font-size: 0.92rem; }
+.eyebrow { margin: 0 0 6px; color: var(--green-text) !important; font-weight: 700; font-size: 0.92rem; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 14px 0 0; }
-.chips li { background: #e9f7f1; color: var(--green-deep); border-radius: 999px; padding: 4px 12px; font-weight: 600; font-size: 0.9rem; }
+.chips li { background: #e9f7f1; color: var(--green-text); border-radius: 999px; padding: 4px 12px; font-weight: 600; font-size: 0.9rem; }
 
 .game { background: var(--d1); color: #fff; margin: 40px 0; }
 .sheet .game { padding-top: 64px; padding-bottom: 64px; }
@@ -159,9 +175,10 @@ a { color: inherit; }
 .plans th, .plans td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--gray); vertical-align: top; font-size: 0.95rem; }
 .plans thead th { font-size: 1rem; }
 .plans tbody th { font-weight: 600; }
-.plans thead th:first-child { width: 36%; }
+.plans thead th:first-child { width: 40%; }
+.plans th, .plans td { overflow-wrap: normal; hyphens: auto; -webkit-hyphens: auto; }
 .plans td { color: var(--muted); }
-.plans .pro { background: #f1faf6; color: var(--green-deep); font-weight: 700; }
+.plans .pro { background: #f1faf6; color: var(--green-text); font-weight: 700; }
 .plans thead .pro { border-radius: 14px 14px 0 0; }
 .note { color: var(--muted); font-size: 0.92rem; margin-top: 16px; }
 
@@ -196,7 +213,7 @@ details p { color: var(--muted); margin: 10px 0 0; }
 .footer a:hover { color: #fff; text-decoration: underline; }
 .footer-links, .lang-switch { display: flex; flex-wrap: wrap; gap: 8px 18px; }
 .lang-switch a[aria-current="true"] { color: #fff; font-weight: 700; }
-.copyright { margin: 0; width: 100%; opacity: 0.6; }
+.copyright { margin: 0; width: 100%; color: rgba(255, 255, 255, 0.68); }
 
 @media (min-width: 768px) {
   .wrap { padding: 0 36px; }
@@ -210,6 +227,7 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .hero-copy { flex: 1 1 55%; }
   .hero-phone { flex: 0 0 auto; }
   .phone { width: 270px; }
+  .hero-sori { width: 190px; left: -110px; bottom: -10px; }
   .cards { grid-template-columns: repeat(3, 1fr); }
   .feature { grid-template-columns: 1fr 1.2fr; gap: 56px; }
   .feature.reverse > img { order: 2; }
@@ -220,6 +238,7 @@ details p { color: var(--muted); margin: 10px 0 0; }
 @media (min-width: 1100px) {
   .hero { padding-top: 64px; padding-bottom: 110px; }
   .phone { width: 300px; }
+  .hero-sori { width: 220px; left: -140px; }
 }
 
 .nw { white-space: nowrap; }

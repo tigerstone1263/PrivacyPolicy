@@ -25,7 +25,8 @@
 <link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/">
 <script src="/assets/js/lang.js"></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
@@ -39,7 +40,8 @@
       <div class="badges">{{@badges_hero}}</div>
     </div>
     <div class="hero-phone">
-      <img class="phone" src="/assets/img/phone-hero.webp" alt="{{hero_phone_alt}}" width="600" height="1267">
+      <img class="phone" src="/assets/img/phone-hero.webp" alt="{{hero_phone_alt}}" width="480" height="1014">
+      <img class="hero-sori" src="/assets/img/hero-sori.webp" alt="" width="440" height="437">
     </div>
   </section>
 </header>
@@ -58,22 +60,22 @@
   <section id="features" class="wrap">
     <h2>{{feat_title}}</h2>
     <div class="feature">
-      <img class="shot" src="/assets/img/feat-ear.webp" alt="{{feat1_alt}}" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/feat-ear.webp" alt="{{feat1_alt}}" width="480" height="1014" loading="lazy">
       <div><p class="eyebrow">{{feat1_eyebrow}}</p><h3>{{feat1_t}}</h3><p>{{feat1_d}}</p><ul class="chips">{{feat1_chips}}</ul></div>
     </div>
     <div class="feature reverse">
-      <img class="shot" src="/assets/img/feat-staff.webp" alt="{{feat2_alt}}" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/feat-staff.webp" alt="{{feat2_alt}}" width="480" height="1014" loading="lazy">
       <div><p class="eyebrow">{{feat2_eyebrow}}</p><h3>{{feat2_t}}</h3><p>{{feat2_d}}</p></div>
     </div>
     <div class="feature">
-      <img class="shot" src="/assets/img/feat-create.webp" alt="{{feat3_alt}}" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/feat-create.webp" alt="{{feat3_alt}}" width="480" height="1014" loading="lazy">
       <div><p class="eyebrow">{{feat3_eyebrow}}</p><h3>{{feat3_t}}</h3><p>{{feat3_d}}</p></div>
     </div>
   </section>
 
   <section id="game" class="game">
     <div class="wrap feature">
-      <img class="shot" src="/assets/img/game-map.webp" alt="{{game_alt}}" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/game-map.webp" alt="{{game_alt}}" width="480" height="1014" loading="lazy">
       <div>
         <h2>{{game_title}}</h2>
         <ul class="points">
@@ -115,6 +117,7 @@
   </section>
 
   <section id="cta" class="cta wrap">
+    <img class="cta-sori" src="/assets/img/hero-sori.webp" alt="" width="440" height="437" loading="lazy">
     <h2>{{hero_title}}</h2>
     <div class="badges">{{@badges_cta}}</div>
   </section>

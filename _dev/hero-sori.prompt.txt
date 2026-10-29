@@ -1,0 +1,7 @@
+Generate ONE image with your image generation tool and save it as ./hero-sori.png in the current directory. Do not write any code or other files.
+
+Use case: marketing illustration for an app homepage hero section.
+Input image 1 is the CHARACTER REFERENCE: Sori, the apricot baby fox mascot of the music ear-training app "Absolute Ear". Input image 2 is STYLE CONTEXT ONLY: an actual screenshot of the app.
+Request: Sori, with exactly the same identity as input 1 (oversized upright ears, large rounded head, warm brown eyes, cream muzzle and belly, small brown paws, big curved tail, mint collar with a small music-note medallion), sitting happily and wearing small mint over-ear headphones, eyes open and smiling, one paw raised as if waving. Around Sori float 4-6 simple music notes (eighth notes, quarter notes) in soft mint #6DDDC3, warm cream and white, with a few tiny sparkles.
+Style: same clean matte 2D style as input 1 — rounded color shapes, one-level soft shading, no fur strands, no glossy or 3D rendering. Palette must sit well on a dark navy background (#2C3048).
+Background genuinely transparent. Square 1:1 canvas, whole character and notes visible with transparent margin. No text, no logo, no frame, no shadow, no watermark.

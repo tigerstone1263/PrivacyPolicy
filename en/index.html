@@ -25,7 +25,8 @@
 <link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/">
 <script src="/assets/js/lang.js"></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
@@ -34,12 +35,13 @@
   <section id="hero" class="hero wrap">
     <div class="hero-copy">
       <p class="app-name"><img src="/assets/img/app-icon.png" alt="" width="40" height="40">Absolute Ear</p>
-      <h1><span class="nw">From ear training</span> <span class="nw">to reading music,</span> <span class="nw">rhythm</span> <span class="nw">and composing —</span><br><span class="nw">all in</span> <span class="nw">one app</span></h1>
+      <h1><span class="nw">Ear training,</span> <span class="nw">reading, rhythm</span> <span class="nw">& composing —</span><br><span class="nw">all in one app</span></h1>
       <p class="hero-sub">Absolute and relative pitch training, played like a stage game. Grow your ear a little every day with Sori the fox.</p>
-      <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701?ct=homepage-hero"><img src="/assets/badges/appstore-en.svg" alt="Download on the App Store" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dhero"><img src="/assets/badges/play-en.png" alt="Get it on Google Play" height="64"></a></div>
+      <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701?ct=homepage-hero"><img src="/assets/badges/appstore-en.svg" alt="Download on the App Store" width="144" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dhero"><img src="/assets/badges/play-en.png" alt="Get it on Google Play" width="165" height="64"></a></div>
     </div>
     <div class="hero-phone">
-      <img class="phone" src="/assets/img/phone-hero.webp" alt="Absolute Ear home screen" width="600" height="1267">
+      <img class="phone" src="/assets/img/phone-hero.webp" alt="Absolute Ear home screen" width="480" height="1014">
+      <img class="hero-sori" src="/assets/img/hero-sori.webp" alt="" width="440" height="437">
     </div>
   </section>
 </header>
@@ -58,22 +60,22 @@
   <section id="features" class="wrap">
     <h2>From listening to creating, in one app</h2>
     <div class="feature">
-      <img class="shot" src="/assets/img/feat-ear.webp" alt="Ear training question screen" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/feat-ear.webp" alt="Ear training question screen" width="480" height="1014" loading="lazy">
       <div><p class="eyebrow">Ear training</p><h3>Train absolute and relative pitch</h3><p>Absolute pitch: name a note with no reference. Relative pitch: hear notes by their distance from each other. A short placement test finds the right starting point for you.</p><ul class="chips"><li>Interval</li><li>Scale</li><li>Chord</li><li>Melody</li><li>Chord Prog.</li><li>Rhythm</li></ul></div>
     </div>
     <div class="feature reverse">
-      <img class="shot" src="/assets/img/feat-staff.webp" alt="Reading music screen" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/feat-staff.webp" alt="Reading music screen" width="480" height="1014" loading="lazy">
       <div><p class="eyebrow">Reading & rhythm</p><h3>Reading music, from the basics</h3><p>A Reading Music Basics course that starts with naming notes on the staff, plus rhythm training that has you hear and match the beat.</p></div>
     </div>
     <div class="feature">
-      <img class="shot" src="/assets/img/feat-create.webp" alt="Sight-singing practice screen" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/feat-create.webp" alt="Sight-singing practice screen" width="480" height="1014" loading="lazy">
       <div><p class="eyebrow">Singing & creating</p><h3>Sing, loop, and make your own</h3><p>Sight-singing practice that checks your pitch through the mic, repeat listening for the pieces you choose, and Music mode for writing your own.</p></div>
     </div>
   </section>
 
   <section id="game" class="game">
     <div class="wrap feature">
-      <img class="shot" src="/assets/img/game-map.webp" alt="Stage progress map screen" width="600" height="1267" loading="lazy">
+      <img class="shot" src="/assets/img/game-map.webp" alt="Stage progress map screen" width="480" height="1014" loading="lazy">
       <div>
         <h2>Like a game, a little every day</h2>
         <ul class="points">
@@ -115,8 +117,9 @@
   </section>
 
   <section id="cta" class="cta wrap">
-    <h2><span class="nw">From ear training</span> <span class="nw">to reading music,</span> <span class="nw">rhythm</span> <span class="nw">and composing —</span><br><span class="nw">all in</span> <span class="nw">one app</span></h2>
-    <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701?ct=homepage-footer-cta"><img src="/assets/badges/appstore-en.svg" alt="Download on the App Store" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dfooter-cta"><img src="/assets/badges/play-en.png" alt="Get it on Google Play" height="64"></a></div>
+    <img class="cta-sori" src="/assets/img/hero-sori.webp" alt="" width="440" height="437" loading="lazy">
+    <h2><span class="nw">Ear training,</span> <span class="nw">reading, rhythm</span> <span class="nw">& composing —</span><br><span class="nw">all in one app</span></h2>
+    <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701?ct=homepage-footer-cta"><img src="/assets/badges/appstore-en.svg" alt="Download on the App Store" width="144" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dfooter-cta"><img src="/assets/badges/play-en.png" alt="Get it on Google Play" width="165" height="64"></a></div>
   </section>
 </main>
 
