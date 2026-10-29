@@ -27,6 +27,74 @@
 
 <main class="sheet">
 
+  <section id="audience" class="wrap">
+    <h2>{{aud_title}}</h2>
+    <div class="cards">
+      <article class="card"><span class="card-emoji" aria-hidden="true">🎓</span><h3>{{aud1_t}}</h3><p>{{aud1_d}}</p></article>
+      <article class="card"><span class="card-emoji" aria-hidden="true">🎸</span><h3>{{aud2_t}}</h3><p>{{aud2_d}}</p></article>
+      <article class="card"><span class="card-emoji" aria-hidden="true">🦊</span><h3>{{aud3_t}}</h3><p>{{aud3_d}}</p></article>
+    </div>
+  </section>
+
+  <section id="features" class="wrap">
+    <h2>{{feat_title}}</h2>
+    <div class="feature">
+      <img class="shot" src="/assets/img/feat-ear.webp" alt="{{feat1_alt}}" width="390" height="844" loading="lazy">
+      <div><p class="eyebrow">{{feat1_eyebrow}}</p><h3>{{feat1_t}}</h3><p>{{feat1_d}}</p><ul class="chips">{{feat1_chips}}</ul></div>
+    </div>
+    <div class="feature reverse">
+      <img class="shot" src="/assets/img/feat-staff.webp" alt="{{feat2_alt}}" width="390" height="844" loading="lazy">
+      <div><p class="eyebrow">{{feat2_eyebrow}}</p><h3>{{feat2_t}}</h3><p>{{feat2_d}}</p></div>
+    </div>
+    <div class="feature">
+      <img class="shot" src="/assets/img/feat-create.webp" alt="{{feat3_alt}}" width="390" height="844" loading="lazy">
+      <div><p class="eyebrow">{{feat3_eyebrow}}</p><h3>{{feat3_t}}</h3><p>{{feat3_d}}</p></div>
+    </div>
+  </section>
+
+  <section id="game" class="game">
+    <div class="wrap feature">
+      <img class="shot" src="/assets/img/game-map.webp" alt="{{game_alt}}" width="390" height="844" loading="lazy">
+      <div>
+        <h2>{{game_title}}</h2>
+        <ul class="points">
+          <li><strong>{{game1_t}}</strong> {{game1_d}}</li>
+          <li><strong>{{game2_t}}</strong> {{game2_d}}</li>
+          <li><strong>{{game3_t}}</strong> {{game3_d}}</li>
+          <li><strong>{{game4_t}}</strong> {{game4_d}}</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="plans" class="wrap">
+    <h2>{{plans_title}}</h2>
+    <p class="lead">{{plans_lead}}</p>
+    <div class="table-wrap">
+      <table class="plans">
+        <thead><tr><th scope="col"></th><th scope="col">{{plans_free}}</th><th scope="col" class="pro">{{plans_pro}}</th></tr></thead>
+        <tbody>
+          <tr class="benefit"><th scope="row">{{row1}}</th><td>{{row1_free}}</td><td class="pro">{{row1_pro}}</td></tr>
+          <tr class="benefit"><th scope="row">{{row2}}</th><td>{{row2_free}}</td><td class="pro">{{row2_pro}}</td></tr>
+          <tr class="benefit"><th scope="row">{{row3}}</th><td>{{row3_free}}</td><td class="pro">{{row3_pro}}</td></tr>
+          <tr class="benefit"><th scope="row">{{row4}}</th><td>{{row4_free}}</td><td class="pro">{{row4_pro}}</td></tr>
+          <tr class="benefit"><th scope="row">{{row5}}</th><td>{{row5_free}}</td><td class="pro">{{row5_pro}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">{{plans_note}}</p>
+  </section>
+
+  <section id="faq" class="wrap narrow">
+    <h2>{{faq_title}}</h2>
+    <details><summary>{{faq1_q}}</summary><p>{{faq1_a}}</p></details>
+    <details><summary>{{faq2_q}}</summary><p>{{faq2_a}}</p></details>
+    <details><summary>{{faq3_q}}</summary><p>{{faq3_a}}</p></details>
+    <details><summary>{{faq4_q}}</summary><p>{{faq4_a}}</p></details>
+    <details><summary>{{faq5_q}}</summary><p>{{faq5_a}}</p></details>
+    <details><summary>{{faq6_q}}</summary><p>{{faq6_a}}</p></details>
+  </section>
+
   <section id="cta" class="cta wrap">
     <h2>{{hero_title}}</h2>
     <div class="badges">{{@badges_cta}}</div>

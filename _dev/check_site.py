@@ -90,7 +90,26 @@ def check_page(lang, rel):
     for src in p.scripts:
         if src and src.startswith(("http:", "https:", "//")):
             fail(f"[{lang}] 외부 스크립트: {src}")
+    check_sections(lang, path.read_text(encoding="utf-8"))
     return p
+
+
+SECTIONS = ["hero", "audience", "features", "game", "plans", "faq", "cta", "footer"]
+
+
+def check_sections(lang, html):
+    import re
+    ids = [i for i in re.findall(r'<(?:section|footer)[^>]*\bid="([\w-]+)"', html) if i in SECTIONS]
+    if ids != SECTIONS:
+        fail(f"[{lang}] 구역 순서/개수 불일치: {ids}")
+    plans = re.search(r'id="plans".*?</section>', html, re.S)
+    rows = len(re.findall(r"<tr class=\"benefit\"", plans.group(0))) if plans else 0
+    if rows != 5:
+        fail(f"[{lang}] 구독 비교 행 {rows}개 (5개여야 함)")
+    faq = re.search(r'id="faq".*?</section>', html, re.S)
+    n = len(re.findall(r"<details", faq.group(0))) if faq else 0
+    if not 5 <= n <= 7:
+        fail(f"[{lang}] FAQ {n}개 (5~7개여야 함)")
 
 
 def main():
