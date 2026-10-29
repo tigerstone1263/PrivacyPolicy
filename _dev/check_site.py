@@ -112,12 +112,72 @@ def check_sections(lang, html):
         fail(f"[{lang}] FAQ {n}개 (5~7개여야 함)")
 
 
+HTML_LANG = {"ko": "ko", "en": "en", "zh": "zh-Hans"}
+HREFLANG = {"ko": "https://tigerstone1263.com/", "en": "https://tigerstone1263.com/en/",
+            "zh-Hans": "https://tigerstone1263.com/zh/", "x-default": "https://tigerstone1263.com/"}
+
+
+def check_lang_meta(lang, p):
+    html_tag = next((a for t, a in p.attrs_all if t == "html"), {})
+    if html_tag.get("lang") != HTML_LANG[lang]:
+        fail(f"[{lang}] <html lang> = {html_tag.get('lang')}")
+    alts = {a.get("hreflang"): a.get("href") for t, a in p.attrs_all
+            if t == "link" and a.get("rel") == "alternate"}
+    if alts != HREFLANG:
+        fail(f"[{lang}] hreflang 불일치: {alts}")
+    if not any(t == "script" and a.get("src") == "/assets/js/lang.js" for t, a in p.attrs_all):
+        fail(f"[{lang}] lang.js 없음")
+
+
+def check_string_keys():
+    keys = {}
+    for lang in PAGES:
+        f = DEV / "strings" / f"{lang}.json"
+        if f.exists():
+            keys[lang] = set(json.loads(f.read_text(encoding="utf-8")))
+        else:
+            fail(f"문구 파일 없음: {lang}.json")
+    base = keys.get("ko", set())
+    for lang, k in keys.items():
+        if k != base:
+            fail(f"[{lang}] 키 불일치: 빠짐 {sorted(base - k)} / 남음 {sorted(k - base)}")
+
+
+def check_build_rejects_missing_key():
+    import shutil
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        shutil.copytree(DEV, tmp / "_dev")
+        f = tmp / "_dev" / "strings" / "en.json"
+        if not f.exists():
+            fail("빌드 키 누락 검사: en.json 없음")
+            return
+        d = json.loads(f.read_text(encoding="utf-8"))
+        d.pop("hero_title")
+        f.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+        r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True)
+        if r.returncode == 0:
+            fail("문구 키가 빠져도 빌드가 성공함")
+
+
+def check_lang_js():
+    import subprocess
+    r = subprocess.run(["node", str(DEV / "test_lang.js")], capture_output=True, text=True)
+    if r.returncode != 0:
+        fail(r.stdout.strip() or r.stderr.strip())
+
+
 def main():
     check_policy_files()
+    check_lang_js()
+    check_string_keys()
+    check_build_rejects_missing_key()
     for lang, rel in PAGES.items():
-        if lang != "ko" and not (DEV / "strings" / f"{lang}.json").exists():
-            continue
-        check_page(lang, rel)
+        p = check_page(lang, rel)
+        if p:
+            check_lang_meta(lang, p)
     if errors:
         print("\n".join(errors))
         sys.exit(1)

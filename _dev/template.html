@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{title}}</title>
 <meta name="description" content="{{description}}">
+<link rel="alternate" hreflang="ko" href="https://tigerstone1263.com/">
+<link rel="alternate" hreflang="en" href="https://tigerstone1263.com/en/">
+<link rel="alternate" hreflang="zh-Hans" href="https://tigerstone1263.com/zh/">
+<link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/">
+<script src="/assets/js/lang.js"></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="/assets/css/site.css">
@@ -109,9 +114,9 @@
       <a href="mailto:tigerstone1263@gmail.com">{{footer_contact}}</a>
     </nav>
     <nav class="lang-switch" aria-label="Language">
-      <a href="/" hreflang="ko" data-lang="ko">한국어</a>
-      <a href="/en/" hreflang="en" data-lang="en">English</a>
-      <a href="/zh/" hreflang="zh-Hans" data-lang="zh">中文</a>
+      <a href="/" hreflang="ko" data-lang="ko" {{@cur_ko}}>한국어</a>
+      <a href="/en/" hreflang="en" data-lang="en" {{@cur_en}}>English</a>
+      <a href="/zh/" hreflang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
     </nav>
     <p class="copyright">© tigerstone</p>
   </div>

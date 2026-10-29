@@ -43,6 +43,7 @@ def computed(lang, s):
         "badges_cta": badges(lang, s, "footer-cta"),
         "url": SITE + "/" + ("" if lang == "ko" else f"{lang}/"),
         "site": SITE,
+        **{f"cur_{l}": 'aria-current="true"' if l == lang else "" for l in LANGS},
     }
 
 
