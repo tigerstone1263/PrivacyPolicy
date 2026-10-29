@@ -14,9 +14,9 @@ PLAY = "id=com.tigerstone.AbsoluteEar"
 FORBIDDEN_TEXT = ["나리", "₩", "$", "원/월"]
 # 앱 동작보다 과장되거나 앱 화면 용어와 다른 표현
 FORBIDDEN_BY_LANG = {
-    "ko": ["바로 열기", "하트 없이 열어요", "계정을 연동"],
-    "en": ["Unlock the next chapter", "Music mode", "Made for"],
-    "zh": ["直接解锁下一章", "反复听播放列表", "想听的曲子反复听"],
+    "ko": ["바로 열기", "하트 없이 열어요", "계정을 연동", "원하는 곡을 반복", "진도를 나눠", "박자를 듣고 맞히는", "코드 진행", "걱정 없이 광고 없이"],
+    "en": ["Unlock the next chapter", "Music mode", "Made for", "pieces you choose", "share progress", "hear and match the beat"],
+    "zh": ["直接解锁下一章", "反复听播放列表", "想听的曲子", "分享进度", "对节奏"],
 }
 
 errors = []
