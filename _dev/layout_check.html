@@ -8,6 +8,8 @@ f.width = q.get('w') || 360; f.height = 900; f.style.border = 0;
 f.src = q.get('p') || '/';
 f.onload = async () => {
   const d = f.contentDocument;
+  // 무한 애니메이션이 있으면 헤드리스 가상 시간이 끝나지 않는다 — 측정 중에는 끈다
+  const st = d.createElement('style'); st.textContent = '*{animation:none!important;transition:none!important}'; d.head.appendChild(st);
   if (q.get('scale')) d.documentElement.style.fontSize = (100 * q.get('scale')) + '%';
   await d.fonts.ready; await new Promise(r => setTimeout(r, 400));
   const bad = [];

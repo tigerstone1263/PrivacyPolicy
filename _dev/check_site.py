@@ -122,6 +122,7 @@ def check_page(lang, rel):
         if t == "a" and a.get("data-lang") and not a.get("lang"):
             fail(f"[{lang}] 언어 링크에 lang 속성 없음: {a.get('href')}")
     check_sections(lang, path.read_text(encoding="utf-8"))
+    check_mascot(lang, path.read_text(encoding="utf-8"))
     return p
 
 
@@ -196,6 +197,30 @@ def check_shot_resolution():
             fail(f"{n}.webp 폭 {w}px (720 이상이어야 선명)")
         if f.stat().st_size > 250_000:
             fail(f"{n}.webp {f.stat().st_size // 1000}KB (250KB 이하)")
+
+
+APP_SORI = Path.home() / "abp" / "absolute_ear" / "assets" / "images" / "mascot" / "sori.webp"
+
+
+def check_mascot(lang, html):
+    """마스코트 그림은 앱 원본 소리여야 한다 (생성 그림은 생김새가 달라 사용자 반려)."""
+    import re
+    srcs = re.findall(r'<img class="(?:hero|cta)-sori" src="([^"]+)"', html)
+    if len(srcs) != 2 or any(s != "/assets/img/sori.webp" for s in srcs):
+        fail(f"[{lang}] 히어로·CTA 마스코트가 sori.webp 가 아님: {srcs}")
+
+
+def check_mascot_matches_app():
+    from PIL import Image, ImageChops, ImageStat
+    if not APP_SORI.exists():
+        return
+    site = Image.open(ROOT / "assets" / "img" / "sori.webp").convert("RGBA")
+    app = Image.open(APP_SORI).convert("RGBA")
+    app = app.crop(app.getbbox())
+    a, b = site.resize((64, 64)), app.resize((64, 64))
+    diff = sum(ImageStat.Stat(ImageChops.difference(a, b)).mean) / 4
+    if diff > 6:
+        fail(f"sori.webp 가 앱 원본과 다름 (평균 차이 {diff:.1f})")
 
 
 def check_sitemap():
@@ -284,11 +309,18 @@ def check_layout():
         for lang in PAGES:
             path = "/" if lang == "ko" else f"/{lang}/"
             for w, scale in LAYOUTS:
-                with tempfile.TemporaryDirectory() as prof:
-                    url = f"http://127.0.0.1:{port}/_dev/layout_check.html?w={w}&p={path}&scale={scale}"
-                    out = subprocess.run([CHROME, "--headless=new", "--disable-gpu", f"--user-data-dir={prof}",
-                                          "--lang=ko-KR", "--virtual-time-budget=8000", "--dump-dom", url],
-                                         capture_output=True, text=True, timeout=60).stdout
+                url = f"http://127.0.0.1:{port}/_dev/layout_check.html?w={w}&p={path}&scale={scale}"
+                out = ""
+                for _ in range(2):  # 헤드리스 Chrome 이 가끔 멈추면 한 번 더
+                    with tempfile.TemporaryDirectory() as prof:
+                        try:
+                            out = subprocess.run([CHROME, "--headless=new", "--disable-gpu", f"--user-data-dir={prof}",
+                                                  "--lang=ko-KR", "--virtual-time-budget=8000", "--dump-dom", url],
+                                                 capture_output=True, text=True, timeout=60).stdout
+                        except subprocess.TimeoutExpired:
+                            out = ""
+                    if '<pre id="result">' in out and "pending" not in out:
+                        break
                 m = re.search(r'<pre id="result">(.*?)</pre>', out, re.S)
                 res = htmllib.unescape(m.group(1)) if m else "결과 없음"
                 if res == "pending" or res == "결과 없음":
@@ -330,6 +362,7 @@ def main():
             check_meta(lang, p)
     check_sitemap()
     check_shot_resolution()
+    check_mascot_matches_app()
     if "--no-layout" not in sys.argv:
         check_layout()
     if errors:

@@ -100,7 +100,7 @@ a { color: inherit; }
 
 .hero-phone { display: flex; justify-content: center; position: relative; }
 
-/* 헤드폰 쓴 소리가 폰 왼쪽 아래에 걸터앉는다 */
+/* 앱의 소리가 폰 왼쪽 아래에 서 있고, 앱 홈처럼 음표가 떠다닌다 */
 .hero-sori {
   position: absolute;
   width: min(170px, 42vw);
@@ -110,6 +110,32 @@ a { color: inherit; }
 }
 
 .cta-sori { width: 140px; margin: 0 auto 8px; }
+
+.sori-notes {
+  position: absolute;
+  left: calc(50% - min(250px, 62vw) / 2 - min(80px, 18vw));
+  bottom: min(150px, 34vw);
+  width: min(170px, 42vw);
+  height: 60px;
+  pointer-events: none;
+}
+.sori-notes i {
+  position: absolute;
+  font-style: normal;
+  font-size: 1.6rem;
+  color: #6dddc3;
+  animation: note-float 3.2s ease-in-out infinite;
+}
+.sori-notes i:nth-child(1) { left: 6%; top: 10px; }
+.sori-notes i:nth-child(2) { left: 46%; top: -14px; color: #fff; animation-delay: -1.1s; }
+.sori-notes i:nth-child(3) { left: 84%; top: 14px; color: #f6d9b8; animation-delay: -2.2s; }
+@keyframes note-float {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50% { transform: translateY(-10px); opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sori-notes i { animation: none; }
+}
 
 .phone {
   width: min(250px, 62vw);
@@ -230,6 +256,7 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .hero-phone { flex: 0 0 auto; }
   .phone { width: 270px; }
   .hero-sori { width: 190px; left: -110px; bottom: -10px; }
+  .sori-notes { width: 190px; left: -110px; bottom: 175px; }
   .cards { grid-template-columns: repeat(3, 1fr); }
   .feature { grid-template-columns: 1fr 1.2fr; gap: 56px; }
   .feature.reverse > img { order: 2; }
@@ -241,6 +268,7 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .hero { padding-top: 64px; padding-bottom: 110px; }
   .phone { width: 300px; }
   .hero-sori { width: 220px; left: -140px; }
+  .sori-notes { width: 220px; left: -140px; bottom: 205px; }
 }
 
 .nw { white-space: nowrap; }
