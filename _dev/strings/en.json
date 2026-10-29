@@ -73,5 +73,7 @@
   "faq5_q": "How do I cancel my subscription?",
   "faq5_a": "Cancel any time from subscription management in the App Store or Google Play. You can also get there from the Shop screen in the app.",
   "faq6_q": "How do I contact you?",
-  "faq6_a": "Email us at <a href=\"mailto:tigerstone1263@gmail.com\">tigerstone1263@gmail.com</a>."
+  "faq6_a": "Email us at <a href=\"mailto:tigerstone1263@gmail.com\">tigerstone1263@gmail.com</a>.",
+  "footer_nav_label": "Site information",
+  "footer_tm": "Apple, the Apple logo and App Store are trademarks of Apple Inc., registered in the U.S. and other countries. Google Play and the Google Play logo are trademarks of Google LLC."
 }

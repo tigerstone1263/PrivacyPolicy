@@ -14,14 +14,18 @@ LANGS = {"ko": "index.html", "en": "en/index.html", "zh": "zh/index.html"}
 SITE = "https://tigerstone1263.com"
 APP_STORE = "https://apps.apple.com/app/id6739764701"
 PLAY = "https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar"
+# App Store Connect 의 provider token. ct(캠페인)는 pt 와 함께여야 집계되므로 없으면 태그를 달지 않는다.
+APP_STORE_PT = None
 
 
 def app_store_url(zone):
-    return f"{APP_STORE}?ct=homepage-{zone}"
+    if APP_STORE_PT:
+        return f"{APP_STORE}?pt={APP_STORE_PT}&ct=homepage-{zone}"
+    return APP_STORE
 
 
 def play_url(zone):
-    return f"{PLAY}&referrer=utm_source%3Dhomepage%26utm_medium%3D{zone}"
+    return f"{PLAY}&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3D{zone}"
 
 
 def svg_width(path, height):
@@ -71,17 +75,21 @@ def render(template, strings, calc):
 
 
 def build(dev=DEV, root=ROOT):
+    """세 언어를 모두 렌더링한 뒤에만 쓴다 — 하나라도 실패하면 아무 파일도 바꾸지 않는다."""
     template = (dev / "template.html").read_text(encoding="utf-8")
+    pages = {}
     for lang, rel in LANGS.items():
         src = dev / "strings" / f"{lang}.json"
         if not src.exists():
-            continue
+            print(f"[{lang}] 문구 파일 없음: {src.name}", file=sys.stderr)
+            sys.exit(1)
         strings = json.loads(src.read_text(encoding="utf-8"))
         try:
-            html = render(template, strings, computed(lang, strings))
+            pages[rel] = render(template, strings, computed(lang, strings))
         except KeyError as e:
             print(f"[{lang}] 문구 키 없음: {e.args[0]}", file=sys.stderr)
             sys.exit(1)
+    for rel, html in pages.items():
         out = root / rel
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")

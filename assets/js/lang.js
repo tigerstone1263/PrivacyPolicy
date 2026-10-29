@@ -1,10 +1,15 @@
 // 언어 선택: 고른 언어는 기억하고, 루트(/)에 처음 온 방문자만 브라우저 언어로 보낸다.
+// 언어 링크는 /?lang=ko 처럼 고른 언어를 URL 에 싣는다 — 저장소가 막혀도, 새 탭으로 열어도 지켜진다.
 (function () {
   var KEY = 'ae-lang';
   var PATHS = { ko: '/', en: '/en/', zh: '/zh/' };
 
   function saved() {
     try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+
+  function save(lang) {
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
   }
 
   function detect() {
@@ -19,14 +24,23 @@
   }
 
   if (location.pathname === '/') {
-    var target = saved();
-    if (!PATHS[target]) target = detect();
-    if (target !== 'ko') location.replace(PATHS[target] + location.search + location.hash);
+    var m = /[?&]lang=(ko|en|zh)\b/.exec(location.search);
+    var target;
+    if (m) {
+      target = m[1];
+      save(target);
+    } else {
+      target = saved();
+      if (!PATHS[target]) target = detect();
+    }
+    if (target !== 'ko') {
+      var rest = location.search.replace(/([?&])lang=(ko|en|zh)(&|$)/, '$1').replace(/[?&]$/, '');
+      location.replace(PATHS[target] + rest + location.hash);
+    }
   }
 
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[data-lang]');
-    if (!a) return;
-    try { localStorage.setItem(KEY, a.getAttribute('data-lang')); } catch (err) {}
+    if (a) save(a.getAttribute('data-lang'));
   });
 })();

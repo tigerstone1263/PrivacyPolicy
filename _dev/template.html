@@ -125,16 +125,17 @@
 
 <footer id="footer" class="footer">
   <div class="wrap footer-inner">
-    <nav class="footer-links">
+    <nav class="footer-links" aria-label="{{footer_nav_label}}">
       <a href="/AbsoluteEarPolicy.html">{{footer_privacy}}</a>
       <a href="/termsOfService.html">{{footer_terms}}</a>
       <a href="mailto:tigerstone1263@gmail.com">{{footer_contact}}</a>
     </nav>
     <nav class="lang-switch" aria-label="Language">
-      <a href="/" hreflang="ko" data-lang="ko" {{@cur_ko}}>한국어</a>
-      <a href="/en/" hreflang="en" data-lang="en" {{@cur_en}}>English</a>
-      <a href="/zh/" hreflang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
+      <a href="/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" {{@cur_ko}}>한국어</a>
+      <a href="/en/" hreflang="en" lang="en" data-lang="en" {{@cur_en}}>English</a>
+      <a href="/zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
     </nav>
+    <p class="trademark">{{footer_tm}}</p>
     <p class="copyright">© tigerstone</p>
   </div>
 </footer>

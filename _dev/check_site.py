@@ -79,10 +79,19 @@ def check_page(lang, rel):
         return None
     p = parse(path)
     links = p.links
-    for store, label in ((APP_STORE, "App Store"), (PLAY, "Google Play")):
+    # App Store 는 pt(provider token)가 있을 때만 구역 태그를 단다 (build.APP_STORE_PT)
+    tagged = [(PLAY, "Google Play")] + ([(APP_STORE, "App Store")] if any("pt=" in h for h in links) else [])
+    for store, label in tagged:
         for zone in ("hero", "footer-cta"):
             if not any(store in h and zone in h for h in links):
                 fail(f"[{lang}] {label} 링크에 {zone} 태그 없음")
+    if sum(APP_STORE in h for h in links) < 2:
+        fail(f"[{lang}] App Store 링크가 히어로·마지막 구역에 모두 있어야 함")
+    for h in links:
+        if APP_STORE in h and "ct=" in h and "pt=" not in h:
+            fail(f"[{lang}] App Store ct 는 pt 없이 집계되지 않음: {h}")
+        if PLAY in h and "utm_campaign%3D" not in h:
+            fail(f"[{lang}] Play 링크에 utm_campaign 없음: {h}")
     for h in links:
         if h.startswith("javascript:"):
             fail(f"[{lang}] JS 링크 사용: {h}")
@@ -98,6 +107,14 @@ def check_page(lang, rel):
     for src in p.scripts:
         if src and src.startswith(("http:", "https:", "//")):
             fail(f"[{lang}] 외부 스크립트: {src}")
+    if "Google Play" not in text or "Google LLC" not in text or "Apple Inc." not in text:
+        fail(f"[{lang}] 스토어 상표 고지 없음")
+    navs = [a for t, a in p.attrs_all if t == "nav"]
+    if any(not a.get("aria-label") for a in navs):
+        fail(f"[{lang}] aria-label 없는 nav")
+    for t, a in p.attrs_all:
+        if t == "a" and a.get("data-lang") and not a.get("lang"):
+            fail(f"[{lang}] 언어 링크에 lang 속성 없음: {a.get('href')}")
     check_sections(lang, path.read_text(encoding="utf-8"))
     return p
 
@@ -169,6 +186,11 @@ def check_sitemap():
     for url in ("https://tigerstone1263.com/", "https://tigerstone1263.com/en/", "https://tigerstone1263.com/zh/"):
         if f"<loc>{url}</loc>" not in xml:
             fail(f"sitemap 에 {url} 없음")
+    import re
+    for block in re.findall(r"<url>(.*?)</url>", xml, re.S):
+        alts = dict(re.findall(r'hreflang="([^"]+)" href="([^"]+)"', block))
+        if set(alts) != {"ko", "en", "zh-Hans", "x-default"}:
+            fail(f"sitemap hreflang 불완전: {sorted(alts)}")
     if not (ROOT / "robots.txt").exists():
         fail("robots.txt 없음")
 
@@ -202,6 +224,7 @@ def check_build_rejects_missing_key():
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         shutil.copytree(DEV, tmp / "_dev")
+        shutil.copytree(ROOT / "assets", tmp / "assets")
         f = tmp / "_dev" / "strings" / "en.json"
         if not f.exists():
             fail("빌드 키 누락 검사: en.json 없음")
@@ -256,8 +279,25 @@ def check_layout():
         server.terminate()
 
 
+def check_build_requires_all_langs():
+    import shutil
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        shutil.copytree(DEV, tmp / "_dev")
+        shutil.copytree(ROOT / "assets", tmp / "assets")
+        (tmp / "_dev" / "strings" / "zh.json").unlink()
+        r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True)
+        if r.returncode == 0:
+            fail("언어 JSON 이 없어도 빌드가 성공함")
+        if (tmp / "index.html").exists():
+            fail("빌드가 실패했는데 일부 언어 html 을 써 버림")
+
+
 def main():
     check_policy_files()
+    check_build_requires_all_langs()
     check_lang_js()
     check_string_keys()
     check_zh_spacing()
