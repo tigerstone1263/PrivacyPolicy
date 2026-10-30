@@ -88,6 +88,10 @@ a { color: inherit; }
 .store-btn .arrow { font-size: 0.85em; opacity: 0.7; }
 .store-btn:hover { background: #000; transform: translateY(-1px); }
 .store-note { margin: 12px 0 0; font-size: 0.85rem; color: var(--muted); }
+/* 기기에 맞는 스토어를 앞세운다 (head 의 #os-detect 가 <html> 에 os-ios / os-android 를 단다) */
+.os-android .store-btn--play { order: -1; }
+.os-ios .store-btn--play, .os-android .store-btn--apple { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px #cfcfcf; }
+.os-ios .store-btn--play:hover, .os-android .store-btn--apple:hover { background: #ececec; }
 
 /* ---------- 히어로 ---------- */
 .hero { display: flex; flex-direction: column; gap: 40px; padding-top: 44px; padding-bottom: 64px; }
@@ -128,6 +132,43 @@ h2 { margin: 0; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.25; font-w
 h3 { margin: 0; font-size: 1.2rem; line-height: 1.38; font-weight: 750; letter-spacing: -0.02em; }
 .lead { color: var(--muted); margin: 14px 0 0; }
 
+/* 청음 맛보기: 왼쪽 설명, 오른쪽 소리 반응 + 문제 카드 */
+.try-inner { display: grid; gap: 8px; }
+.try-sound { display: flex; align-items: center; gap: 8px; margin: 18px 0 0; font-size: 0.88rem; color: var(--muted); }
+.icon-sm { width: 18px; height: 18px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.try-card { background: var(--card); border: 1px solid var(--line); border-radius: 28px; padding: 18px; display: grid; gap: 18px; }
+.try-stage { display: flex; justify-content: center; }
+.try-stage img { width: min(100%, 300px); height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; background: var(--c-interval-l); }
+.try-live { display: none; }
+.js .try-live { display: block; }
+.try-progress { margin: 0 0 12px; font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.try-play {
+  width: 100%; padding: 14px; border: 0; border-radius: 14px; cursor: pointer;
+  background: var(--btn); color: #fff; font: inherit; font-weight: 700; font-size: 1.02rem;
+}
+.try-play:hover { background: #000; }
+.try-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.try-options button {
+  padding: 14px 6px; border-radius: 14px; cursor: pointer; font: inherit; font-weight: 700; font-size: 0.95rem;
+  background: var(--card); color: var(--ink); border: 1.5px solid var(--line);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.try-options button:not(:disabled):hover { border-color: var(--ink); }
+.try-options button:disabled { cursor: default; color: #a3a3a3; }
+.try-options button.is-right { border-color: var(--c-chord-d); background: color-mix(in srgb, var(--c-chord-l) 45%, #fff); color: var(--c-chord-d); }
+.try-options button.is-wrong { border-color: var(--c-melody-d); background: color-mix(in srgb, var(--c-melody-l) 45%, #fff); color: var(--c-melody-d); }
+.try-feedback { min-height: 1.6em; margin: 12px 0 0; font-weight: 700; }
+.try-next, .try-retry {
+  margin-top: 4px; padding: 10px 16px; border-radius: 12px; cursor: pointer; font: inherit; font-weight: 700;
+  background: transparent; color: var(--ink); border: 1.5px solid var(--line);
+}
+.try-next:hover, .try-retry:hover { border-color: var(--ink); }
+.try-done { margin-top: 8px; padding-top: 16px; border-top: 1px solid var(--line); }
+.try-done-text { margin: 0; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
+.try-more { margin: 6px 0 14px; color: var(--muted); font-size: 0.92rem; }
+.try-done .store-btns { margin-bottom: 12px; }
+.try-nojs { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
 /* 기능 카드 4개: 번호 → 제목 → 설명 → 아래로 잘려 나가는 폰 */
 .fcards { display: grid; gap: 16px; }
 .fcard { display: flex; flex-direction: column; background: var(--bg); border: 1px solid var(--line); border-radius: 24px; padding: 24px 22px 0; overflow: hidden; }
@@ -156,7 +197,7 @@ h3 { margin: 0; font-size: 1.2rem; line-height: 1.38; font-weight: 750; letter-s
 .poses-label { margin: 22px 0 12px; font-size: 0.88rem; font-weight: 700; color: #f2c98a; }
 .poses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .pose { text-align: center; font-size: 0.82rem; color: rgba(255, 255, 255, 0.78); }
-.pose img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; margin-bottom: 6px; }
+.pose img, .pose video { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; margin-bottom: 6px; background: var(--cat-l); }
 
 /* 이런 분께: 3열 텍스트, 위 테두리 */
 .aud { display: grid; gap: 28px; }
@@ -182,6 +223,12 @@ details p { color: var(--muted); margin: 10px 0 0; }
 .cta-sori { width: 110px; margin: 0 auto 18px; }
 .cta-card h2 { font-size: clamp(1.6rem, 4.6vw, 2.4rem); }
 .cta-card .store-btns { justify-content: center; margin-top: 28px; }
+.cta-qr { display: none; }
+@media (hover: hover) and (min-width: 900px) {
+  .cta-qr { display: inline-flex; align-items: center; gap: 14px; margin-top: 26px; padding: 10px 18px 10px 10px; border: 1px solid var(--line); border-radius: 18px; text-align: left; }
+  .cta-qr img { width: 88px; height: 88px; border-radius: 8px; }
+  .cta-qr p { margin: 0; max-width: 13em; font-size: 0.88rem; color: var(--muted); }
+}
 
 /* ---------- 스크롤 등장 (JS 있을 때만 숨긴다) ---------- */
 .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -221,6 +268,8 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .poses { grid-template-columns: repeat(3, 1fr); }
   .aud { grid-template-columns: repeat(3, 1fr); gap: 32px; }
   .faq { grid-template-columns: 0.8fr 1.2fr; gap: 64px; align-items: start; }
+  .try-inner { grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .try-card { grid-template-columns: 1fr; padding: 22px; }
   .cta-card { padding: 64px 40px 56px; }
 }
 

@@ -23,9 +23,18 @@
 <link rel="alternate" hreflang="en" href="https://tigerstone1263.com/en/">
 <link rel="alternate" hreflang="zh-Hans" href="https://tigerstone1263.com/zh/">
 <link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/">
-<script>document.documentElement.classList.add('js')</script>
+<script id="os-detect">
+// <html> 에 js(스크롤 등장 등 JS 전용 스타일)와 기기 클래스(os-ios / os-android)를 단다 — 스토어 버튼 순서·강조에 쓴다
+(function (h) {
+  h.classList.add('js');
+  var ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) h.classList.add('os-ios');
+  else if (/Android/.test(ua)) h.classList.add('os-android');
+})(document.documentElement);
+</script>
 <script src="/assets/js/lang.js"></script>
 <script src="/assets/js/reveal.js" defer></script>
+<script src="/assets/js/eartest.js" defer></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
@@ -59,9 +68,9 @@
 <main>
   <section id="hero" class="hero wrap">
     <div class="hero-copy">
-      <h1><span class="nw">청음부터</span> <span class="nw">악보·리듬·작곡까지,</span><br><span class="nw">음감 훈련을</span> <span class="nw">앱 하나로</span></h1>
-      <p class="hero-sub">절대음감·상대음감 훈련을 스테이지 게임처럼. 여우 소리와 함께 매일 조금씩 귀를 키워요.</p>
-      <div class="store-btns"><a class="store-btn" href="https://apps.apple.com/app/id6739764701" aria-label="App Store에서 다운로드">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero" aria-label="Google Play에서 다운로드">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+      <h1><span class="nw">청음부터</span> <span class="nw">작곡까지,</span><br><span class="nw">음감 훈련을</span> <span class="nw">앱 하나로</span></h1>
+      <p class="hero-sub">절대음감·상대음감부터 악보 읽기, 리듬, 시창까지. 여우 소리와 함께 스테이지 게임처럼 매일 조금씩 훈련해요.</p>
+      <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="App Store에서 다운로드">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero" aria-label="Google Play에서 다운로드">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
       <p class="store-note">Android · iOS에서 만나요</p>
       <p class="hero-links"><a href="#features">둘러보기 <span aria-hidden="true">↓</span></a><a href="#sori">소리 만나기 <span aria-hidden="true">↓</span></a></p>
     </div>
@@ -72,6 +81,38 @@
       <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 210px, (min-width: 768px) 180px, 40vw" alt="" width="720" height="1520" fetchpriority="low">
       <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 260px, (min-width: 768px) 230px, 50vw" alt="Absolute Ear 앱 홈 화면" width="720" height="1520" fetchpriority="high">
       <p class="float-card"><img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">여우 소리와 매일 조금씩</p>
+    </div>
+  </section>
+
+  <section id="try" class="try" data-q="문제 {n} / 3" data-correct="정답이에요!" data-wrong="아쉬워요. 정답은 {a}였어요." data-result="3문제 중 {k}문제를 맞혔어요." data-perfect="3문제를 모두 맞혔어요. 완벽해요!" data-keep="처음엔 누구나 헷갈려요. 앱에서 천천히 익혀 봐요." data-play="▶ 듣기" data-replay="↻ 다시 듣기" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
+    <div class="wrap try-inner">
+      <div class="section-head reveal">
+        <p class="eyebrow">직접 들어 보세요</p>
+        <h2>지금 귀를 시험해 볼까요?</h2>
+        <p class="lead">두 음을 차례로 듣고 어떤 음정인지 골라 보세요. 앱의 음정 문제를 세 문제만 맛볼 수 있어요.</p>
+        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>소리가 나요. 음량을 확인해 주세요.</p>
+      </div>
+      <div class="try-card reveal">
+        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="400" height="300" loading="lazy"></div>
+        <div class="try-live">
+          <p class="try-progress"></p>
+          <button type="button" class="try-play">▶ 듣기</button>
+          <div class="try-options">
+            <button type="button" data-iv="m3" disabled>장3도</button>
+            <button type="button" data-iv="p4" disabled>완전4도</button>
+            <button type="button" data-iv="p5" disabled>완전5도</button>
+          </div>
+          <p class="try-feedback" aria-live="polite"></p>
+          <button type="button" class="try-next" hidden>다음 문제 →</button>
+          <div class="try-done" hidden>
+            <p class="try-done-text"></p>
+            <p class="try-more">앱에서는 이런 문제를 스테이지마다 이어서 훈련해요.</p>
+            <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="App Store에서 다운로드">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dtry" aria-label="Google Play에서 다운로드">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+            <button type="button" class="try-retry">↻ 다시 하기</button>
+          </div>
+        </div>
+        <noscript><p class="try-nojs">체험은 JavaScript가 켜진 브라우저에서 동작해요.</p></noscript>
+      </div>
     </div>
   </section>
 
@@ -126,12 +167,12 @@
           <p class="sori-desc">소리는 맞히면 함께 기뻐하고, 틀리면 다독여 주는 Absolute Ear의 여우예요. 홈에서 고른 카테고리에 따라 동작도 달라져요.</p>
           <p class="poses-label">카테고리마다 다른 동작</p>
           <ul class="poses">
-          <li class="pose c-interval"><img src="/assets/img/poses/sori-interval.webp" alt="" width="400" height="300" loading="lazy"><span>음정</span></li>
-          <li class="pose c-scale"><img src="/assets/img/poses/sori-scale.webp" alt="" width="400" height="300" loading="lazy"><span>스케일</span></li>
-          <li class="pose c-chord"><img src="/assets/img/poses/sori-chord.webp" alt="" width="400" height="300" loading="lazy"><span>화음</span></li>
-          <li class="pose c-melody"><img src="/assets/img/poses/sori-melody.webp" alt="" width="400" height="300" loading="lazy"><span>선율</span></li>
-          <li class="pose c-prog"><img src="/assets/img/poses/sori-prog.webp" alt="" width="400" height="300" loading="lazy"><span>화음 진행</span></li>
-          <li class="pose c-rhythm"><img src="/assets/img/poses/sori-rhythm.webp" alt="" width="400" height="300" loading="lazy"><span>리듬</span></li>
+          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4" type="video/mp4"></video><span>음정</span></li>
+          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4" type="video/mp4"></video><span>스케일</span></li>
+          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4" type="video/mp4"></video><span>화음</span></li>
+          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4" type="video/mp4"></video><span>선율</span></li>
+          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4" type="video/mp4"></video><span>화음 진행</span></li>
+          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4" type="video/mp4"></video><span>리듬</span></li>
           </ul>
         </div>
       </div>
@@ -172,9 +213,10 @@
   <section id="cta" class="wrap">
     <div class="cta-card reveal">
       <img class="cta-sori" src="/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy">
-      <h2><span class="nw">청음부터</span> <span class="nw">악보·리듬·작곡까지,</span><br><span class="nw">음감 훈련을</span> <span class="nw">앱 하나로</span></h2>
-      <div class="store-btns"><a class="store-btn" href="https://apps.apple.com/app/id6739764701" aria-label="App Store에서 다운로드">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta" aria-label="Google Play에서 다운로드">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+      <h2><span class="nw">청음부터</span> <span class="nw">작곡까지,</span><br><span class="nw">음감 훈련을</span> <span class="nw">앱 하나로</span></h2>
+      <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="App Store에서 다운로드">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta" aria-label="Google Play에서 다운로드">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
       <p class="store-note">Android · iOS에서 만나요</p>
+      <div class="cta-qr"><img src="/assets/img/qr-get.svg" alt="" width="112" height="112" loading="lazy"><p>휴대폰 카메라로 찍으면 바로 받을 수 있어요</p></div>
     </div>
   </section>
 </main>

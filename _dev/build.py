@@ -31,11 +31,11 @@ def play_url(zone):
 def badges(lang, s, zone):
     """스토어 버튼: 공식 배지 대신 흑백 텍스트 버튼(로고 없음 — 상표 지침상 로고는 공식 배지에서만 쓴다)."""
     apple = (
-        f'<a class="store-btn" href="{app_store_url(zone)}" aria-label="{s["badge_apple_alt"]}">'
+        f'<a class="store-btn store-btn--apple" href="{app_store_url(zone)}" aria-label="{s["badge_apple_alt"]}">'
         f'App Store<span class="arrow" aria-hidden="true">↗</span></a>'
     )
     play = (
-        f'<a class="store-btn" href="{play_url(zone)}" aria-label="{s["badge_play_alt"]}">'
+        f'<a class="store-btn store-btn--play" href="{play_url(zone)}" aria-label="{s["badge_play_alt"]}">'
         f'Google Play<span class="arrow" aria-hidden="true">↗</span></a>'
     )
     return apple + play  # 모든 언어 App Store 먼저 (zh 는 spec 상 필수)
@@ -54,6 +54,7 @@ def computed(lang, s):
         "lang": lang,
         "badges_hero": badges(lang, s, "hero"),
         "badges_cta": badges(lang, s, "footer-cta"),
+        "badges_try": badges(lang, s, "try"),
         "url": SITE + "/" + ("" if lang == "ko" else f"{lang}/"),
         "site": SITE,
         "lang_banner": LANG_BANNER if lang == "ko" else "",

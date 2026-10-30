@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Absolute Ear 받기 · Get the app</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<script>
+// 홈페이지 QR 이 여는 페이지: 기기에 맞는 스토어로 바로 보낸다. 판별이 안 되면 두 버튼을 보여 준다.
+(function () {
+  var ua = navigator.userAgent || '';
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (ios) location.replace('https://apps.apple.com/app/id6739764701');
+  else if (/Android/.test(ua)) location.replace('https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dqr');
+})();
+</script>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #fafafa; color: #191919;
+         font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; text-align: center; }
+  img { border-radius: 14px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 16px 0 24px; letter-spacing: -0.02em; }
+  .btn { display: block; margin: 10px auto; width: 220px; padding: 14px 0; border-radius: 12px; background: #222; color: #fff; text-decoration: none; font-weight: 700; }
+  .home { color: #6b6b6b; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <img src="/apple-touch-icon.png" alt="" width="72" height="72">
+  <h1>Absolute Ear</h1>
+  <a class="btn" href="https://apps.apple.com/app/id6739764701">App Store ↗</a>
+  <a class="btn" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&amp;referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dqr">Google Play ↗</a>
+  <p><a class="home" href="/">tigerstone1263.com</a></p>
+</main>
+</body>
+</html>

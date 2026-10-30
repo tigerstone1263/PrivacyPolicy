@@ -1,6 +1,7 @@
 """홈페이지 정적 검사. 통과하면 OK, 실패하면 이유를 출력하고 exit 1."""
 import hashlib
 import json
+import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -126,7 +127,7 @@ def check_page(lang, rel):
     return p
 
 
-SECTIONS = ["hero", "features", "sori", "audience", "faq", "cta", "footer"]
+SECTIONS = ["hero", "try", "features", "sori", "audience", "faq", "cta", "footer"]
 
 
 def check_sections(lang, html):
@@ -227,14 +228,31 @@ def check_design(lang, p, html):
         fail(f"[{lang}] aria-label 있는 상단 내비(.topnav) 없음")
     if not any(t == "a" and a.get("href") == "#cta" and "nav-cta" in (a.get("class") or "") for t, a in p.attrs_all):
         fail(f"[{lang}] 내비 다운로드 버튼(#cta) 없음")
-    # 소리 소개: 앱의 실제 카테고리별 동작 6개 (Rive 렌더 프레임)
-    poses = [a for t, a in p.attrs_all if t == "img" and (a.get("src") or "").startswith("/assets/img/poses/")]
+    # 소리 소개: 앱의 실제 카테고리별 동작 6개 — 정지 프레임(poster) + 반복 영상(mp4)
+    vids = [a for t, a in p.attrs_all if t == "video" and "pose-video" in (a.get("class") or "")]
     want = [f"/assets/img/poses/sori-{c[2:]}.webp" for c in CHIP_CLASSES]
-    if [a.get("src") for a in poses] != want:
-        fail(f"[{lang}] 소리 동작 이미지 순서 불일치: {[a.get('src') for a in poses]}")
-    for a in poses:
-        if not (ROOT / a["src"].lstrip("/")).exists():
-            fail(f"[{lang}] 동작 이미지 파일 없음: {a['src']}")
+    if [a.get("poster") for a in vids] != want:
+        fail(f"[{lang}] 소리 동작 영상 순서 불일치: {[a.get('poster') for a in vids]}")
+    for a in vids:
+        for key in ("muted", "loop", "playsinline"):
+            if key not in a:
+                fail(f"[{lang}] 동작 영상에 {key} 없음: {a.get('poster')}")
+        if a.get("preload") != "none":
+            fail(f"[{lang}] 동작 영상은 preload=none 이어야 함")
+        mp4 = ROOT / a.get("poster", "").lstrip("/").replace(".webp", ".mp4")
+        if not mp4.exists() or mp4.stat().st_size > 250_000:
+            fail(f"[{lang}] 동작 영상 없음 또는 250KB 초과: {mp4.name}")
+    # 청음 맛보기: 앱과 같은 세 음정 보기, 결과 안내는 스크린리더에 읽힘
+    ivs = [a.get("data-iv") for t, a in p.attrs_all if t == "button" and a.get("data-iv")]
+    if ivs != ["m3", "p4", "p5"]:
+        fail(f"[{lang}] 청음 맛보기 보기 버튼 불일치: {ivs}")
+    if not any(a.get("aria-live") == "polite" and "try-feedback" in (a.get("class") or "") for t, a in p.attrs_all):
+        fail(f"[{lang}] 청음 맛보기 결과에 aria-live 없음")
+    if not any(t == "script" and a.get("src") == "/assets/js/eartest.js" and "defer" in a for t, a in p.attrs_all):
+        fail(f"[{lang}] eartest.js(defer) 없음")
+    # 데스크톱 QR → /get/ (기기에 맞는 스토어로 이동)
+    if not any(t == "img" and a.get("src") == "/assets/img/qr-get.svg" for t, a in p.attrs_all):
+        fail(f"[{lang}] 설치 QR 없음")
     if not any(t == "script" and a.get("src") == "/assets/js/reveal.js" and "defer" in a for t, a in p.attrs_all):
         fail(f"[{lang}] reveal.js(defer) 없음")
     # 첫 화면 폰 두 장은 표시 크기(≤270px)에 맞는 작은 이미지를 srcset 으로, 앞 폰은 우선 로드
@@ -254,7 +272,7 @@ def check_design(lang, p, html):
     cards = re.findall(r'<article class="fcard', html)
     if len(cards) != 4:
         fail(f"[{lang}] 기능 카드 {len(cards)}개 (4개여야 함)")
-    for sec in ("audience", "features", "sori", "faq"):
+    for sec in ("try", "audience", "features", "sori", "faq"):
         m = re.search(rf'<section id="{sec}".*?</h2>', html, re.S)
         if not m or 'class="eyebrow"' not in m.group(0):
             fail(f"[{lang}] {sec} 구역 제목 위에 eyebrow 없음")
@@ -351,6 +369,30 @@ def check_build_rejects_missing_key():
             fail("문구 키가 빠져도 빌드가 성공함")
 
 
+def check_get_page():
+    f = ROOT / "get" / "index.html"
+    if not f.exists():
+        fail("get/index.html 없음")
+        return
+    html = f.read_text(encoding="utf-8")
+    for need in ("apps.apple.com/app/id6739764701", "id=com.tigerstone.AbsoluteEar", 'name="robots" content="noindex"'):
+        if need not in html:
+            fail(f"get/index.html 에 {need} 없음")
+    if re.search(r'<script[^>]+src=', html):
+        fail("get/index.html 에 외부 스크립트")
+    qr = ROOT / "assets" / "img" / "qr-get.svg"
+    if not qr.exists() or "<svg" not in qr.read_text(encoding="utf-8"):
+        fail("assets/img/qr-get.svg 없음")
+
+
+def check_node_tests():
+    import subprocess
+    for t in ("test_eartest.js", "test_os.js"):
+        r = subprocess.run(["node", str(DEV / t)], capture_output=True, text=True)
+        if r.returncode != 0:
+            fail((r.stdout.strip() or r.stderr.strip().splitlines()[-1]) + f" ({t})")
+
+
 def check_lang_js():
     import subprocess
     r = subprocess.run(["node", str(DEV / "test_lang.js")], capture_output=True, text=True)
@@ -420,6 +462,8 @@ def main():
     check_policy_files()
     check_build_requires_all_langs()
     check_lang_js()
+    check_node_tests()
+    check_get_page()
     check_string_keys()
     check_zh_spacing()
     check_build_rejects_missing_key()

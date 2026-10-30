@@ -23,9 +23,18 @@
 <link rel="alternate" hreflang="en" href="https://tigerstone1263.com/en/">
 <link rel="alternate" hreflang="zh-Hans" href="https://tigerstone1263.com/zh/">
 <link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/">
-<script>document.documentElement.classList.add('js')</script>
+<script id="os-detect">
+// <html> 에 js(스크롤 등장 등 JS 전용 스타일)와 기기 클래스(os-ios / os-android)를 단다 — 스토어 버튼 순서·강조에 쓴다
+(function (h) {
+  h.classList.add('js');
+  var ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) h.classList.add('os-ios');
+  else if (/Android/.test(ua)) h.classList.add('os-android');
+})(document.documentElement);
+</script>
 <script src="/assets/js/lang.js"></script>
 <script src="/assets/js/reveal.js" defer></script>
+<script src="/assets/js/eartest.js" defer></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
@@ -68,6 +77,38 @@
       <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 210px, (min-width: 768px) 180px, 40vw" alt="" width="720" height="1520" fetchpriority="low">
       <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 260px, (min-width: 768px) 230px, 50vw" alt="{{hero_phone_alt}}" width="720" height="1520" fetchpriority="high">
       <p class="float-card"><img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">{{float_card}}</p>
+    </div>
+  </section>
+
+  <section id="try" class="try" data-q="{{try_q}}" data-correct="{{try_correct}}" data-wrong="{{try_wrong}}" data-result="{{try_result}}" data-perfect="{{try_perfect}}" data-keep="{{try_keep}}" data-play="▶ {{try_play}}" data-replay="↻ {{try_replay}}" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
+    <div class="wrap try-inner">
+      <div class="section-head reveal">
+        <p class="eyebrow">{{try_eyebrow}}</p>
+        <h2>{{try_title}}</h2>
+        <p class="lead">{{try_desc}}</p>
+        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>{{try_note}}</p>
+      </div>
+      <div class="try-card reveal">
+        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="400" height="300" loading="lazy"></div>
+        <div class="try-live">
+          <p class="try-progress"></p>
+          <button type="button" class="try-play">▶ {{try_play}}</button>
+          <div class="try-options">
+            <button type="button" data-iv="m3" disabled>{{iv_m3}}</button>
+            <button type="button" data-iv="p4" disabled>{{iv_p4}}</button>
+            <button type="button" data-iv="p5" disabled>{{iv_p5}}</button>
+          </div>
+          <p class="try-feedback" aria-live="polite"></p>
+          <button type="button" class="try-next" hidden>{{try_next}} →</button>
+          <div class="try-done" hidden>
+            <p class="try-done-text"></p>
+            <p class="try-more">{{try_more}}</p>
+            <div class="store-btns">{{@badges_try}}</div>
+            <button type="button" class="try-retry">↻ {{try_retry}}</button>
+          </div>
+        </div>
+        <noscript><p class="try-nojs">{{try_nojs}}</p></noscript>
+      </div>
     </div>
   </section>
 
@@ -122,12 +163,12 @@
           <p class="sori-desc">{{sori_desc}}</p>
           <p class="poses-label">{{sori_poses}}</p>
           <ul class="poses">
-          <li class="pose c-interval"><img src="/assets/img/poses/sori-interval.webp" alt="" width="400" height="300" loading="lazy"><span>{{chip_interval}}</span></li>
-          <li class="pose c-scale"><img src="/assets/img/poses/sori-scale.webp" alt="" width="400" height="300" loading="lazy"><span>{{chip_scale}}</span></li>
-          <li class="pose c-chord"><img src="/assets/img/poses/sori-chord.webp" alt="" width="400" height="300" loading="lazy"><span>{{chip_chord}}</span></li>
-          <li class="pose c-melody"><img src="/assets/img/poses/sori-melody.webp" alt="" width="400" height="300" loading="lazy"><span>{{chip_melody}}</span></li>
-          <li class="pose c-prog"><img src="/assets/img/poses/sori-prog.webp" alt="" width="400" height="300" loading="lazy"><span>{{chip_prog}}</span></li>
-          <li class="pose c-rhythm"><img src="/assets/img/poses/sori-rhythm.webp" alt="" width="400" height="300" loading="lazy"><span>{{chip_rhythm}}</span></li>
+          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4" type="video/mp4"></video><span>{{chip_interval}}</span></li>
+          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4" type="video/mp4"></video><span>{{chip_scale}}</span></li>
+          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4" type="video/mp4"></video><span>{{chip_chord}}</span></li>
+          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4" type="video/mp4"></video><span>{{chip_melody}}</span></li>
+          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4" type="video/mp4"></video><span>{{chip_prog}}</span></li>
+          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4" type="video/mp4"></video><span>{{chip_rhythm}}</span></li>
           </ul>
         </div>
       </div>
@@ -171,6 +212,7 @@
       <h2>{{hero_title}}</h2>
       <div class="store-btns">{{@badges_cta}}</div>
       <p class="store-note">{{hero_note}}</p>
+      <div class="cta-qr"><img src="/assets/img/qr-get.svg" alt="" width="112" height="112" loading="lazy"><p>{{cta_qr}}</p></div>
     </div>
   </section>
 </main>
