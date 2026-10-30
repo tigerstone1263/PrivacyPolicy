@@ -34,11 +34,13 @@
 <body>
 
 
-<header class="canvas">
+<header class="top">
   <nav class="topnav" aria-label="Main">
     <div class="wrap topnav-inner">
-      <a class="brand" href="#hero"><img src="/assets/img/app-icon.png" alt="" width="32" height="32">Absolute Ear</a>
+      <a class="brand" href="#hero"><img src="/assets/img/app-icon.png" alt="" width="30" height="30">Absolute Ear</a>
       <div class="topnav-right">
+        <a class="nav-link" href="#features">Explore</a>
+        <a class="nav-link" href="#faq">FAQ</a>
         <span class="nav-langs">
           <a href="/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" >KO</a>
           <a href="/en/" hreflang="en" lang="en" data-lang="en" aria-current="true">EN</a>
@@ -48,101 +50,127 @@
       </div>
     </div>
   </nav>
+</header>
+
+<main>
   <section id="hero" class="hero wrap">
     <div class="hero-copy">
       <h1><span class="nw">Ear training,</span> <span class="nw">reading music,</span> <span class="nw">rhythm &</span> <span class="nw">composing —</span><br><span class="nw">all in one app</span></h1>
       <p class="hero-sub">Absolute and relative pitch training, played like a stage game. Grow your ear a little every day with Sori the fox.</p>
-      <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701"><img src="/assets/badges/appstore-en.svg" alt="Download on the App Store" width="144" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero"><img src="/assets/badges/play-en.png" alt="Get it on Google Play" width="161" height="48"></a></div>
-      <p class="hero-note">Free to start · iOS & Android</p>
+      <div class="store-btns"><a class="store-btn" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero" aria-label="Get it on Google Play">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+      <p class="store-note">Available on Android & iOS</p>
+      <p class="hero-links"><a href="#features">Explore <span aria-hidden="true">↓</span></a><a href="#sori">Meet Sori <span aria-hidden="true">↓</span></a></p>
     </div>
     <div class="hero-visual">
-      <span class="glow glow-a" aria-hidden="true"></span><span class="glow glow-b" aria-hidden="true"></span><span class="glow glow-c" aria-hidden="true"></span>
-      <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 225px, (min-width: 768px) 200px, 44vw" alt="" width="720" height="1520" fetchpriority="low">
-      <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 270px, (min-width: 768px) 240px, 52vw" alt="Absolute Ear home screen" width="720" height="1520" fetchpriority="high">
-      <span class="sori-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♩</i></span>
-      <img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">
+      <span class="blob" aria-hidden="true"></span>
+      <svg class="spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.8 2.6 7.4 8 8-5.4.6-7.4 3.2-8 8-.6-4.8-2.6-7.4-8-8 5.4-.6 7.4-3.2 8-8z"/></svg>
+      <svg class="spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.8 2.6 7.4 8 8-5.4.6-7.4 3.2-8 8-.6-4.8-2.6-7.4-8-8 5.4-.6 7.4-3.2 8-8z"/></svg>
+      <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 210px, (min-width: 768px) 180px, 40vw" alt="" width="720" height="1520" fetchpriority="low">
+      <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 260px, (min-width: 768px) 230px, 50vw" alt="Absolute Ear home screen" width="720" height="1520" fetchpriority="high">
+      <p class="float-card"><img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">A little every day with Sori</p>
     </div>
   </section>
-</header>
 
-<main class="sheet">
+  <section id="features" class="band">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Absolute Ear</p>
+        <h2>From listening to creating, in one app</h2>
+      </div>
+      <div class="fcards">
+      <article class="fcard reveal">
+        <p class="fcard-num">01 · Ear training</p>
+        <h3>Train absolute and relative pitch</h3>
+        <p class="fcard-desc">A short placement test finds where you should start</p>
+        <div class="fcard-shot"><img src="/assets/img/feat-ear.webp" alt="Ear training question screen" width="720" height="1520" loading="lazy"></div>
+      </article>
+      <article class="fcard reveal">
+        <p class="fcard-num">02 · Reading & rhythm</p>
+        <h3>Reading music, from the basics</h3>
+        <p class="fcard-desc">From reading the staff to tapping along in rhythm</p>
+        <div class="fcard-shot"><img src="/assets/img/feat-staff.webp" alt="Reading music screen" width="720" height="1520" loading="lazy"></div>
+      </article>
+      <article class="fcard reveal">
+        <p class="fcard-num">03 · Singing & creating</p>
+        <h3>Sing, loop, and make your own</h3>
+        <p class="fcard-desc">Sight-singing with a mic pitch check, plus repeat-listening albums</p>
+        <div class="fcard-shot"><img src="/assets/img/feat-create.webp" alt="Sight-singing practice screen" width="720" height="1520" loading="lazy"></div>
+      </article>
+      <article class="fcard reveal">
+        <p class="fcard-num">04 · Sori the fox</p>
+        <h3>Like a game, a little every day</h3>
+        <p class="fcard-desc">A stage map, hearts and a Weekly League keep you going</p>
+        <div class="fcard-shot"><img src="/assets/img/game-map.webp" alt="Stage progress map screen" width="720" height="1520" loading="lazy"></div>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="sori" class="sori">
+    <svg class="staff-line" viewBox="0 0 1200 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8H1200M0 18H1200M0 28H1200M0 38H1200M0 48H1200"/></svg>
+    <span class="star s1" aria-hidden="true">✦</span><span class="star s2" aria-hidden="true">✦</span><span class="star s3" aria-hidden="true">✦</span><span class="star s4" aria-hidden="true">✦</span>
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <p class="eyebrow">♪ Your practice buddy ♪</p>
+        <h2>Meet Sori</h2>
+      </div>
+      <div class="sori-card reveal">
+        <div class="sori-portrait"><img src="/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy"></div>
+        <div class="sori-info">
+          <h3>Sori the fox</h3>
+          <span class="name-bar" aria-hidden="true"></span>
+          <p class="sori-desc">Sori is the Absolute Ear fox who cheers when you get it right and comforts you when you miss. Sori's moves change with the category you pick on the home screen.</p>
+          <p class="poses-label">A move for every category</p>
+          <ul class="poses">
+          <li class="pose c-interval"><img src="/assets/img/poses/sori-interval.webp" alt="" width="400" height="300" loading="lazy"><span>Interval</span></li>
+          <li class="pose c-scale"><img src="/assets/img/poses/sori-scale.webp" alt="" width="400" height="300" loading="lazy"><span>Scale</span></li>
+          <li class="pose c-chord"><img src="/assets/img/poses/sori-chord.webp" alt="" width="400" height="300" loading="lazy"><span>Chord</span></li>
+          <li class="pose c-melody"><img src="/assets/img/poses/sori-melody.webp" alt="" width="400" height="300" loading="lazy"><span>Melody</span></li>
+          <li class="pose c-prog"><img src="/assets/img/poses/sori-prog.webp" alt="" width="400" height="300" loading="lazy"><span>Chord Prog.</span></li>
+          <li class="pose c-rhythm"><img src="/assets/img/poses/sori-rhythm.webp" alt="" width="400" height="300" loading="lazy"><span>Rhythm</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="audience" class="wrap">
     <div class="section-head reveal">
       <p class="eyebrow">Audience</p>
       <h2>Who it's for</h2>
     </div>
-    <div class="cards">
-      <article class="card c-interval reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span><h3>Music students & exam takers</h3><p>Build up intervals, chords, melodies and chord progressions — the core of ear-training exams — stage by stage.</p></article>
-      <article class="card c-prog reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><h3>Hobby players & singers</h3><p>Lock in your pitch with sight-singing practice and loop the progressions you love.</p></article>
-      <article class="card c-melody reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><h3>Kids & parents</h3><p>Short stage games with Sori the fox make it easy to keep going a little every day.</p></article>
+    <div class="aud reveal">
+      <article><p class="aud-num">01</p><h3>Music students & exam takers</h3><p>Build up intervals, chords, melodies and chord progressions — the core of ear-training exams — stage by stage.</p></article>
+      <article><p class="aud-num">02</p><h3>Hobby players & singers</h3><p>Lock in your pitch with sight-singing practice and loop the progressions you love.</p></article>
+      <article><p class="aud-num">03</p><h3>Kids & parents</h3><p>Short stage games with Sori the fox make it easy to keep going a little every day.</p></article>
     </div>
   </section>
 
-  <section id="features" class="wrap">
-    <div class="section-head reveal">
-      <p class="eyebrow">Features</p>
-      <h2>From listening to creating, in one app</h2>
-    </div>
-    <div class="feature reveal">
-      <div class="shot-panel c-interval"><img class="shot" src="/assets/img/feat-ear.webp" alt="Ear training question screen" width="720" height="1520" loading="lazy"></div>
-      <div class="feature-copy c-interval"><p class="tag">Ear training</p><h3>Train absolute and relative pitch</h3><p>Absolute pitch: name a note with no reference. Relative pitch: hear notes by their distance from each other. A short placement test finds the right starting point for you.</p>
-        <ul class="chips"><li class="chip c-interval">Interval</li><li class="chip c-scale">Scale</li><li class="chip c-chord">Chord</li><li class="chip c-melody">Melody</li><li class="chip c-prog">Chord Prog.</li><li class="chip c-rhythm">Rhythm</li></ul></div>
-    </div>
-    <div class="feature reverse reveal">
-      <div class="shot-panel c-scale"><img class="shot" src="/assets/img/feat-staff.webp" alt="Reading music screen" width="720" height="1520" loading="lazy"></div>
-      <div class="feature-copy c-scale"><p class="tag">Reading & rhythm</p><h3>Reading music, from the basics</h3><p>A Reading Music Basics course that starts with naming notes on the staff, plus rhythm training where you tap along to what you hear.</p></div>
-    </div>
-    <div class="feature reveal">
-      <div class="shot-panel c-prog"><img class="shot" src="/assets/img/feat-create.webp" alt="Sight-singing practice screen" width="720" height="1520" loading="lazy"></div>
-      <div class="feature-copy c-prog"><p class="tag">Singing & creating</p><h3>Sing, loop, and make your own</h3><p>Sight-singing practice that checks your pitch through the mic, albums for repeat listening to intervals, scales and chord progressions, and the Music tab for writing your own.</p></div>
-    </div>
-  </section>
-
-  <section id="game" class="game">
-    <div class="wrap game-inner">
-      <div class="game-visual reveal">
-        <span class="glow glow-a" aria-hidden="true"></span><span class="glow glow-b" aria-hidden="true"></span>
-        <img class="shot" src="/assets/img/game-map.webp" alt="Stage progress map screen" width="720" height="1520" loading="lazy">
+  <section id="faq" class="band">
+    <div class="wrap faq">
+      <div class="faq-head section-head reveal">
+        <p class="eyebrow">Questions</p>
+        <h2>FAQ</h2>
+        <p class="lead">Still curious? Drop us an email anytime.</p>
+        <a class="faq-mail" href="mailto:tigerstone1263@gmail.com">Email us ↗</a>
       </div>
-      <div class="game-copy">
-        <div class="section-head reveal">
-          <p class="eyebrow">Why you'll keep going</p>
-          <h2>Like a game, a little every day</h2>
-        </div>
-        <ul class="points">
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg></span><strong>Stage map</strong> Open the map one stage at a time and see how far you have come at a glance.</li>
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.5" cy="9.5" r="1.6"/><circle cx="10.5" cy="6" r="1.6"/><circle cx="14.5" cy="6" r="1.6"/><circle cx="18" cy="9.5" r="1.6"/><path d="M12 11.5c-3 0-5.5 3.3-5.5 5.8 0 1.6 1.3 2.5 3 2.2 1-.2 1.6-.6 2.5-.6s1.5.4 2.5.6c1.7.3 3-.6 3-2.2 0-2.5-2.5-5.8-5.5-5.8z"/></svg></span><strong>Sori the fox</strong> Your mascot cheers when you get it right and comforts you when you miss.</li>
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><strong>Hearts</strong> Wrong answers cost a heart, so every question gets your full attention.</li>
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 20h8"/></svg></span><strong>Weekly League & friends</strong> Compete in the Weekly League with the XP you earn, and compare XP and trophies with friends.</li>
-        </ul>
+      <div class="faq-list reveal">
+        <details><summary>Is it free?</summary><p>Yes. Every training mode is free to start. When you run out of hearts, watch an ad or wait a bit for them to refill — or subscribe to Infinite Note for unlimited hearts and no ads.</p></details>
+        <details><summary>Can I start with no music background?</summary><p>Yes. A short placement test sets your starting point, and reading music starts from a basics course.</p></details>
+        <details><summary>What is the difference between absolute and relative pitch training?</summary><p>Absolute pitch training means naming a note you hear without any reference. Relative pitch training means recognizing notes by their relationship (interval) to a reference note. You can work on each separately in the app.</p></details>
+        <details><summary>Will I lose my progress if I switch phones?</summary><p>Link an account in the app and you can sign in on your new device to pick up where you left off.</p></details>
+        <details><summary>How do I cancel my subscription?</summary><p>Cancel any time from subscription management in the App Store or Google Play. You can also get there from the Shop screen in the app.</p></details>
+        <details><summary>How do I contact you?</summary><p>Email us at <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>.</p></details>
       </div>
-    </div>
-  </section>
-
-  <section id="faq" class="wrap faq">
-    <div class="faq-head section-head reveal">
-      <p class="eyebrow">Questions</p>
-      <h2>FAQ</h2>
-      <p class="lead">Still curious? Drop us an email anytime.</p>
-      <a class="faq-mail" href="mailto:tigerstone1263@gmail.com">Email us →</a>
-    </div>
-    <div class="faq-list reveal">
-      <details><summary>Is it free?</summary><p>Yes. Every training mode is free to start. When you run out of hearts, watch an ad or wait a bit for them to refill — or subscribe to Infinite Note for unlimited hearts and no ads.</p></details>
-      <details><summary>Can I start with no music background?</summary><p>Yes. A short placement test sets your starting point, and reading music starts from a basics course.</p></details>
-      <details><summary>What is the difference between absolute and relative pitch training?</summary><p>Absolute pitch training means naming a note you hear without any reference. Relative pitch training means recognizing notes by their relationship (interval) to a reference note. You can work on each separately in the app.</p></details>
-      <details><summary>Will I lose my progress if I switch phones?</summary><p>Link an account in the app and you can sign in on your new device to pick up where you left off.</p></details>
-      <details><summary>How do I cancel my subscription?</summary><p>Cancel any time from subscription management in the App Store or Google Play. You can also get there from the Shop screen in the app.</p></details>
-      <details><summary>How do I contact you?</summary><p>Email us at <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>.</p></details>
     </div>
   </section>
 
   <section id="cta" class="wrap">
     <div class="cta-card reveal">
-      <span class="sori-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♩</i></span>
       <img class="cta-sori" src="/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy">
       <h2><span class="nw">Ear training,</span> <span class="nw">reading music,</span> <span class="nw">rhythm &</span> <span class="nw">composing —</span><br><span class="nw">all in one app</span></h2>
-      <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701"><img src="/assets/badges/appstore-en.svg" alt="Download on the App Store" width="144" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta"><img src="/assets/badges/play-en.png" alt="Get it on Google Play" width="161" height="48"></a></div>
+      <div class="store-btns"><a class="store-btn" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta" aria-label="Get it on Google Play">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+      <p class="store-note">Available on Android & iOS</p>
     </div>
   </section>
 </main>

@@ -34,11 +34,13 @@
 <body>
 
 
-<header class="canvas">
+<header class="top">
   <nav class="topnav" aria-label="主菜单">
     <div class="wrap topnav-inner">
-      <a class="brand" href="#hero"><img src="/assets/img/app-icon.png" alt="" width="32" height="32">Absolute Ear</a>
+      <a class="brand" href="#hero"><img src="/assets/img/app-icon.png" alt="" width="30" height="30">Absolute Ear</a>
       <div class="topnav-right">
+        <a class="nav-link" href="#features">浏览功能</a>
+        <a class="nav-link" href="#faq">常见问题</a>
         <span class="nav-langs">
           <a href="/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" >KO</a>
           <a href="/en/" hreflang="en" lang="en" data-lang="en" >EN</a>
@@ -48,101 +50,127 @@
       </div>
     </div>
   </nav>
-  <section id="hero" class="hero wrap">
-    <div class="hero-copy">
-      <h1><span class="nw">从听音</span><span class="nw">到识谱、</span><span class="nw">节奏、作曲，</span><br><span class="nw">音感训练，</span><span class="nw">一个应用</span><span class="nw">就够了</span></h1>
-      <p class="hero-sub">像闯关游戏一样训练绝对音感与相对音感。和小狐狸小音一起，每天进步一点点。</p>
-      <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701"><img src="/assets/badges/appstore-zh.svg" alt="在 App Store 下载" width="131" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero"><img src="/assets/badges/play-zh.png" alt="在 Google Play 下载" width="162" height="48"></a></div>
-      <p class="hero-note">免费开始 · iOS 与 Android</p>
-    </div>
-    <div class="hero-visual">
-      <span class="glow glow-a" aria-hidden="true"></span><span class="glow glow-b" aria-hidden="true"></span><span class="glow glow-c" aria-hidden="true"></span>
-      <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 225px, (min-width: 768px) 200px, 44vw" alt="" width="720" height="1520" fetchpriority="low">
-      <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 270px, (min-width: 768px) 240px, 52vw" alt="Absolute Ear 应用主页" width="720" height="1520" fetchpriority="high">
-      <span class="sori-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♩</i></span>
-      <img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">
-    </div>
-  </section>
 </header>
 
-<main class="sheet">
+<main>
+  <section id="hero" class="hero wrap">
+    <div class="hero-copy">
+      <h1><span class="nw">从听音</span><span class="nw">到识谱、</span><span class="nw">节奏、作曲，</span><br><span class="nw">音感训练，</span><span class="nw">一个应用就够了</span></h1>
+      <p class="hero-sub">像闯关游戏一样训练绝对音感与相对音感。和小狐狸小音一起，每天进步一点点。</p>
+      <div class="store-btns"><a class="store-btn" href="https://apps.apple.com/app/id6739764701" aria-label="在 App Store 下载">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero" aria-label="在 Google Play 下载">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+      <p class="store-note">支持 Android 与 iOS</p>
+      <p class="hero-links"><a href="#features">浏览功能 <span aria-hidden="true">↓</span></a><a href="#sori">认识小音 <span aria-hidden="true">↓</span></a></p>
+    </div>
+    <div class="hero-visual">
+      <span class="blob" aria-hidden="true"></span>
+      <svg class="spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.8 2.6 7.4 8 8-5.4.6-7.4 3.2-8 8-.6-4.8-2.6-7.4-8-8 5.4-.6 7.4-3.2 8-8z"/></svg>
+      <svg class="spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.8 2.6 7.4 8 8-5.4.6-7.4 3.2-8 8-.6-4.8-2.6-7.4-8-8 5.4-.6 7.4-3.2 8-8z"/></svg>
+      <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 210px, (min-width: 768px) 180px, 40vw" alt="" width="720" height="1520" fetchpriority="low">
+      <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 260px, (min-width: 768px) 230px, 50vw" alt="Absolute Ear 应用主页" width="720" height="1520" fetchpriority="high">
+      <p class="float-card"><img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">和小音每天进步一点点</p>
+    </div>
+  </section>
+
+  <section id="features" class="band">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Absolute Ear</p>
+        <h2>从聆听到创作，一个应用搞定</h2>
+      </div>
+      <div class="fcards">
+      <article class="fcard reveal">
+        <p class="fcard-num">01 · 听音</p>
+        <h3>绝对音感、相对音感，两条路线训练</h3>
+        <p class="fcard-desc">开始时的简短测试帮你找到合适的起点</p>
+        <div class="fcard-shot"><img src="/assets/img/feat-ear.webp" alt="听音练习题画面" width="720" height="1520" loading="lazy"></div>
+      </article>
+      <article class="fcard reveal">
+        <p class="fcard-num">02 · 识谱与节奏</p>
+        <h3>从识谱基础开始，循序渐进</h3>
+        <p class="fcard-desc">从读五线谱到跟着声音点击的节奏训练</p>
+        <div class="fcard-shot"><img src="/assets/img/feat-staff.webp" alt="识谱画面" width="720" height="1520" loading="lazy"></div>
+      </article>
+      <article class="fcard reveal">
+        <p class="fcard-num">03 · 演唱与创作</p>
+        <h3>唱、反复听、亲手创作</h3>
+        <p class="fcard-desc">用麦克风检查音高的视唱，还有反复聆听专辑</p>
+        <div class="fcard-shot"><img src="/assets/img/feat-create.webp" alt="看谱视唱练习画面" width="720" height="1520" loading="lazy"></div>
+      </article>
+      <article class="fcard reveal">
+        <p class="fcard-num">04 · 小狐狸小音</p>
+        <h3>像游戏一样，每天一点点</h3>
+        <p class="fcard-desc">关卡地图、爱心与每周联盟，让你每天坚持</p>
+        <div class="fcard-shot"><img src="/assets/img/game-map.webp" alt="关卡进度地图画面" width="720" height="1520" loading="lazy"></div>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="sori" class="sori">
+    <svg class="staff-line" viewBox="0 0 1200 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 8H1200M0 18H1200M0 28H1200M0 38H1200M0 48H1200"/></svg>
+    <span class="star s1" aria-hidden="true">✦</span><span class="star s2" aria-hidden="true">✦</span><span class="star s3" aria-hidden="true">✦</span><span class="star s4" aria-hidden="true">✦</span>
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <p class="eyebrow">♪ 陪你练习的伙伴 ♪</p>
+        <h2>认识小音</h2>
+      </div>
+      <div class="sori-card reveal">
+        <div class="sori-portrait"><img src="/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy"></div>
+        <div class="sori-info">
+          <h3>小狐狸小音</h3>
+          <span class="name-bar" aria-hidden="true"></span>
+          <p class="sori-desc">小音是 Absolute Ear 的小狐狸，答对时和你一起开心，答错时给你鼓励。在主页选择的类别不同，小音的动作也会不同。</p>
+          <p class="poses-label">每个类别都有专属动作</p>
+          <ul class="poses">
+          <li class="pose c-interval"><img src="/assets/img/poses/sori-interval.webp" alt="" width="400" height="300" loading="lazy"><span>音程</span></li>
+          <li class="pose c-scale"><img src="/assets/img/poses/sori-scale.webp" alt="" width="400" height="300" loading="lazy"><span>音阶</span></li>
+          <li class="pose c-chord"><img src="/assets/img/poses/sori-chord.webp" alt="" width="400" height="300" loading="lazy"><span>和弦</span></li>
+          <li class="pose c-melody"><img src="/assets/img/poses/sori-melody.webp" alt="" width="400" height="300" loading="lazy"><span>旋律</span></li>
+          <li class="pose c-prog"><img src="/assets/img/poses/sori-prog.webp" alt="" width="400" height="300" loading="lazy"><span>和弦进行</span></li>
+          <li class="pose c-rhythm"><img src="/assets/img/poses/sori-rhythm.webp" alt="" width="400" height="300" loading="lazy"><span>节奏</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="audience" class="wrap">
     <div class="section-head reveal">
       <p class="eyebrow">适合人群</p>
       <h2>适合这样的你</h2>
     </div>
-    <div class="cards">
-      <article class="card c-interval reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span><h3>备考与音乐专业学生</h3><p>把视唱练耳考试中的音程、和弦、旋律、和弦进行，按关卡一步步练扎实。</p></article>
-      <article class="card c-prog reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><h3>业余演奏者与歌唱爱好者</h3><p>通过视唱练习找准音高，反复聆听喜欢的和弦进行。</p></article>
-      <article class="card c-melody reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><h3>孩子与家长</h3><p>和小狐狸小音一起玩简短的闯关游戏，每天坚持一点点很轻松。</p></article>
+    <div class="aud reveal">
+      <article><p class="aud-num">01</p><h3>备考与音乐专业学生</h3><p>把视唱练耳考试中的音程、和弦、旋律、和弦进行，按关卡一步步练扎实。</p></article>
+      <article><p class="aud-num">02</p><h3>业余演奏者与歌唱爱好者</h3><p>通过视唱练习找准音高，反复聆听喜欢的和弦进行。</p></article>
+      <article><p class="aud-num">03</p><h3>孩子与家长</h3><p>和小狐狸小音一起玩简短的闯关游戏，每天坚持一点点很轻松。</p></article>
     </div>
   </section>
 
-  <section id="features" class="wrap">
-    <div class="section-head reveal">
-      <p class="eyebrow">主要功能</p>
-      <h2>从聆听到创作，一个应用搞定</h2>
-    </div>
-    <div class="feature reveal">
-      <div class="shot-panel c-interval"><img class="shot" src="/assets/img/feat-ear.webp" alt="听音练习题画面" width="720" height="1520" loading="lazy"></div>
-      <div class="feature-copy c-interval"><p class="tag">听音</p><h3>绝对音感、相对音感，两条路线训练</h3><p>绝对音感：不借助基准音说出音名；相对音感：通过音与音之间的关系来辨认。开始时的简短测试会帮你找到合适的起点。</p>
-        <ul class="chips"><li class="chip c-interval">音程</li><li class="chip c-scale">音阶</li><li class="chip c-chord">和弦</li><li class="chip c-melody">旋律</li><li class="chip c-prog">和弦进行</li><li class="chip c-rhythm">节奏</li></ul></div>
-    </div>
-    <div class="feature reverse reveal">
-      <div class="shot-panel c-scale"><img class="shot" src="/assets/img/feat-staff.webp" alt="识谱画面" width="720" height="1520" loading="lazy"></div>
-      <div class="feature-copy c-scale"><p class="tag">识谱与节奏</p><h3>从识谱基础开始，循序渐进</h3><p>从读出五线谱上的音名开始的识谱课程，加上跟着声音点击屏幕的节奏训练，眼睛和耳朵一起提升。</p></div>
-    </div>
-    <div class="feature reveal">
-      <div class="shot-panel c-prog"><img class="shot" src="/assets/img/feat-create.webp" alt="看谱视唱练习画面" width="720" height="1520" loading="lazy"></div>
-      <div class="feature-copy c-prog"><p class="tag">演唱与创作</p><h3>唱、反复听、亲手创作</h3><p>用麦克风检查自己音高的视唱练习、反复聆听音程、音阶与和弦进行的专辑，还能在音乐模式中创作属于自己的曲子。</p></div>
-    </div>
-  </section>
-
-  <section id="game" class="game">
-    <div class="wrap game-inner">
-      <div class="game-visual reveal">
-        <span class="glow glow-a" aria-hidden="true"></span><span class="glow glow-b" aria-hidden="true"></span>
-        <img class="shot" src="/assets/img/game-map.webp" alt="关卡进度地图画面" width="720" height="1520" loading="lazy">
+  <section id="faq" class="band">
+    <div class="wrap faq">
+      <div class="faq-head section-head reveal">
+        <p class="eyebrow">有疑问？</p>
+        <h2>常见问题</h2>
+        <p class="lead">还有其他问题，欢迎随时发邮件给我们。</p>
+        <a class="faq-mail" href="mailto:tigerstone1263@gmail.com">发送邮件 ↗</a>
       </div>
-      <div class="game-copy">
-        <div class="section-head reveal">
-          <p class="eyebrow">坚持下去的理由</p>
-          <h2>像游戏一样，每天一点点</h2>
-        </div>
-        <ul class="points">
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg></span><strong>关卡地图</strong> 一格一格解锁的进度地图，让你一眼看到自己走了多远。</li>
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6.5" cy="9.5" r="1.6"/><circle cx="10.5" cy="6" r="1.6"/><circle cx="14.5" cy="6" r="1.6"/><circle cx="18" cy="9.5" r="1.6"/><path d="M12 11.5c-3 0-5.5 3.3-5.5 5.8 0 1.6 1.3 2.5 3 2.2 1-.2 1.6-.6 2.5-.6s1.5.4 2.5.6c1.7.3 3-.6 3-2.2 0-2.5-2.5-5.8-5.5-5.8z"/></svg></span><strong>小狐狸小音</strong> 答对时和你一起开心，答错时给你鼓励的吉祥物。</li>
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><strong>爱心</strong> 答错会失去爱心，让你专注于每一道题。</li>
-          <li class="reveal"><span class="icon-wrap"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 20h8"/></svg></span><strong>每周联盟与好友</strong> 用每周积累的经验值争夺联盟排名，还能和好友比一比经验值与奖杯。</li>
-        </ul>
+      <div class="faq-list reveal">
+        <details><summary>可以免费使用吗？</summary><p>可以。所有训练都能免费开始。爱心用完后可以看广告或稍等片刻恢复；订阅无限音符即可享受无限爱心、无广告。</p></details>
+        <details><summary>完全不懂音乐也能开始吗？</summary><p>可以。开始时的简短测试会帮你确定起点，识谱也从基础课程开始。</p></details>
+        <details><summary>绝对音感训练和相对音感训练有什么不同？</summary><p>绝对音感训练是在没有基准音的情况下说出所听到的音名；相对音感训练是通过与基准音的关系（音程）来辨认音。应用中两者可以分别练习。</p></details>
+        <details><summary>换手机后记录会消失吗？</summary><p>在应用中绑定账号后，在新设备上登录即可继续之前的进度。</p></details>
+        <details><summary>如何取消订阅？</summary><p>可随时在 App Store 或 Google Play 的订阅管理中取消，也可以从应用内的商店页面前往订阅管理。</p></details>
+        <details><summary>如何联系你们？</summary><p>请发送邮件至 <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>。</p></details>
       </div>
-    </div>
-  </section>
-
-  <section id="faq" class="wrap faq">
-    <div class="faq-head section-head reveal">
-      <p class="eyebrow">有疑问？</p>
-      <h2>常见问题</h2>
-      <p class="lead">还有其他问题，欢迎随时发邮件给我们。</p>
-      <a class="faq-mail" href="mailto:tigerstone1263@gmail.com">发送邮件 →</a>
-    </div>
-    <div class="faq-list reveal">
-      <details><summary>可以免费使用吗？</summary><p>可以。所有训练都能免费开始。爱心用完后可以看广告或稍等片刻恢复；订阅无限音符即可享受无限爱心、无广告。</p></details>
-      <details><summary>完全不懂音乐也能开始吗？</summary><p>可以。开始时的简短测试会帮你确定起点，识谱也从基础课程开始。</p></details>
-      <details><summary>绝对音感训练和相对音感训练有什么不同？</summary><p>绝对音感训练是在没有基准音的情况下说出所听到的音名；相对音感训练是通过与基准音的关系（音程）来辨认音。应用中两者可以分别练习。</p></details>
-      <details><summary>换手机后记录会消失吗？</summary><p>在应用中绑定账号后，在新设备上登录即可继续之前的进度。</p></details>
-      <details><summary>如何取消订阅？</summary><p>可随时在 App Store 或 Google Play 的订阅管理中取消，也可以从应用内的商店页面前往订阅管理。</p></details>
-      <details><summary>如何联系你们？</summary><p>请发送邮件至 <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>。</p></details>
     </div>
   </section>
 
   <section id="cta" class="wrap">
     <div class="cta-card reveal">
-      <span class="sori-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♩</i></span>
       <img class="cta-sori" src="/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy">
-      <h2><span class="nw">从听音</span><span class="nw">到识谱、</span><span class="nw">节奏、作曲，</span><br><span class="nw">音感训练，</span><span class="nw">一个应用</span><span class="nw">就够了</span></h2>
-      <div class="badges"><a class="badge badge-apple" href="https://apps.apple.com/app/id6739764701"><img src="/assets/badges/appstore-zh.svg" alt="在 App Store 下载" width="131" height="48"></a><a class="badge badge-play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta"><img src="/assets/badges/play-zh.png" alt="在 Google Play 下载" width="162" height="48"></a></div>
+      <h2><span class="nw">从听音</span><span class="nw">到识谱、</span><span class="nw">节奏、作曲，</span><br><span class="nw">音感训练，</span><span class="nw">一个应用就够了</span></h2>
+      <div class="store-btns"><a class="store-btn" href="https://apps.apple.com/app/id6739764701" aria-label="在 App Store 下载">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta" aria-label="在 Google Play 下载">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+      <p class="store-note">支持 Android 与 iOS</p>
     </div>
   </section>
 </main>

@@ -126,7 +126,7 @@ def check_page(lang, rel):
     return p
 
 
-SECTIONS = ["hero", "audience", "features", "game", "faq", "cta", "footer"]
+SECTIONS = ["hero", "features", "sori", "audience", "faq", "cta", "footer"]
 
 
 def check_sections(lang, html):
@@ -227,10 +227,14 @@ def check_design(lang, p, html):
         fail(f"[{lang}] aria-label 있는 상단 내비(.topnav) 없음")
     if not any(t == "a" and a.get("href") == "#cta" and "nav-cta" in (a.get("class") or "") for t, a in p.attrs_all):
         fail(f"[{lang}] 내비 다운로드 버튼(#cta) 없음")
-    chips = [a.get("class", "") for t, a in p.attrs_all if t == "li" and "chip" in (a.get("class") or "").split()]
-    got = [next((c for c in CHIP_CLASSES if c in cls.split()), None) for cls in chips]
-    if got != CHIP_CLASSES:
-        fail(f"[{lang}] 칩 카테고리 색 순서 불일치: {got}")
+    # 소리 소개: 앱의 실제 카테고리별 동작 6개 (Rive 렌더 프레임)
+    poses = [a for t, a in p.attrs_all if t == "img" and (a.get("src") or "").startswith("/assets/img/poses/")]
+    want = [f"/assets/img/poses/sori-{c[2:]}.webp" for c in CHIP_CLASSES]
+    if [a.get("src") for a in poses] != want:
+        fail(f"[{lang}] 소리 동작 이미지 순서 불일치: {[a.get('src') for a in poses]}")
+    for a in poses:
+        if not (ROOT / a["src"].lstrip("/")).exists():
+            fail(f"[{lang}] 동작 이미지 파일 없음: {a['src']}")
     if not any(t == "script" and a.get("src") == "/assets/js/reveal.js" and "defer" in a for t, a in p.attrs_all):
         fail(f"[{lang}] reveal.js(defer) 없음")
     # 첫 화면 폰 두 장은 표시 크기(≤270px)에 맞는 작은 이미지를 srcset 으로, 앞 폰은 우선 로드
@@ -240,7 +244,17 @@ def check_design(lang, p, html):
                 fail(f"[{lang}] 히어로 폰 이미지에 srcset/sizes 없음: {a.get('src')}")
             if "phone-front" in a.get("class") and a.get("fetchpriority") != "high":
                 fail(f"[{lang}] 앞 폰(LCP)에 fetchpriority=high 없음")
-    for sec in ("audience", "features", "game", "faq"):
+    for zone in ("hero", "cta"):
+        m = re.search(rf'<section id="{zone}".*?</section>', html, re.S)
+        n = len(re.findall(r'<a class="store-btn', m.group(0))) if m else 0
+        if n != 2:
+            fail(f"[{lang}] {zone} 구역 스토어 버튼 {n}개 (2개여야 함)")
+    if re.search(r"radial-gradient|linear-gradient|backdrop-filter", (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8")):
+        fail(f"[{lang}] 그라데이션·블러 장식 사용 (흑백·평면 톤 유지)")
+    cards = re.findall(r'<article class="fcard', html)
+    if len(cards) != 4:
+        fail(f"[{lang}] 기능 카드 {len(cards)}개 (4개여야 함)")
+    for sec in ("audience", "features", "sori", "faq"):
         m = re.search(rf'<section id="{sec}".*?</h2>', html, re.S)
         if not m or 'class="eyebrow"' not in m.group(0):
             fail(f"[{lang}] {sec} 구역 제목 위에 eyebrow 없음")
@@ -345,7 +359,7 @@ def check_lang_js():
 
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-LAYOUTS = [(360, 1), (360, 1.15), (320, 1), (768, 1), (1280, 1)]
+LAYOUTS = [(360, 1), (360, 1.15), (320, 1), (768, 1), (1024, 1), (1280, 1)]
 
 
 def check_layout():

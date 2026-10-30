@@ -28,27 +28,15 @@ def play_url(zone):
     return f"{PLAY}&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3D{zone}"
 
 
-def svg_width(path, height):
-    m = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', path.read_text(encoding="utf-8"))
-    return round(float(m.group(1)) / float(m.group(2)) * height)
-
-
-def png_width(path, height):
-    import struct
-    w, h = struct.unpack(">II", path.read_bytes()[16:24])
-    return round(w / h * height)
-
-
 def badges(lang, s, zone):
-    aw = svg_width(ROOT / "assets" / "badges" / f"appstore-{lang}.svg", 48)
-    pw = png_width(ROOT / "assets" / "badges" / f"play-{lang}.png", 48)
+    """스토어 버튼: 공식 배지 대신 흑백 텍스트 버튼(로고 없음 — 상표 지침상 로고는 공식 배지에서만 쓴다)."""
     apple = (
-        f'<a class="badge badge-apple" href="{app_store_url(zone)}">'
-        f'<img src="/assets/badges/appstore-{lang}.svg" alt="{s["badge_apple_alt"]}" width="{aw}" height="48"></a>'
+        f'<a class="store-btn" href="{app_store_url(zone)}" aria-label="{s["badge_apple_alt"]}">'
+        f'App Store<span class="arrow" aria-hidden="true">↗</span></a>'
     )
     play = (
-        f'<a class="badge badge-play" href="{play_url(zone)}">'
-        f'<img src="/assets/badges/play-{lang}.png" alt="{s["badge_play_alt"]}" width="{pw}" height="48"></a>'
+        f'<a class="store-btn" href="{play_url(zone)}" aria-label="{s["badge_play_alt"]}">'
+        f'Google Play<span class="arrow" aria-hidden="true">↗</span></a>'
     )
     return apple + play  # 모든 언어 App Store 먼저 (zh 는 spec 상 필수)
 

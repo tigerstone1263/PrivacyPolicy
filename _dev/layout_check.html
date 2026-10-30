@@ -19,12 +19,16 @@ f.onload = async () => {
     if (el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).display !== 'inline')
       bad.push('넘침 <' + el.tagName.toLowerCase() + '> ' + el.textContent.trim().slice(0, 30));
   }
-  for (const box of d.querySelectorAll('.badges')) {
-    const b = box.getBoundingClientRect();
-    for (const img of box.querySelectorAll('img')) {
-      const r = img.getBoundingClientRect();
-      if (r.left < b.left - 1) bad.push('배지가 왼쪽으로 튀어나옴 ' + Math.round(b.left - r.left) + 'px');
-    }
+  // 구역 사이 여백: 첫 화면을 뺀 main 의 구역은 위아래 여백이 있어야 한다
+  for (const sec of d.querySelectorAll('main > section:not(#hero)')) {
+    const cs = getComputedStyle(sec);
+    if (parseFloat(cs.paddingTop) < 40 || parseFloat(cs.paddingBottom) < 40)
+      bad.push('구역 여백 부족 #' + sec.id + ' ' + cs.paddingTop + '/' + cs.paddingBottom);
+  }
+  // 스토어 버튼이 화면 밖으로 나가지 않는지
+  for (const btn of d.querySelectorAll('.store-btn')) {
+    const r = btn.getBoundingClientRect();
+    if (r.left < -1 || r.right > vw + 1) bad.push('스토어 버튼이 화면 밖 ' + Math.round(r.left) + '~' + Math.round(r.right));
   }
   document.getElementById('result').textContent = JSON.stringify(bad);
 };

@@ -10,12 +10,12 @@ CARD = """<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="/assets/css/site.css">
 <style>body{{margin:0;width:1200px;height:630px;overflow:hidden}}
-.og{{width:1200px;height:630px;box-sizing:border-box;padding:80px 90px;color:#fff;display:flex;flex-direction:column;justify-content:center;
-background:radial-gradient(900px 500px at 90% 0%,rgba(46,176,134,.25),transparent 60%),var(--d1)}}
-.og h1{{max-width:760px;font-size:60px;line-height:1.25;margin:28px 0 0;font-weight:800;letter-spacing:-.02em}}</style></head>
-<body><div class="og"><p style="display:flex;align-items:center;gap:16px;margin:0;font-size:34px;font-weight:800"><img src="/assets/img/app-icon.png" width="72" height="72" style="border-radius:18px">Absolute Ear</p>
+.og{{width:1200px;height:630px;box-sizing:border-box;padding:80px 90px;color:#191919;display:flex;flex-direction:column;justify-content:center;background:#fafafa}}
+.og-blob{{position:absolute;right:40px;bottom:30px;width:420px;height:420px;border-radius:50%;background:#e3e9ef}}
+.og h1{{max-width:600px;font-size:60px;line-height:1.2;margin:28px 0 0;font-weight:800;letter-spacing:-.045em}}</style></head>
+<body><div class="og"><p style="display:flex;align-items:center;gap:16px;margin:0;font-size:34px;font-weight:800"><img src="/assets/img/app-icon.png" width="72" height="72" style="border-radius:16px">Absolute Ear</p>
 <h1>{title}</h1></div>
-<img src="/assets/img/sori.webp" style="position:absolute;right:50px;bottom:40px;width:340px;filter:drop-shadow(0 14px 20px rgba(0,0,0,.3))">
+<span class="og-blob"></span><img src="/assets/img/sori.webp" style="position:absolute;right:80px;bottom:60px;width:340px">
 </body></html>"""
 
 for lang in ("ko", "en", "zh"):
