@@ -15,9 +15,15 @@ f.onload = async () => {
   const bad = [];
   const vw = d.documentElement.clientWidth;
   if (d.documentElement.scrollWidth > vw + 1) bad.push('가로 스크롤 ' + d.documentElement.scrollWidth + '>' + vw);
-  for (const el of d.querySelectorAll('h1,h2,h3,p,li,td,th,summary,a')) {
+  for (const el of d.querySelectorAll('h1,h2,h3,p,li,td,th,summary,a,button')) {
     if (el.scrollWidth > el.clientWidth + 1 && getComputedStyle(el).display !== 'inline')
       bad.push('넘침 <' + el.tagName.toLowerCase() + '> ' + el.textContent.trim().slice(0, 30));
+  }
+  // 보기 버튼: 공백 없는 라벨이 두 줄이 되면(단어 중간에서 끊김) 결함
+  for (const b of d.querySelectorAll('.try-options button')) {
+    const t = b.textContent.trim(); const lh = parseFloat(getComputedStyle(b).lineHeight) || 20;
+    const words = t.split(/\s+/).length; const lines = Math.round((b.clientHeight - parseFloat(getComputedStyle(b).paddingTop) - parseFloat(getComputedStyle(b).paddingBottom)) / lh);
+    if (lines > words) bad.push('보기 버튼 글자가 단어 중간에서 끊김: ' + t + ' (' + lines + '줄)');
   }
   // 구역 사이 여백: 첫 화면을 뺀 main 의 구역은 위아래 여백이 있어야 한다
   for (const sec of d.querySelectorAll('main > section:not(#hero)')) {

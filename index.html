@@ -84,34 +84,34 @@
     </div>
   </section>
 
-  <section id="try" class="try" data-q="문제 {n} / 3" data-correct="정답이에요!" data-wrong="아쉬워요. 정답은 {a}였어요." data-result="3문제 중 {k}문제를 맞혔어요." data-perfect="3문제를 모두 맞혔어요. 완벽해요!" data-keep="처음엔 누구나 헷갈려요. 앱에서 천천히 익혀 봐요." data-play="▶ 듣기" data-replay="↻ 다시 듣기" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
+  <section id="try" class="try" data-q="문제 {n} / 3" data-correct="정답이에요!" data-wrong="아쉬워요. 정답은 {a}였어요." data-result="3문제 중 {k}문제를 맞혔어요." data-perfect="3문제를 모두 맞혔어요. 완벽해요!" data-keep="처음엔 누구나 헷갈려요. 앱에서 천천히 익혀 봐요." data-play="듣기" data-replay="다시 듣기" data-zero="아직 맞힌 문제가 없어요." data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
     <div class="wrap try-inner">
       <div class="section-head reveal">
         <p class="eyebrow">직접 들어 보세요</p>
         <h2>지금 귀를 시험해 볼까요?</h2>
         <p class="lead">두 음을 차례로 듣고 어떤 음정인지 골라 보세요. 앱의 음정 문제를 세 문제만 맛볼 수 있어요.</p>
-        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>소리가 나요. 음량을 확인해 주세요.</p>
+        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>소리가 나요. 음량과 무음 모드를 확인해 주세요.</p>
       </div>
       <div class="try-card reveal">
-        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="400" height="300" loading="lazy"></div>
+        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="600" height="450" loading="lazy"></div>
         <div class="try-live">
           <p class="try-progress"></p>
-          <button type="button" class="try-play">▶ 듣기</button>
+          <button type="button" class="try-play"><span class="ico" aria-hidden="true">▶</span> <span class="lbl">듣기</span></button>
           <div class="try-options">
-            <button type="button" data-iv="m3" disabled>장3도</button>
+            <button type="button" data-iv="maj3" disabled>장3도</button>
             <button type="button" data-iv="p4" disabled>완전4도</button>
             <button type="button" data-iv="p5" disabled>완전5도</button>
           </div>
           <p class="try-feedback" aria-live="polite"></p>
-          <button type="button" class="try-next" hidden>다음 문제 →</button>
+          <button type="button" class="try-next" hidden>다음 문제 <span aria-hidden="true">→</span></button>
           <div class="try-done" hidden>
-            <p class="try-done-text"></p>
+            <p class="try-done-text" tabindex="-1" role="status"></p>
             <p class="try-more">앱에서는 이런 문제를 스테이지마다 이어서 훈련해요.</p>
             <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="App Store에서 다운로드">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dtry" aria-label="Google Play에서 다운로드">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
-            <button type="button" class="try-retry">↻ 다시 하기</button>
+            <button type="button" class="try-retry"><span aria-hidden="true">↻</span> 다시 하기</button>
           </div>
         </div>
-        <noscript><p class="try-nojs">체험은 JavaScript가 켜진 브라우저에서 동작해요.</p></noscript>
+        <p class="try-fallback">체험은 JavaScript와 소리 재생을 지원하는 브라우저에서 동작해요.</p>
       </div>
     </div>
   </section>
@@ -167,12 +167,12 @@
           <p class="sori-desc">소리는 맞히면 함께 기뻐하고, 틀리면 다독여 주는 Absolute Ear의 여우예요. 홈에서 고른 카테고리에 따라 동작도 달라져요.</p>
           <p class="poses-label">카테고리마다 다른 동작</p>
           <ul class="poses">
-          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4" type="video/mp4"></video><span>음정</span></li>
-          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4" type="video/mp4"></video><span>스케일</span></li>
-          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4" type="video/mp4"></video><span>화음</span></li>
-          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4" type="video/mp4"></video><span>선율</span></li>
-          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4" type="video/mp4"></video><span>화음 진행</span></li>
-          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4" type="video/mp4"></video><span>리듬</span></li>
+          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4#t=3.333" type="video/mp4"></video><span>음정</span></li>
+          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4#t=3.333" type="video/mp4"></video><span>스케일</span></li>
+          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4#t=7.167" type="video/mp4"></video><span>화음</span></li>
+          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4#t=3.000" type="video/mp4"></video><span>선율</span></li>
+          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4#t=2.500" type="video/mp4"></video><span>화음 진행</span></li>
+          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4#t=1.067" type="video/mp4"></video><span>리듬</span></li>
           </ul>
         </div>
       </div>

@@ -80,34 +80,34 @@
     </div>
   </section>
 
-  <section id="try" class="try" data-q="Question {n} of 3" data-correct="Correct!" data-wrong="Not quite — it was a {a}." data-result="You got {k} of 3." data-perfect="3 out of 3 — perfect!" data-keep="Everyone mixes these up at first — the app takes you there step by step." data-play="▶ Play" data-replay="↻ Play again" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
+  <section id="try" class="try" data-q="Question {n} of 3" data-correct="Correct!" data-wrong="Not quite — it was a {a}." data-result="You got {k} of 3." data-perfect="3 out of 3 — perfect!" data-keep="Everyone mixes these up at first — the app builds it up step by step." data-play="Play" data-replay="Play again" data-zero="No correct answers yet." data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
     <div class="wrap try-inner">
       <div class="section-head reveal">
         <p class="eyebrow">Try it now</p>
         <h2>Want to test your ear?</h2>
         <p class="lead">Listen to two notes and pick the interval. It's a three-question taste of the app's interval training.</p>
-        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>This plays sound — check your volume.</p>
+        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>This plays sound — check your volume and silent mode.</p>
       </div>
       <div class="try-card reveal">
-        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="400" height="300" loading="lazy"></div>
+        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="600" height="450" loading="lazy"></div>
         <div class="try-live">
           <p class="try-progress"></p>
-          <button type="button" class="try-play">▶ Play</button>
+          <button type="button" class="try-play"><span class="ico" aria-hidden="true">▶</span> <span class="lbl">Play</span></button>
           <div class="try-options">
-            <button type="button" data-iv="m3" disabled>Major 3rd</button>
+            <button type="button" data-iv="maj3" disabled>Major 3rd</button>
             <button type="button" data-iv="p4" disabled>Perfect 4th</button>
             <button type="button" data-iv="p5" disabled>Perfect 5th</button>
           </div>
           <p class="try-feedback" aria-live="polite"></p>
-          <button type="button" class="try-next" hidden>Next →</button>
+          <button type="button" class="try-next" hidden>Next <span aria-hidden="true">→</span></button>
           <div class="try-done" hidden>
-            <p class="try-done-text"></p>
+            <p class="try-done-text" tabindex="-1" role="status"></p>
             <p class="try-more">In the app, questions like these continue stage by stage.</p>
             <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dtry" aria-label="Get it on Google Play">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
-            <button type="button" class="try-retry">↻ Try again</button>
+            <button type="button" class="try-retry"><span aria-hidden="true">↻</span> Try again</button>
           </div>
         </div>
-        <noscript><p class="try-nojs">The demo needs JavaScript turned on in your browser.</p></noscript>
+        <p class="try-fallback">The demo needs a browser with JavaScript and audio playback.</p>
       </div>
     </div>
   </section>
@@ -163,12 +163,12 @@
           <p class="sori-desc">Sori is the Absolute Ear fox who cheers when you get it right and comforts you when you miss. Sori's moves change with the category you pick on the home screen.</p>
           <p class="poses-label">A move for every category</p>
           <ul class="poses">
-          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4" type="video/mp4"></video><span>Interval</span></li>
-          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4" type="video/mp4"></video><span>Scale</span></li>
-          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4" type="video/mp4"></video><span>Chord</span></li>
-          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4" type="video/mp4"></video><span>Melody</span></li>
-          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4" type="video/mp4"></video><span>Chord Prog.</span></li>
-          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4" type="video/mp4"></video><span>Rhythm</span></li>
+          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4#t=3.333" type="video/mp4"></video><span>Interval</span></li>
+          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4#t=3.333" type="video/mp4"></video><span>Scale</span></li>
+          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4#t=7.167" type="video/mp4"></video><span>Chord</span></li>
+          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4#t=3.000" type="video/mp4"></video><span>Melody</span></li>
+          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4#t=2.500" type="video/mp4"></video><span>Chord Prog.</span></li>
+          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4#t=1.067" type="video/mp4"></video><span>Rhythm</span></li>
           </ul>
         </div>
       </div>

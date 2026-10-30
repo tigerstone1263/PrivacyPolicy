@@ -73,7 +73,7 @@
   "try_eyebrow": "Try it now",
   "try_title": "Want to test your ear?",
   "try_desc": "Listen to two notes and pick the interval. It's a three-question taste of the app's interval training.",
-  "try_note": "This plays sound — check your volume.",
+  "try_note": "This plays sound — check your volume and silent mode.",
   "try_play": "Play",
   "try_replay": "Play again",
   "iv_m3": "Major 3rd",
@@ -86,8 +86,9 @@
   "try_result": "You got {k} of 3.",
   "try_more": "In the app, questions like these continue stage by stage.",
   "try_retry": "Try again",
-  "try_nojs": "The demo needs JavaScript turned on in your browser.",
+  "try_nojs": "The demo needs a browser with JavaScript and audio playback.",
   "cta_qr": "Scan with your phone camera to get the app",
-  "try_keep": "Everyone mixes these up at first — the app takes you there step by step.",
-  "try_perfect": "3 out of 3 — perfect!"
+  "try_keep": "Everyone mixes these up at first — the app builds it up step by step.",
+  "try_perfect": "3 out of 3 — perfect!",
+  "try_zero": "No correct answers yet."
 }

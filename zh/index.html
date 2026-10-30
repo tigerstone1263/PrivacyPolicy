@@ -80,34 +80,34 @@
     </div>
   </section>
 
-  <section id="try" class="try" data-q="第 {n} 题 / 共 3 题" data-correct="答对了！" data-wrong="差一点，正确答案是{a}。" data-result="3 道题答对了 {k} 道。" data-perfect="3 道题全部答对，满分！" data-keep="刚开始谁都会混淆，在应用里慢慢练就好。" data-play="▶ 播放" data-replay="↻ 再听一次" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
+  <section id="try" class="try" data-q="第 {n} 题 / 共 3 题" data-correct="答对了！" data-wrong="差一点，正确答案是{a}。" data-result="3 道题答对了 {k} 道。" data-perfect="3 道题全部答对，满分！" data-keep="刚开始谁都会混淆，在应用里慢慢练就好。" data-play="播放" data-replay="再听一次" data-zero="这次还没有答对。" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
     <div class="wrap try-inner">
       <div class="section-head reveal">
         <p class="eyebrow">现在就试试</p>
         <h2>来测测你的耳朵？</h2>
         <p class="lead">依次听两个音，选出它们的音程。三道题，快速体验应用里的音程训练。</p>
-        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>会播放声音，请留意音量。</p>
+        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>会播放声音，请检查音量和静音模式。</p>
       </div>
       <div class="try-card reveal">
-        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="400" height="300" loading="lazy"></div>
+        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="600" height="450" loading="lazy"></div>
         <div class="try-live">
           <p class="try-progress"></p>
-          <button type="button" class="try-play">▶ 播放</button>
+          <button type="button" class="try-play"><span class="ico" aria-hidden="true">▶</span> <span class="lbl">播放</span></button>
           <div class="try-options">
-            <button type="button" data-iv="m3" disabled>大三度</button>
+            <button type="button" data-iv="maj3" disabled>大三度</button>
             <button type="button" data-iv="p4" disabled>纯四度</button>
             <button type="button" data-iv="p5" disabled>纯五度</button>
           </div>
           <p class="try-feedback" aria-live="polite"></p>
-          <button type="button" class="try-next" hidden>下一题 →</button>
+          <button type="button" class="try-next" hidden>下一题 <span aria-hidden="true">→</span></button>
           <div class="try-done" hidden>
-            <p class="try-done-text"></p>
-            <p class="try-more">在应用里，这类题目会按关卡持续练习。</p>
+            <p class="try-done-text" tabindex="-1" role="status"></p>
+            <p class="try-more">在应用里，可以按关卡持续练习这类题目。</p>
             <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="在 App Store 下载">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dtry" aria-label="在 Google Play 下载">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
-            <button type="button" class="try-retry">↻ 再试一次</button>
+            <button type="button" class="try-retry"><span aria-hidden="true">↻</span> 再试一次</button>
           </div>
         </div>
-        <noscript><p class="try-nojs">体验需要浏览器开启 JavaScript。</p></noscript>
+        <p class="try-fallback">体验需要支持 JavaScript 和声音播放的浏览器。</p>
       </div>
     </div>
   </section>
@@ -163,12 +163,12 @@
           <p class="sori-desc">小音是 Absolute Ear 的小狐狸，答对时和你一起开心，答错时给你鼓励。在主页选择的类别不同，小音的动作也会不同。</p>
           <p class="poses-label">每个类别都有专属动作</p>
           <ul class="poses">
-          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4" type="video/mp4"></video><span>音程</span></li>
-          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4" type="video/mp4"></video><span>音阶</span></li>
-          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4" type="video/mp4"></video><span>和弦</span></li>
-          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4" type="video/mp4"></video><span>旋律</span></li>
-          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4" type="video/mp4"></video><span>和弦进行</span></li>
-          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4" type="video/mp4"></video><span>节奏</span></li>
+          <li class="pose c-interval"><video class="pose-video" poster="/assets/img/poses/sori-interval.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-interval.mp4#t=3.333" type="video/mp4"></video><span>音程</span></li>
+          <li class="pose c-scale"><video class="pose-video" poster="/assets/img/poses/sori-scale.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-scale.mp4#t=3.333" type="video/mp4"></video><span>音阶</span></li>
+          <li class="pose c-chord"><video class="pose-video" poster="/assets/img/poses/sori-chord.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-chord.mp4#t=7.167" type="video/mp4"></video><span>和弦</span></li>
+          <li class="pose c-melody"><video class="pose-video" poster="/assets/img/poses/sori-melody.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-melody.mp4#t=3.000" type="video/mp4"></video><span>旋律</span></li>
+          <li class="pose c-prog"><video class="pose-video" poster="/assets/img/poses/sori-prog.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-prog.mp4#t=2.500" type="video/mp4"></video><span>和弦进行</span></li>
+          <li class="pose c-rhythm"><video class="pose-video" poster="/assets/img/poses/sori-rhythm.webp" muted loop playsinline preload="none" width="400" height="300" aria-hidden="true"><source src="/assets/img/poses/sori-rhythm.mp4#t=1.067" type="video/mp4"></video><span>节奏</span></li>
           </ul>
         </div>
       </div>
