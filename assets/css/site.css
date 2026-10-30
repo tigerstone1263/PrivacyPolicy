@@ -184,27 +184,6 @@ h3 { margin: 0; font-size: 1.2rem; line-height: 1.38; font-weight: 750; letter-s
 .fcard-shot { margin-top: auto; height: 300px; overflow: hidden; display: flex; justify-content: center; }
 .fcard-shot img { width: 76%; max-width: 230px; height: auto; align-self: flex-start; border: 5px solid #161616; border-bottom: 0; border-radius: 26px 26px 0 0; background: #161616; }
 
-/* 소리 소개: 앱 남색 띠 + 오선 + 별, 카테고리별 동작 타일 */
-.sori { position: relative; overflow: hidden; background: var(--d1); color: #fff; }
-.staff-line { position: absolute; left: 0; top: 0; width: 100%; height: 56px; fill: none; stroke: rgba(255, 255, 255, 0.12); stroke-width: 1; }
-.star { position: absolute; color: rgba(255, 255, 255, 0.35); font-size: 14px; pointer-events: none; }
-.s1 { left: 8%; top: 120px; } .s2 { right: 10%; top: 90px; font-size: 18px; } .s3 { left: 18%; bottom: 60px; font-size: 11px; } .s4 { right: 22%; bottom: 120px; }
-.sori .eyebrow { color: #f2c98a; }
-.sori h2 { color: #fff; }
-.sori-card {
-  display: grid; gap: 28px; align-items: center;
-  background: #353a55; border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 28px; padding: 28px 22px;
-}
-.sori-portrait { width: min(240px, 70%); margin: 0 auto; padding: 18px; border-radius: 24px; background: #f3efe9; border: 3px solid #f2c98a; transform: rotate(-2deg); }
-.sori-info h3 { font-size: 1.6rem; color: #fff; }
-.name-bar { display: block; width: 36px; height: 3px; border-radius: 2px; background: #f2c98a; margin: 10px 0 14px; }
-.sori-desc { margin: 0; color: rgba(255, 255, 255, 0.78); max-width: 34em; }
-.poses-label { margin: 22px 0 12px; font-size: 0.88rem; font-weight: 700; color: #f2c98a; }
-.poses { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.pose { text-align: center; font-size: 0.82rem; color: rgba(255, 255, 255, 0.78); }
-.pose img, .pose video { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 14px; margin-bottom: 6px; background: var(--cat-l); }
-
 /* 이런 분께: 3열 텍스트, 위 테두리 */
 .aud { display: grid; gap: 28px; }
 .aud article { border-top: 1px solid var(--ink); padding-top: 18px; }
@@ -257,7 +236,6 @@ details p { color: var(--muted); margin: 10px 0 0; }
 /* ---------- 반응형 ---------- */
 @media (min-width: 560px) {
   .nav-langs { display: flex; }
-  .poses { grid-template-columns: repeat(6, 1fr); }
 }
 
 @media (min-width: 768px) {
@@ -269,9 +247,6 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .phone-back { width: 180px; }
   main > section { padding-top: 104px; padding-bottom: 104px; }
   .fcards { grid-template-columns: repeat(2, 1fr); }
-  .sori-card { grid-template-columns: 260px 1fr; gap: 40px; padding: 36px; }
-  .sori-portrait { width: 100%; }
-  .poses { grid-template-columns: repeat(3, 1fr); }
   .aud { grid-template-columns: repeat(3, 1fr); gap: 32px; }
   .faq { grid-template-columns: 0.8fr 1.2fr; gap: 64px; align-items: start; }
   .try-inner { grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
@@ -292,6 +267,4 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .phone-back { width: 210px; }
   .fcards { grid-template-columns: repeat(4, 1fr); }
   .fcard-shot { height: 280px; }
-  .poses { grid-template-columns: repeat(6, 1fr); }
-  .sori-card { grid-template-columns: 300px 1fr; padding: 44px; }
 }

@@ -127,7 +127,7 @@ def check_page(lang, rel):
     return p
 
 
-SECTIONS = ["hero", "try", "features", "sori", "audience", "faq", "cta", "footer"]
+SECTIONS = ["hero", "try", "features", "audience", "faq", "cta", "footer"]
 
 
 def check_sections(lang, html):
@@ -228,20 +228,9 @@ def check_design(lang, p, html):
         fail(f"[{lang}] aria-label 있는 상단 내비(.topnav) 없음")
     if not any(t == "a" and a.get("href") == "#cta" and "nav-cta" in (a.get("class") or "") for t, a in p.attrs_all):
         fail(f"[{lang}] 내비 다운로드 버튼(#cta) 없음")
-    # 소리 소개: 앱의 실제 카테고리별 동작 6개 — 정지 프레임(poster) + 반복 영상(mp4)
-    vids = [a for t, a in p.attrs_all if t == "video" and "pose-video" in (a.get("class") or "")]
-    want = [f"/assets/img/poses/sori-{c[2:]}.webp" for c in CHIP_CLASSES]
-    if [a.get("poster") for a in vids] != want:
-        fail(f"[{lang}] 소리 동작 영상 순서 불일치: {[a.get('poster') for a in vids]}")
-    for a in vids:
-        for key in ("muted", "loop", "playsinline"):
-            if key not in a:
-                fail(f"[{lang}] 동작 영상에 {key} 없음: {a.get('poster')}")
-        if a.get("preload") != "none":
-            fail(f"[{lang}] 동작 영상은 preload=none 이어야 함")
-        mp4 = ROOT / a.get("poster", "").lstrip("/").replace(".webp", ".mp4")
-        if not mp4.exists() or mp4.stat().st_size > 250_000:
-            fail(f"[{lang}] 동작 영상 없음 또는 250KB 초과: {mp4.name}")
+    # 소리 소개 구역은 뺐다(2026-10-31 사용자 결정) — 동작 영상·#sori 링크가 남으면 안 된다
+    if any(t == "video" for t, a in p.attrs_all) or any(t == "a" and a.get("href") == "#sori" for t, a in p.attrs_all):
+        fail(f"[{lang}] 소리 소개 구역의 영상이나 #sori 링크가 남아 있음")
     # 청음 맛보기: 앱과 같은 세 음정 보기, 결과 안내는 스크린리더에 읽힘
     ivs = [a.get("data-iv") for t, a in p.attrs_all if t == "button" and a.get("data-iv")]
     if ivs != ["maj3", "p4", "p5"]:
@@ -282,7 +271,7 @@ def check_design(lang, p, html):
     cards = re.findall(r'<article class="fcard', html)
     if len(cards) != 4:
         fail(f"[{lang}] 기능 카드 {len(cards)}개 (4개여야 함)")
-    for sec in ("try", "audience", "features", "sori", "faq"):
+    for sec in ("try", "audience", "features", "faq"):
         m = re.search(rf'<section id="{sec}".*?</h2>', html, re.S)
         if not m or 'class="eyebrow"' not in m.group(0):
             fail(f"[{lang}] {sec} 구역 제목 위에 eyebrow 없음")
@@ -299,41 +288,6 @@ def check_try_frames():
             if max(abs(a - b) for a, b in zip(px, (0xB6, 0xC6, 0xD8))) > 6:
                 fail(f"try-{name}.webp 배경이 음정 카테고리 색이 아님: {px}")
                 break
-
-
-def check_pose_videos(html):
-    """동작 영상: 재생은 포스터와 같은 장면(#t=)에서 시작하고, 끝→처음 이음새가 그 영상의 평소 움직임보다 튀지 않아야 한다."""
-    import shutil
-    import subprocess
-    import tempfile
-    from PIL import Image, ImageChops, ImageStat
-    if not shutil.which("ffmpeg"):
-        return
-    def diff(a, b):
-        return sum(ImageStat.Stat(ImageChops.difference(a, b)).mean) / 3
-    for poster, src in re.findall(r'<video class="pose-video" poster="([^"]+)".*?<source src="([^"]+)"', html, re.S):
-        name = poster.rsplit("/", 1)[-1]
-        m = re.search(r"#t=([\d.]+)$", src)
-        if not m:
-            fail(f"동작 영상 {name}: 포스터 장면에서 시작하도록 #t= 가 필요함")
-            continue
-        mp4 = ROOT / src.split("#")[0].lstrip("/")
-        with tempfile.TemporaryDirectory() as tmp:
-            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(mp4), "-vf", "scale=160:120", f"{tmp}/f%04d.png"], check=True)
-            frames = [Image.open(f).convert("RGB") for f in sorted(Path(tmp).glob("f*.png"))]
-        if len(frames) < 10:
-            fail(f"동작 영상 {name}: 프레임이 너무 적음 ({len(frames)})")
-            continue
-        post = Image.open(ROOT / poster.lstrip("/")).convert("RGB").resize((160, 120))
-        k = round(float(m.group(1)) * 30)
-        near = [diff(post, frames[i]) for i in (k - 1, k, k + 1) if 0 <= i < len(frames)]
-        if min(near) > 3:
-            fail(f"동작 영상 {name}: #t={m.group(1)} 장면이 포스터와 다름 ({min(near):.1f})")
-        steps = sorted(diff(frames[i], frames[i + 1]) for i in range(len(frames) - 1))
-        p90 = steps[int(len(steps) * 0.9)]
-        seam = diff(frames[-1], frames[0])
-        if seam > max(1.0, 1.25 * p90):
-            fail(f"동작 영상 {name}: 반복 이음새가 튐 (이음새 {seam:.1f} > 평소 움직임 p90 {p90:.1f})")
 
 
 def check_zh_store_order():
@@ -547,7 +501,6 @@ def main():
     check_reveal_needs_js()
     check_zh_store_order()
     check_try_frames()
-    check_pose_videos((ROOT / 'index.html').read_text(encoding='utf-8'))
     if "--no-layout" not in sys.argv:
         check_layout()
     if errors:
