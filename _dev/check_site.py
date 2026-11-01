@@ -271,6 +271,28 @@ def check_design(lang, p, html):
     cards = re.findall(r'<article class="fcard', html)
     if len(cards) != 4:
         fail(f"[{lang}] 기능 카드 {len(cards)}개 (4개여야 함)")
+    # MotionSites 업그레이드 뼈대: 시그니처 워드마크, 굴러가는 알약 버튼, 쌓이는 기능 카드, 등장 모션, 질감
+    hero = re.search(r'<section id="hero".*?</section>', html, re.S)
+    hero_html = hero.group(0) if hero else ""
+    # 워드마크는 장식 — 실제 글자로 두면 접근성 대비 검사에 걸리므로 CSS 의사 요소(data-text)로 그린다
+    if not re.search(r'<div class="hero-wordmark" aria-hidden="true" data-text="Absolute Ear"></div>', hero_html):
+        fail(f"[{lang}] 첫 화면 시그니처 워드마크 없음(장식은 data-text 의사 요소로)")
+    css = (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8")
+    m = re.search(r"@keyframes riseIn \{([^}]*\})", css)
+    if not m or "opacity" in m.group(1):
+        fail("첫 화면 폰(LCP) 등장 애니메이션이 투명도를 바꿈 — LCP 가 늦어진다")
+    if len(re.findall(r'class="in-blur[ "]', hero_html)) < 2:
+        fail(f"[{lang}] 제목 줄별 blur-rise 등장 없음")
+    for zone in ("hero", "cta"):
+        m = re.search(rf'<section id="{zone}".*?</section>', html, re.S)
+        btns = re.findall(r'<a class="store-btn[^"]*".*?</a>', m.group(0) if m else "", re.S)
+        if not btns or not all("btn-roll__chip" in b and "btn-roll__inner" in b for b in btns):
+            fail(f"[{lang}] {zone} 스토어 버튼이 굴러가는 알약 버튼이 아님")
+    slots = re.findall(r'<div class="stack-slot" style="--i:\d">\s*<article class="fcard', html)
+    if len(slots) != 4:
+        fail(f"[{lang}] 쌓이는 기능 카드 슬롯 {len(slots)}개 (4개여야 함)")
+    if '<div class="page-grain" aria-hidden="true"></div>' not in html:
+        fail(f"[{lang}] 종이 질감 레이어 없음")
     for sec in ("try", "audience", "features", "faq"):
         m = re.search(rf'<section id="{sec}".*?</h2>', html, re.S)
         if not m or 'class="eyebrow"' not in m.group(0):

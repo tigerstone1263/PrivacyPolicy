@@ -41,9 +41,10 @@
 <link rel="stylesheet" href="/assets/css/site.css">
 </head>
 <body>
+<div class="page-grain" aria-hidden="true"></div>
 
 
-<header class="top">
+<header class="top in-down">
   <nav class="topnav" aria-label="Main">
     <div class="wrap topnav-inner">
       <a class="brand" href="#hero"><img src="/assets/img/app-icon.png" alt="" width="30" height="30">Absolute Ear</a>
@@ -62,22 +63,22 @@
 </header>
 
 <main>
-  <section id="hero" class="hero wrap">
-    <div class="hero-copy">
-      <h1><span class="nw">Ear training</span> <span class="nw">to composing,</span><br><span class="nw">all in</span> <span class="nw">one app</span></h1>
-      <p class="hero-sub">From absolute and relative pitch to reading music, rhythm and sight-singing — train a little every day, stage by stage, with Sori the fox.</p>
-      <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero" aria-label="Get it on Google Play">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
-      <p class="store-note">Available on Android & iOS</p>
-      <p class="hero-links"><a href="#features">Explore <span aria-hidden="true">↓</span></a></p>
+  <section id="hero" class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow in-fade" style="--d:120ms">Absolute Ear</p>
+        <h1><span class="in-blur h1-line" style="--d:250ms"><span class="nw">Ear training</span> <span class="nw">to composing,</span></span><span class="in-blur h1-line" style="--d:420ms"><span class="nw">all in</span> <span class="nw">one app</span></span></h1>
+        <p class="hero-sub in-fade" style="--d:700ms">From absolute and relative pitch to reading music, rhythm and sight-singing — train a little every day, stage by stage, with Sori the fox.</p>
+        <div class="store-btns in-fade" style="--d:880ms"><a class="store-btn store-btn--apple btn-roll" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store"><span class="btn-roll__label"><span class="btn-roll__inner"><span>App Store</span><span aria-hidden="true">App Store</span></span></span><span class="btn-roll__chip" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a><a class="store-btn store-btn--play btn-roll" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dhero" aria-label="Get it on Google Play"><span class="btn-roll__label"><span class="btn-roll__inner"><span>Google Play</span><span aria-hidden="true">Google Play</span></span></span><span class="btn-roll__chip" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></div>
+        <p class="store-note in-fade" style="--d:1000ms">Available on Android & iOS</p>
+      </div>
+      <div class="hero-visual in-rise" style="--d:350ms">
+        <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 220px, (min-width: 768px) 190px, 40vw" alt="" width="720" height="1520" fetchpriority="low">
+        <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 270px, (min-width: 768px) 236px, 50vw" alt="Absolute Ear home screen" width="720" height="1520" fetchpriority="high">
+        <img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">
+      </div>
     </div>
-    <div class="hero-visual">
-      <span class="blob" aria-hidden="true"></span>
-      <svg class="spark spark-a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.8 2.6 7.4 8 8-5.4.6-7.4 3.2-8 8-.6-4.8-2.6-7.4-8-8 5.4-.6 7.4-3.2 8-8z"/></svg>
-      <svg class="spark spark-b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 4.8 2.6 7.4 8 8-5.4.6-7.4 3.2-8 8-.6-4.8-2.6-7.4-8-8 5.4-.6 7.4-3.2 8-8z"/></svg>
-      <img class="phone phone-back" src="/assets/img/feat-ear-480.webp" srcset="/assets/img/feat-ear-480.webp 480w, /assets/img/feat-ear.webp 720w" sizes="(min-width: 1100px) 210px, (min-width: 768px) 180px, 40vw" alt="" width="720" height="1520" fetchpriority="low">
-      <img class="phone phone-front" src="/assets/img/phone-hero-480.webp" srcset="/assets/img/phone-hero-480.webp 480w, /assets/img/phone-hero.webp 720w" sizes="(min-width: 1100px) 260px, (min-width: 768px) 230px, 50vw" alt="Absolute Ear home screen" width="720" height="1520" fetchpriority="high">
-      <p class="float-card"><img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">A little every day with Sori</p>
-    </div>
+    <div class="hero-wordmark" aria-hidden="true" data-text="Absolute Ear"></div>
   </section>
 
   <section id="try" class="try" data-q="Question {n} of 3" data-correct="Correct!" data-wrong="Not quite — it was a {a}." data-result="You got {k} of 3." data-perfect="3 out of 3 — perfect!" data-keep="Everyone mixes these up at first — the app builds it up step by step." data-play="Play" data-replay="Play again" data-zero="No correct answers yet." data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
@@ -103,7 +104,7 @@
           <div class="try-done" hidden>
             <p class="try-done-text" tabindex="-1" role="status"></p>
             <p class="try-more">In the app, questions like these continue stage by stage.</p>
-            <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dtry" aria-label="Get it on Google Play">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+            <div class="store-btns"><a class="store-btn store-btn--apple btn-roll" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store"><span class="btn-roll__label"><span class="btn-roll__inner"><span>App Store</span><span aria-hidden="true">App Store</span></span></span><span class="btn-roll__chip" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a><a class="store-btn store-btn--play btn-roll" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dtry" aria-label="Get it on Google Play"><span class="btn-roll__label"><span class="btn-roll__inner"><span>Google Play</span><span aria-hidden="true">Google Play</span></span></span><span class="btn-roll__chip" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></div>
             <button type="button" class="try-retry"><span aria-hidden="true">↻</span> Try again</button>
           </div>
         </div>
@@ -118,31 +119,47 @@
         <p class="eyebrow">Absolute Ear</p>
         <h2>From listening to creating, in one app</h2>
       </div>
-      <div class="fcards">
-      <article class="fcard reveal">
-        <p class="fcard-num">01 · Ear training</p>
-        <h3>Train absolute and relative pitch</h3>
-        <p class="fcard-desc">A short placement test finds where you should start</p>
-        <div class="fcard-shot"><img src="/assets/img/feat-ear.webp" alt="Ear training question screen" width="720" height="1520" loading="lazy"></div>
-      </article>
-      <article class="fcard reveal">
-        <p class="fcard-num">02 · Reading & rhythm</p>
-        <h3>Reading music, from the basics</h3>
-        <p class="fcard-desc">From reading the staff to tapping along in rhythm</p>
-        <div class="fcard-shot"><img src="/assets/img/feat-staff.webp" alt="Reading music screen" width="720" height="1520" loading="lazy"></div>
-      </article>
-      <article class="fcard reveal">
-        <p class="fcard-num">03 · Singing & creating</p>
-        <h3>Sing, loop, and make your own</h3>
-        <p class="fcard-desc">Sight-singing with a mic pitch check, plus repeat-listening albums</p>
-        <div class="fcard-shot"><img src="/assets/img/feat-create.webp" alt="Sight-singing practice screen" width="720" height="1520" loading="lazy"></div>
-      </article>
-      <article class="fcard reveal">
-        <p class="fcard-num">04 · Sori the fox</p>
-        <h3>Like a game, a little every day</h3>
-        <p class="fcard-desc">A stage map, hearts and a Weekly League keep you going</p>
-        <div class="fcard-shot"><img src="/assets/img/game-map.webp" alt="Stage progress map screen" width="720" height="1520" loading="lazy"></div>
-      </article>
+      <div class="fcards stack">
+      <div class="stack-slot" style="--i:0">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">01 · Ear training</p>
+            <h3>Train absolute and relative pitch</h3>
+            <p class="fcard-desc">A short placement test finds where you should start</p>
+          </div>
+          <div class="fcard-shot"><img src="/assets/img/feat-ear.webp" alt="Ear training question screen" width="720" height="1520" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:1">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">02 · Reading & rhythm</p>
+            <h3>Reading music, from the basics</h3>
+            <p class="fcard-desc">From reading the staff to tapping along in rhythm</p>
+          </div>
+          <div class="fcard-shot"><img src="/assets/img/feat-staff.webp" alt="Reading music screen" width="720" height="1520" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:2">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">03 · Singing & creating</p>
+            <h3>Sing, loop, and make your own</h3>
+            <p class="fcard-desc">Sight-singing with a mic pitch check, plus repeat-listening albums</p>
+          </div>
+          <div class="fcard-shot"><img src="/assets/img/feat-create.webp" alt="Sight-singing practice screen" width="720" height="1520" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:3">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">04 · Sori the fox</p>
+            <h3>Like a game, a little every day</h3>
+            <p class="fcard-desc">A stage map, hearts and a Weekly League keep you going</p>
+          </div>
+          <div class="fcard-shot"><img src="/assets/img/game-map.webp" alt="Stage progress map screen" width="720" height="1520" loading="lazy"></div>
+        </article>
+      </div>
       </div>
     </div>
   </section>
@@ -183,7 +200,7 @@
     <div class="cta-card reveal">
       <img class="cta-sori" src="/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy">
       <h2><span class="nw">Ear training</span> <span class="nw">to composing,</span><br><span class="nw">all in</span> <span class="nw">one app</span></h2>
-      <div class="store-btns"><a class="store-btn store-btn--apple" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store">App Store<span class="arrow" aria-hidden="true">↗</span></a><a class="store-btn store-btn--play" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta" aria-label="Get it on Google Play">Google Play<span class="arrow" aria-hidden="true">↗</span></a></div>
+      <div class="store-btns"><a class="store-btn store-btn--apple btn-roll" href="https://apps.apple.com/app/id6739764701" aria-label="Download on the App Store"><span class="btn-roll__label"><span class="btn-roll__inner"><span>App Store</span><span aria-hidden="true">App Store</span></span></span><span class="btn-roll__chip" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a><a class="store-btn store-btn--play btn-roll" href="https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3Dfooter-cta" aria-label="Get it on Google Play"><span class="btn-roll__label"><span class="btn-roll__inner"><span>Google Play</span><span aria-hidden="true">Google Play</span></span></span><span class="btn-roll__chip" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></div>
       <p class="store-note">Available on Android & iOS</p>
       <div class="cta-qr"><img src="/assets/img/qr-get.svg" alt="" width="112" height="112" loading="lazy"><p>Scan with your phone camera to get the app</p></div>
     </div>

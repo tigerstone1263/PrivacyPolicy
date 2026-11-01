@@ -28,17 +28,29 @@ def play_url(zone):
     return f"{PLAY}&referrer=utm_source%3Dhomepage%26utm_medium%3Dweb%26utm_campaign%3D{zone}"
 
 
+ARROW = ('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
+         'stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>')
+
+
+def roll_button(cls, href, label, aria):
+    """글자가 굴러 바뀌고 화살표 칩이 도는 알약 버튼 (MotionSites text-roll). 두 번째 글자는 장식이라 aria-hidden."""
+    return (f'<a class="{cls} btn-roll" href="{href}" aria-label="{aria}">'
+            f'<span class="btn-roll__label"><span class="btn-roll__inner"><span>{label}</span>'
+            f'<span aria-hidden="true">{label}</span></span></span>'
+            f'<span class="btn-roll__chip" aria-hidden="true">{ARROW}</span></a>')
+
+
 def badges(lang, s, zone):
     """스토어 버튼: 공식 배지 대신 흑백 텍스트 버튼(로고 없음 — 상표 지침상 로고는 공식 배지에서만 쓴다)."""
-    apple = (
-        f'<a class="store-btn store-btn--apple" href="{app_store_url(zone)}" aria-label="{s["badge_apple_alt"]}">'
-        f'App Store<span class="arrow" aria-hidden="true">↗</span></a>'
-    )
-    play = (
-        f'<a class="store-btn store-btn--play" href="{play_url(zone)}" aria-label="{s["badge_play_alt"]}">'
-        f'Google Play<span class="arrow" aria-hidden="true">↗</span></a>'
-    )
+    apple = roll_button("store-btn store-btn--apple", app_store_url(zone), "App Store", s["badge_apple_alt"])
+    play = roll_button("store-btn store-btn--play", play_url(zone), "Google Play", s["badge_play_alt"])
     return apple + play  # 모든 언어 App Store 먼저 (zh 는 spec 상 필수)
+
+
+def hero_lines(title):
+    """첫 화면 제목을 줄마다 blur-rise 로 차례로 올린다 (250ms 에서 시작, 줄마다 170ms 간격)."""
+    lines = title.split("<br>")
+    return "".join(f'<span class="in-blur h1-line" style="--d:{250 + i * 170}ms">{ln}</span>' for i, ln in enumerate(lines))
 
 
 # 루트(한국어) 페이지에만 넣는 언어 안내 띠. 문구는 안내받을 사람의 언어로 쓴다.
@@ -55,6 +67,7 @@ def computed(lang, s):
         "badges_hero": badges(lang, s, "hero"),
         "badges_cta": badges(lang, s, "footer-cta"),
         "badges_try": badges(lang, s, "try"),
+        "hero_lines": hero_lines(s["hero_title"]),
         "url": SITE + "/" + ("" if lang == "ko" else f"{lang}/"),
         "site": SITE,
         "lang_banner": LANG_BANNER if lang == "ko" else "",
