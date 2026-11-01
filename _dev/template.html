@@ -34,6 +34,7 @@
 </script>
 <script src="/assets/js/lang.js"></script>
 <script src="/assets/js/reveal.js" defer></script>
+<script src="/assets/js/cine.js" defer></script>
 <script src="/assets/js/eartest.js" defer></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
@@ -64,6 +65,7 @@
 
 <main>
   <section id="hero" class="hero">
+   <div class="hero-stage">
     <div class="wrap hero-inner">
       <div class="hero-copy">
         <p class="eyebrow in-fade" style="--d:120ms">{{feat_eyebrow}}</p>
@@ -78,7 +80,9 @@
         <img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">
       </div>
     </div>
+    <p class="hero-caption">{{hero_caption}}</p>
     <div class="hero-wordmark" aria-hidden="true" data-text="Absolute Ear"></div>
+   </div>
   </section>
 
   <section id="try" class="try" data-q="{{try_q}}" data-correct="{{try_correct}}" data-wrong="{{try_wrong}}" data-result="{{try_result}}" data-perfect="{{try_perfect}}" data-keep="{{try_keep}}" data-play="{{try_play}}" data-replay="{{try_replay}}" data-zero="{{try_zero}}" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">

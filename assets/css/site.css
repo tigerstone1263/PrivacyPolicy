@@ -105,7 +105,8 @@ html:not([lang^="zh"]).os-ios .store-btn--play .btn-roll__chip, html:not([lang^=
 html:not([lang^="zh"]).os-ios .store-btn--play:hover, html:not([lang^="zh"]).os-android .store-btn--apple:hover { background: #ececec; }
 
 /* ---------- 히어로: 화면 폭을 채우는 워드마크 위에 폰과 소리가 선다 (MotionSites ghost-word) ---------- */
-.hero { position: relative; overflow: hidden; padding-top: 40px; }
+.hero { position: relative; }
+.hero-stage { position: relative; overflow: hidden; padding-top: 40px; }
 .hero-inner { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 36px; }
 .hero .eyebrow { margin-bottom: 18px; }
 .hero h1 { margin: 0; font-size: clamp(2rem, 8.6vw, 4.5rem); line-height: 1.06; font-weight: 700; letter-spacing: -0.05em; }
@@ -114,16 +115,20 @@ html:not([lang^="zh"]).os-ios .store-btn--play:hover, html:not([lang^="zh"]).os-
 .hero-visual { position: relative; display: grid; width: min(440px, 100%); margin: 0 auto; padding-bottom: clamp(56px, 9vw, 120px); }
 .hero-visual > .phone { grid-area: 1 / 1; }
 .phone { position: relative; box-sizing: content-box; border-radius: 32px; border: 5px solid #161616; background: #161616; }
-.phone-front { width: min(220px, 52vw); justify-self: start; margin-left: 6%; transform: rotate(-4deg); z-index: 2; box-shadow: 0 4px 14px rgba(0, 0, 0, .12), 0 24px 48px rgba(0, 0, 0, .12); }
-.phone-back { width: min(176px, 41vw); justify-self: end; margin-right: 2%; margin-top: 64px; transform: rotate(6deg); z-index: 1; box-shadow: 0 4px 14px rgba(0, 0, 0, .1); }
-.hero-sori { position: absolute; z-index: 3; width: min(150px, 34vw); left: -4%; bottom: 0; }
+.phone-front { width: min(220px, 52vw); justify-self: start; margin-left: 6%; transform: translateX(calc(var(--cam, 0) * -5vw + var(--front-x, 0px))) rotate(var(--front-r, -4deg)) scale(var(--front-s, 1)); z-index: 2; box-shadow: 0 4px 14px rgba(0, 0, 0, .12), 0 24px 48px rgba(0, 0, 0, .12); }
+.phone-back { width: min(176px, 41vw); justify-self: end; margin-right: 2%; margin-top: 64px; transform: translate(calc(var(--cam, 0) * -5vw + var(--back-x, 0px)), var(--back-y, 0px)) rotate(var(--back-r, 6deg)); z-index: 1; box-shadow: 0 4px 14px rgba(0, 0, 0, .1); }
+.hero-sori { position: absolute; z-index: 3; width: min(150px, 34vw); left: -4%; bottom: 0; transform-origin: 50% 100%; transform: translateX(calc(var(--cam, 0) * -5vw + var(--sori-x, 0px))) scale(var(--sori-s, 1)); }
+.hero-copy { opacity: var(--copy-o, 1); transform: translateY(var(--copy-y, 0px)); }
 /* 시그니처: 아래쪽에 깔린 거대한 앱 이름 — 폰과 소리가 글자 위에 서서 포스터 같은 깊이를 만든다 */
 .hero-wordmark {
   position: absolute; z-index: 1; left: 0; right: 0; bottom: -0.16em;
   font-size: 19.5vw; font-weight: 700; line-height: .85; letter-spacing: -0.075em;
-  white-space: nowrap; text-align: center; color: #ecebe7; pointer-events: none; user-select: none;
+  white-space: nowrap; text-align: center; color: #d6d4cd; pointer-events: none; user-select: none;
 }
-.hero-wordmark::before { content: attr(data-text); }
+/* 스크롤 연출 값은 의사 요소에 건다 — 본체는 등장 애니메이션(fill both)이 transform 을 붙잡고 있다 */
+.hero-wordmark::before { content: attr(data-text); display: inline-block; opacity: var(--word-o, .55); transform: translateY(var(--word-y, 0vh)) scale(var(--word-s, 1)); transform-origin: 50% 100%; }
+/* 연출 자막: 문구가 빠진 자리에 한 줄 (연출이 켜졌을 때만) */
+.hero-caption { display: none; }
 
 /* ---------- 공통 구역 ---------- */
 /* 장식(연한 원·별)이 화면 밖으로 넘쳐도 가로 스크롤이 생기지 않게 자른다 (clip 은 스크롤 영역을 만들지 않음) */
@@ -287,9 +292,9 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .cta-card { padding: 64px 40px 56px; }
 }
 
-/* 큰 제목과 폰 두 대가 한 줄에 들어가는 폭부터 좌우 배치 */
-@media (min-width: 1000px) {
-  .hero { min-height: min(calc(100vh - var(--nav-h)), 900px); min-height: min(calc(100dvh - var(--nav-h)), 900px); display: flex; align-items: center; padding-top: 32px; }
+/* 큰 제목과 폰 두 대가 한 줄에 들어가는 폭부터 좌우 배치 (1024px 에서는 폰이 잘려서 1100px 부터) */
+@media (min-width: 1100px) {
+  .hero-stage { min-height: min(calc(100vh - var(--nav-h)), 900px); min-height: min(calc(100dvh - var(--nav-h)), 900px); display: flex; align-items: center; padding-top: 32px; }
   .hero-inner { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
   .hero-copy { flex: 1 1 56%; padding-bottom: 10vw; }
   .h1-line { white-space: nowrap; }
@@ -301,4 +306,15 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .phone-front { width: 270px; }
   .phone-back { width: 220px; }
   .hero-sori { width: 190px; left: -30%; }
+}
+
+/* ---------- 첫 화면 스크롤 연출 (cine.js 가 넓은 화면·마우스·동작 줄이기 아님일 때만 html.cine-on 을 단다) ---------- */
+/* 대본은 1000px 에서 끝나고, 200px 더 끝 장면을 붙잡아 둔다. 공통 구역 여백은 빼야 무대가 바로 고정된다 */
+html.cine-on .hero { --runway: 1200px; height: calc(min(calc(100dvh - var(--nav-h)), 900px) + var(--runway)); padding-top: 0; padding-bottom: 0; }
+html.cine-on .hero-stage { position: sticky; top: var(--nav-h); height: min(calc(100dvh - var(--nav-h)), 900px); }
+html.cine-on .hero-caption {
+  display: block; position: absolute; z-index: 4; top: 38%; margin: 0;
+  left: max(36px, calc((100vw - var(--wrap)) / 2 + 36px)); white-space: nowrap;
+  font-size: clamp(2.4rem, 3.9vw, 3.6rem); font-weight: 700; letter-spacing: -0.055em; line-height: 1.08;
+  opacity: var(--cap-o, 0); transform: translateY(calc(-50% + var(--cap-y, 24px))); pointer-events: none;
 }

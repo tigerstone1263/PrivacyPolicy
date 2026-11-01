@@ -291,6 +291,15 @@ def check_design(lang, p, html):
     slots = re.findall(r'<div class="stack-slot" style="--i:\d">\s*<article class="fcard', html)
     if len(slots) != 4:
         fail(f"[{lang}] 쌓이는 기능 카드 슬롯 {len(slots)}개 (4개여야 함)")
+    # 스크롤 연출: 무대(hero-stage)와 자막, cine.js(defer). 긴 활주로 높이는 JS 가 cine-on 을 달 때만 (JS 없으면 정적 첫 화면)
+    if '<div class="hero-stage">' not in hero_html or 'class="hero-caption"' not in hero_html:
+        fail(f"[{lang}] 첫 화면 연출 무대·자막 없음")
+    if not any(t == "script" and a.get("src") == "/assets/js/cine.js" and "defer" in a for t, a in p.attrs_all):
+        fail(f"[{lang}] cine.js(defer) 없음")
+    css_all = re.sub(r"/\*.*?\*/", "", (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8"), flags=re.S)
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css_all):
+        if "--runway" in body and "height" in body and ".cine-on" not in sel:
+            fail(f"연출 활주로 높이가 cine-on 없이 걸림: {sel.strip()}")
     if '<div class="page-grain" aria-hidden="true"></div>' not in html:
         fail(f"[{lang}] 종이 질감 레이어 없음")
     for sec in ("try", "audience", "features", "faq"):
@@ -430,7 +439,7 @@ def check_get_page():
 
 def check_node_tests():
     import subprocess
-    for t in ("test_eartest.js", "test_eartest_dom.js", "test_os.js"):
+    for t in ("test_eartest.js", "test_eartest_dom.js", "test_os.js", "test_cine.js"):
         r = subprocess.run(["node", str(DEV / t)], capture_output=True, text=True)
         if r.returncode != 0:
             fail((r.stdout.strip() or r.stderr.strip().splitlines()[-1]) + f" ({t})")
