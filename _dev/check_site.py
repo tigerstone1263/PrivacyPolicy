@@ -191,13 +191,24 @@ SHOTS = ["phone-hero", "feat-ear", "feat-staff", "feat-create", "game-map"]
 def check_shot_resolution():
     """폰 화면은 최대 300 CSS px 로 보이므로 2~3배 화면에서 선명하려면 폭 720px 이상, 파일은 250KB 이하."""
     from PIL import Image
-    for n in SHOTS:
-        f = ROOT / "assets" / "img" / f"{n}.webp"
-        w = Image.open(f).size[0]
-        if w < 720:
-            fail(f"{n}.webp 폭 {w}px (720 이상이어야 선명)")
-        if f.stat().st_size > 250_000:
-            fail(f"{n}.webp {f.stat().st_size // 1000}KB (250KB 이하)")
+    for lang in PAGES:
+        for n in SHOTS:
+            f = ROOT / "assets" / "img" / "shots" / lang / f"{n}.webp"
+            if not f.exists():
+                fail(f"shots/{lang}/{n}.webp 없음")
+                continue
+            w = Image.open(f).size[0]
+            if w < 720:
+                fail(f"shots/{lang}/{n}.webp 폭 {w}px (720 이상이어야 선명)")
+            if f.stat().st_size > 250_000:
+                fail(f"shots/{lang}/{n}.webp {f.stat().st_size // 1000}KB (250KB 이하)")
+        # 언어 페이지는 자기 언어의 앱 화면만 쓴다
+        html = (ROOT / PAGES[lang]).read_text(encoding="utf-8")
+        for other in PAGES:
+            if other != lang and f"/assets/img/shots/{other}/" in html:
+                fail(f"[{lang}] 다른 언어({other}) 앱 화면을 쓴다")
+        if f"/assets/img/shots/{lang}/" not in html:
+            fail(f"[{lang}] 자기 언어 앱 화면이 없다")
 
 
 APP_SORI = Path.home() / "abp" / "absolute_ear" / "assets" / "images" / "mascot" / "sori.webp"

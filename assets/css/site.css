@@ -298,6 +298,9 @@ details p { color: var(--muted); margin: 10px 0 0; }
   .hero-inner { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
   .hero-copy { flex: 1 1 56%; padding-bottom: 10vw; }
   .h1-line { white-space: nowrap; }
+  /* 영·중 첫 줄은 한 줄로 두면 폰 자리를 밀어내므로 .nw 덩어리 사이에서 나뉘게 둔다. */
+  html:not([lang="ko"]) .hero-copy { min-width: 0; }
+  html:not([lang="ko"]) .h1-line { white-space: normal; }
   .hero-visual { flex: 0 0 auto; margin: 0; }
 }
 

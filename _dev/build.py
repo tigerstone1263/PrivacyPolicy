@@ -70,6 +70,7 @@ def computed(lang, s):
         "hero_lines": hero_lines(s["hero_title"]),
         "url": SITE + "/" + ("" if lang == "ko" else f"{lang}/"),
         "site": SITE,
+        "shots": f"/assets/img/shots/{lang}",
         "lang_banner": LANG_BANNER if lang == "ko" else "",
         **{f"cur_{l}": 'aria-current="true"' if l == lang else "" for l in LANGS},
     }
