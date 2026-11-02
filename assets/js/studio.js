@@ -1,5 +1,5 @@
-// tigerstone 루트 페이지 연출.
-// 1) 스크롤 무대: 활주로 진행률 p(0~1) → 장면 값(frame)은 순수 함수. 화면은 CSS 변수(--split, --rise)와 data-scene 만 바꾼다.
+// TigerStone1263 루트 페이지 연출.
+// 1) 스크롤 무대: 활주로 진행률 p(0~1) → 장면 값(frame)은 순수 함수. 화면은 CSS 변수와 data-scene·data-route 만 바꾼다.
 // 2) 소리: 앱 Rive 동작을 렌더한 투명 영상. 평소엔 idle 반복, 장면이 바뀌면 한 번 반응한 뒤 idle 로 돌아온다.
 //    동작 줄이기·재생 실패 때만 정지 그림(sori-still)이 남는다.
 (function (root) {
@@ -7,13 +7,29 @@
   function smooth(a, b, x) { var t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t); }
   function r3(x) { return Math.round(x * 1000) / 1000; }
 
-  // 장면 대본: 0→.16 글자가 tiger | stone 으로 갈라짐 · .06→.26 폰이 올라옴 · 장면 1(.28) 2(.52) 3(.76)
-  var SCENES = [0.28, 0.52, 0.76];
+  // 장면 대본
+  //  0→.12  글자가 Tiger ← · Stone → · 1263 ↓ 로 흩어지고 오선이 넓어진다
+  //  .10→.24 검은 원이 열린다 · .14→.32 큰 외곽선 1263 · .18→.32 폰이 올라온다
+  //  장면 1(.34) 소리 고리 · 2(.54) 오선 위로 음표가 흐른다(.50→.76) · 3(.72) 지도 길이 그려진다(.72→.88)
+  //  .90→.985 검은 원이 닫힌다
+  var SCENES = [0.34, 0.54, 0.72];
+  var NODES = [0.28, 0.5, 0.7, 0.9];   // 길 위의 스테이지 점이 켜지는 진행률
   function frame(p) {
     p = clamp01(p);
     var scene = 0;
     for (var i = 0; i < SCENES.length; i++) if (p >= SCENES[i]) scene = i + 1;
-    return { split: r3(smooth(0, 0.16, p)), rise: r3(smooth(0.06, 0.26, p)), scene: scene };
+    var route = smooth(0.72, 0.88, p), nodes = 0;
+    for (var j = 0; j < NODES.length; j++) if (route >= NODES[j]) nodes = j + 1;
+    return {
+      split: r3(smooth(0, 0.12, p)),
+      iris: r3(smooth(0.10, 0.24, p) * (1 - smooth(0.90, 0.985, p))),
+      num: r3(smooth(0.14, 0.32, p)),
+      rise: r3(smooth(0.18, 0.32, p)),
+      notes: r3(clamp01((p - 0.50) / 0.26)),
+      route: r3(route),
+      nodes: nodes,
+      scene: scene
+    };
   }
   // 장면에 들어갈 때 소리가 하는 반응 (장면 2는 반응 없이 idle)
   var REACT = { 1: 'listen', 3: 'celebrate' };
@@ -26,7 +42,7 @@
   }
   function shouldEnable(env) { return !env.reduced; }
 
-  root.Studio = { frame: frame, SCENES: SCENES, REACT: REACT, videoExt: videoExt, shouldEnable: shouldEnable };
+  root.Studio = { frame: frame, SCENES: SCENES, NODES: NODES, REACT: REACT, videoExt: videoExt, shouldEnable: shouldEnable };
   if (typeof document === 'undefined' || !document.getElementById) return;
 
   var html = document.documentElement;
@@ -121,7 +137,12 @@
       var run = Math.max(1, stage.offsetHeight - innerHeight);
       var f = frame(-r.top / run);
       pin.style.setProperty('--split', f.split);
+      pin.style.setProperty('--iris', f.iris);
+      pin.style.setProperty('--num', f.num);
       pin.style.setProperty('--rise', f.rise);
+      pin.style.setProperty('--notes', f.notes);
+      pin.style.setProperty('--route', f.route);
+      pin.setAttribute('data-route', f.nodes);
       if (f.rise > 0.05 && !stageSori.started) {
         stageSori.start();
         stageSori.preload(['listen', 'celebrate']);
@@ -136,6 +157,20 @@
     addEventListener('resize', update);
     update();
     whenVisible(stage, function () { onScreen = true; stageSori.resume(); }, function () { onScreen = false; stageSori.pause(); });
+  }
+
+  // ---------- 글자 띠: 스크롤에 맞춰 옆으로 흐른다 ----------
+  var track = document.querySelector('.marquee-track');
+  if (track) {
+    var mqTick = false;
+    var mq = function () {
+      mqTick = false;
+      var r = track.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      track.style.setProperty('--mq', Math.round((innerHeight - r.top) * 0.6));
+    };
+    addEventListener('scroll', function () { if (!mqTick) { mqTick = true; requestAnimationFrame(mq); } }, { passive: true });
+    mq();
   }
 
   // ---------- 앱 카드의 소리: 보이면 손을 흔들고 idle ----------

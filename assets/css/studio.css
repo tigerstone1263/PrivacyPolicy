@@ -1,9 +1,10 @@
-/* tigerstone 루트 페이지 — 밝은 흑백 + 실제 앱 재료(앱 화면, 소리 Rive 동작 영상).
-   그라데이션·글로우·블러 배경·색 머리말은 쓰지 않는다. 연출은 스크롤에 따라 움직이는 배치로만 낸다. */
+/* TigerStone1263 루트 페이지 — 흑백 그래픽 + 실제 앱 재료(앱 화면, 소리 Rive 동작 영상).
+   그라데이션·글로우·블러 배경·색 머리말은 쓰지 않는다. 연출은 오선·원·숫자 같은 흑백 도형과 스크롤 배치로 낸다. */
 :root {
   --bg: #fafafa;
   --card: #ffffff;
   --ink: #191919;
+  --night: #0f0f0f;
   --muted: #6b6b6b;
   --line: #e4e4e4;
   --btn: #222222;
@@ -43,26 +44,25 @@ a { color: inherit; }
 /* ---------- 머리 ---------- */
 .top { position: relative; z-index: 5; }
 .top-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: var(--wrap); margin: 0 auto; padding: 18px 20px; }
-.top-mark { font-weight: 800; letter-spacing: -0.04em; font-size: 1.1rem; text-decoration: none; }
+.top-mark { font-weight: 800; letter-spacing: -0.04em; font-size: 1.05rem; text-decoration: none; }
 .top-langs { display: flex; gap: 14px; font-size: 0.85rem; font-weight: 700; }
 .top-langs a { text-decoration: none; color: var(--muted); }
 .top-langs a[aria-current], .top-langs a:hover { color: var(--ink); }
 
-/* ---------- 스크롤 무대 ----------
-   정적 구성(기본): 글자 → 한 줄 소개 → 폰과 소리 → 장면 세 줄. JS 가 html 에 cine-on 을 달면 긴 활주로 위에
-   화면을 고정하고, studio.js 가 --split(글자 갈라짐)·--rise(폰 올라옴)과 data-scene(1~3)을 바꾼다. */
+/* ---------- 스크롤 무대: 정적 구성(기본) ----------
+   글자 → 한 줄 소개 → 폰과 소리 → 장면 세 줄. 도형(원·오선·숫자·고리·길)은 연출이 켜졌을 때만 그린다. */
 .stage { position: relative; padding: 24px 0 72px; overflow-x: clip; }
 .stage-pin { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 20px; }
+.iris, .big-num, .staff, .rings, .route, .scene-count, .scroll-hint { display: none; }
 .mark {
-  margin: 8px 0 0; font-size: clamp(58px, 17.5vw, 250px); font-weight: 800; line-height: .9; letter-spacing: -0.065em;
+  margin: 8px 0 0; font-size: clamp(34px, 10.8vw, 196px); font-weight: 800; line-height: .95; letter-spacing: -0.06em;
   white-space: nowrap; display: flex; justify-content: center;
 }
-.mark-half { display: inline-flex; }
-.ch { display: inline-block; animation: blurRise 1.1s var(--ease-out-expo) calc(150ms + var(--i) * 55ms) both; }
+.mark-part { display: inline-flex; }
+.ch { display: inline-block; animation: blurRise 1.1s var(--ease-out-expo) calc(250ms + var(--i) * 45ms) both; }
 /* 등장 애니메이션은 안쪽 span 에 건다 — 바깥에 걸면 fill both 가 스크롤로 바꾸는 투명도를 덮어쓴다 */
 .tagline { margin: 22px 0 0; font-size: clamp(1.02rem, 2.2vw, 1.3rem); font-weight: 600; color: var(--muted); letter-spacing: -0.01em; }
-.tagline-in { display: inline-block; animation: fadeRise .9s var(--ease-out-expo) .85s both; }
-.scroll-hint { display: none; }
+.tagline-in { display: inline-block; animation: fadeRise .9s var(--ease-out-expo) 1s both; }
 .show { position: relative; margin-top: 48px; }
 .phone { position: relative; width: min(240px, 62vw); border-radius: 34px; border: 6px solid #161616; background: #161616; overflow: hidden;
          box-shadow: 0 4px 14px rgba(0, 0, 0, .12), 0 30px 60px rgba(0, 0, 0, .14); }
@@ -78,70 +78,132 @@ a { color: inherit; }
 .scene p { margin: 0; color: var(--muted); }
 .scene .scene-num { font-size: 0.8rem; font-weight: 800; color: var(--ink); letter-spacing: 0.08em; }
 
-/* 연출 켜짐 */
-.cine-on .stage { height: 520svh; padding: 0; }
-.cine-on .stage-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; padding: 0; display: block; }
-.cine-on .mark {
-  position: absolute; left: 0; right: 0; top: 50%; margin: 0;
-  transform: translateY(calc(-62% - var(--rise, 0) * 4svh)) scale(calc(1 + var(--split, 0) * .32));
-  opacity: calc(1 - var(--split, 0) * .93);
-}
-.cine-on .mark-l { transform: translateX(calc(var(--split, 0) * var(--spread) * -1)); }
-.cine-on .mark-r { transform: translateX(calc(var(--split, 0) * var(--spread))); }
-.cine-on .stage { --spread: 30vw; }
-.cine-on .tagline { position: absolute; left: 20px; right: 20px; top: calc(50% + 9vw); margin: 0;
-                    opacity: calc(1 - var(--split, 0) * 2.4); transform: translateY(calc(var(--split, 0) * -24px)); }
-.cine-on .scroll-hint { display: block; position: absolute; left: 0; right: 0; bottom: 28px; margin: 0;
-                        font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); opacity: calc(1 - var(--split, 0) * 4); }
-.scroll-in { display: flex; flex-direction: column; align-items: center; gap: 10px; animation: fadeRise .9s var(--ease-out-expo) 1.3s both; }
-.scroll-line { width: 1.5px; height: 36px; background: var(--ink); transform-origin: top; animation: scrollLine 1.8s var(--ease-std) infinite; }
-@keyframes scrollLine { 0% { transform: scaleY(0); } 45% { transform: scaleY(1); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+/* ---------- 스크롤 무대: 연출 켜짐 ----------
+   studio.js 가 --split(글자 흩어짐) --iris(검은 원) --rise(폰) --num(큰 숫자) --notes(음표 흐름) --route(길) 와 data-scene 을 바꾼다. */
+/* 휴대폰(기본): 글자가 작아 오선이 글자를 가로지르면 취소선처럼 읽힌다 → 오선은 글자 아래에 깔고 소개 글은 그 아래 */
+.cine-on .stage { height: 640svh; padding: 0; --spread: 30vw; --gap-end: 4.2svh; --show-top: 44%; --staff-y0: calc(50% + 9vw); --tag-y: calc(50% + 17vw); }
+.cine-on .stage-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; padding: 0; display: block; isolation: isolate; background: var(--bg);
+                      --gap: calc(1.55vw * (1 - var(--split, 0)) + var(--gap-end) * var(--split, 0)); }
 
+/* 검은 원: 가운데에서 열려 화면을 덮고, 끝에서 닫힌다 */
+.cine-on .iris { display: block; position: absolute; inset: 0; z-index: 1; background: var(--night);
+                 clip-path: circle(calc(var(--iris, 0) * 82%) at 50% var(--show-top)); }
+/* 검은 무대 뒤의 거대한 외곽선 숫자 */
+.cine-on .big-num { display: block; position: absolute; z-index: 2; left: 50%; top: var(--show-top); margin: 0;
+  font-size: 52vw; font-weight: 800; line-height: 1; letter-spacing: -0.07em; white-space: nowrap; color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, .2);
+  transform: translate(-50%, -50%) scale(calc(.5 + var(--num, 0) * .5)) translateX(calc(var(--notes, 0) * -6%));
+  opacity: calc(var(--num, 0) * var(--iris, 0)); }
+
+/* 오선: 처음엔 글자 밑에 깔린 촘촘한 다섯 줄 → 흩어지며 넓어져 검은 무대의 가로선이 된다. difference 로 바탕에 따라 흑백이 뒤집힌다 */
+.cine-on .staff { display: block; position: absolute; z-index: 3; left: 0; right: 0; height: 0; mix-blend-mode: difference;
+                 top: calc(var(--staff-y0) * (1 - var(--split, 0)) + var(--show-top) * var(--split, 0)); }
+.line { position: absolute; left: 0; width: 100%; height: 1.5px; background: #fff; top: calc((var(--l) - 2) * var(--gap));
+        transform-origin: left center; opacity: .9; }
+.cine-on .line { animation: drawLine 1.3s var(--ease-out-expo) calc(var(--l) * 90ms) both; }
+.notes { position: absolute; left: 0; top: 0; width: 150vw; height: 0; opacity: 0; transition: opacity .5s var(--ease-std);
+         transform: translateX(calc(100vw - var(--notes, 0) * 250vw)); }
+.note { position: absolute; left: calc(var(--x) * 1vw); top: calc((var(--y) - 2) * var(--gap) - var(--gap) / 2);
+        width: calc(var(--gap) * 1.36); height: var(--gap); border-radius: 50%; background: #fff; transform: rotate(-22deg); }
+.note:nth-child(3n)::after { content: ""; position: absolute; right: 0; bottom: 50%; width: 1.5px; height: calc(var(--gap) * 3.3); background: #fff; transform: rotate(22deg); transform-origin: bottom; }
+.cine-on .stage[data-scene="2"] .notes { opacity: 1; }
+
+/* 장면 1: 폰에서 퍼지는 소리 고리 */
+.cine-on .rings { display: block; position: absolute; z-index: 2; left: 50%; top: var(--show-top); width: 0; height: 0; opacity: 0; transition: opacity .6s var(--ease-std); }
+.rings span { position: absolute; left: 0; top: 0; width: 46svh; height: 46svh; border: 2px solid rgba(255, 255, 255, .75); border-radius: 50%;
+              transform: translate(-50%, -50%) scale(.45); opacity: 0; animation: ring 2.7s var(--ease-std) infinite paused; }
+.rings span:nth-child(2) { animation-delay: .9s; }
+.rings span:nth-child(3) { animation-delay: 1.8s; }
+.cine-on .stage[data-scene="1"] .rings { opacity: 1; }
+.cine-on .stage[data-scene="1"] .rings span { animation-play-state: running; }
+
+/* 장면 3: 스크롤에 따라 그려지는 지도 길과 스테이지 점 */
+.cine-on .route { display: block; position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .6s var(--ease-std); }
+.route path { fill: none; stroke: rgba(255, 255, 255, .8); stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linecap: round;
+              stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--route, 0)); }
+.route circle { fill: #fff; opacity: 0; transition: opacity .35s var(--ease-std); }
+.cine-on .stage[data-scene="3"] .route { opacity: 1; }
+.cine-on .stage-pin[data-route="1"] .route circle:nth-of-type(1),
+.cine-on .stage-pin[data-route="2"] .route circle:nth-of-type(-n+2),
+.cine-on .stage-pin[data-route="3"] .route circle:nth-of-type(-n+3),
+.cine-on .stage-pin[data-route="4"] .route circle { opacity: 1; }
+
+/* 글자: Tiger ← · Stone → · 1263 ↓ (큰 외곽선 숫자로 이어진다) */
+.cine-on .mark {
+  position: absolute; z-index: 4; left: 0; right: 0; top: 50%; margin: 0; color: #fff; mix-blend-mode: difference;
+  transform: translateY(-62%) scale(calc(1 + var(--split, 0) * .25));
+  opacity: calc((1 - var(--split, 0) * .92) * (1 - var(--iris, 0)));
+}
+.cine-on .mark-tiger { transform: translateX(calc(var(--split, 0) * var(--spread) * -1)); }
+.cine-on .mark-stone { transform: translateX(calc(var(--split, 0) * var(--spread))); }
+.cine-on .mark-num { transform: translate(calc(var(--split, 0) * var(--spread) * .6), calc(var(--split, 0) * 34svh)) scale(calc(1 + var(--split, 0) * 1.6));
+                     opacity: calc(1 - var(--split, 0) * 1.5); }
+.cine-on .tagline { position: absolute; z-index: 4; left: 20px; right: 20px; top: var(--tag-y); margin: 0;
+                    opacity: calc(1 - var(--split, 0) * 2.4); transform: translateY(calc(var(--split, 0) * -24px)); }
+.cine-on .scroll-hint { display: block; position: absolute; z-index: 4; left: 0; right: 0; bottom: 28px; margin: 0;
+                        font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); opacity: calc(1 - var(--split, 0) * 4); }
+.scroll-in { display: flex; flex-direction: column; align-items: center; gap: 10px; animation: fadeRise .9s var(--ease-out-expo) 1.5s both; }
+.scroll-line { width: 1.5px; height: 36px; background: var(--ink); transform-origin: top; animation: scrollLine 1.8s var(--ease-std) infinite; }
+
+/* 폰과 소리 */
 .cine-on .show {
-  position: absolute; left: 50%; top: 50%; margin: 0;
+  position: absolute; z-index: 5; left: 50%; top: var(--show-top); margin: 0;
   transform: translate(-50%, calc(-50% + (1 - var(--rise, 0)) * 100svh)) scale(calc(.9 + var(--rise, 0) * .1));
 }
-.cine-on .phone { width: min(31svh, 290px, 56vw); }
+.cine-on .phone { width: min(27svh, 52vw); box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 30px 60px rgba(0, 0, 0, .3); }
 .cine-on .shot-2, .cine-on .shot-3 { display: block; position: absolute; inset: 0; height: 100%; object-fit: cover; }
 .cine-on .shot { opacity: 0; transform: scale(1.06); transition: opacity .6s var(--ease-std), transform .9s var(--ease-out-expo); }
 .cine-on .stage:is([data-scene="0"], [data-scene="1"]) .shot-1,
 .cine-on .stage[data-scene="2"] .shot-2,
 .cine-on .stage[data-scene="3"] .shot-3 { opacity: 1; transform: none; }
-.cine-on .stage .sori { opacity: calc((var(--rise, 0) - .55) * 2.4); transform: translateX(calc((1 - var(--rise, 0)) * -40px)); }
+.cine-on .stage .sori { width: 64%; left: -50%; opacity: calc((var(--rise, 0) - .55) * 2.4); transform: translateX(calc((1 - var(--rise, 0)) * -40px)); }
 
-.cine-on .scenes { position: absolute; margin: 0; left: 20px; right: 20px; bottom: 5svh; max-width: none; display: block; height: 7.5em; }
+/* 장면 글: 검은 무대 위의 흰 글. 원이 닫히면 함께 사라진다 */
+.cine-on .scenes-wrap { position: absolute; z-index: 6; left: 20px; right: 20px; bottom: 4svh; color: #fff; opacity: var(--iris, 0); text-align: center; }
+.cine-on .stage[data-scene="0"] .scenes-wrap { opacity: 0; }
+.cine-on .scene-count { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 0 10px; font-size: .75rem; font-weight: 800; letter-spacing: .1em; }
+.scene-count-now::before { content: "01"; }
+.cine-on .stage[data-scene="2"] .scene-count-now::before { content: "02"; }
+.cine-on .stage[data-scene="3"] .scene-count-now::before { content: "03"; }
+.scene-bar { position: relative; width: 64px; height: 1.5px; background: rgba(255, 255, 255, .25); }
+.scene-bar span { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #fff; transition: width .6s var(--ease-out-expo); }
+.cine-on .stage[data-scene="1"] .scene-bar span { width: 33.3%; }
+.cine-on .stage[data-scene="2"] .scene-bar span { width: 66.6%; }
+.cine-on .stage[data-scene="3"] .scene-bar span { width: 100%; }
+.cine-on .scenes { position: relative; margin: 0; max-width: none; display: block; height: 6.6em; }
 .cine-on .scene { position: absolute; inset: 0; opacity: 0; transform: translateY(18px); filter: blur(6px);
                   transition: opacity .55s var(--ease-std), transform .7s var(--ease-out-expo), filter .55s var(--ease-std); }
 .cine-on .stage[data-scene="1"] .scene-1,
 .cine-on .stage[data-scene="2"] .scene-2,
 .cine-on .stage[data-scene="3"] .scene-3 { opacity: 1; transform: none; filter: none; }
 .cine-on .scene h2 { font-size: clamp(1.4rem, 5.6vw, 2.6rem); }
-/* 휴대폰: 글자는 위, 폰은 가운데, 장면 글은 아래. 폰을 조금 위로 올려 글과 겹치지 않게 */
-@media (max-width: 767px) {
-  .cine-on .show { top: 44%; }
-  .cine-on .phone { width: min(27svh, 52vw); }
-  .cine-on .stage .sori { width: 64%; left: -50%; }
-  .cine-on .tagline { top: calc(50% + 12vw); }
-}
+.cine-on .scene p { color: rgba(255, 255, 255, .72); }
+.cine-on .scene .scene-num { display: none; }
+
 /* 넓은 화면: 폰은 가운데, 장면 글은 오른쪽, 소리는 왼쪽 */
 @media (min-width: 900px) {
   .stage-pin { padding: 0 40px; }
   .phone { width: 260px; }
   .scenes { grid-template-columns: repeat(3, 1fr); max-width: 980px; text-align: left; }
-  .cine-on .stage { --spread: 27vw; }
+  .cine-on .stage { --spread: 27vw; --gap-end: 6.2svh; --show-top: 50%; --staff-y0: 50%; --tag-y: calc(50% + 6.4vw); }
+  .cine-on .big-num { font-size: 40vw; }
   .cine-on .phone { width: min(56svh, 300px); }
   .cine-on .stage .sori { width: 78%; left: -74%; bottom: 2%; }
-  .cine-on .scenes { left: calc(50% + min(28svh, 150px) + 56px); right: auto; top: 50%; bottom: auto; width: min(30vw, 380px);
-                     height: auto; transform: translateY(-50%); text-align: left; }
-  .cine-on .scene { position: absolute; left: 0; right: 0; top: 0; transform: translateY(calc(-50% + 18px)); }
-  .cine-on .stage[data-scene="1"] .scene-1,
-  .cine-on .stage[data-scene="2"] .scene-2,
-  .cine-on .stage[data-scene="3"] .scene-3 { transform: translateY(-50%); }
-  .cine-on .scene h2 { font-size: clamp(2rem, 3.4vw, 3rem); }
+  .cine-on .rings span { width: 70svh; height: 70svh; }
+  /* 오선(가운데 ±12svh)과 겹치지 않게 오른쪽 아래에 둔다 */
+  .cine-on .scenes-wrap { left: calc(50% + min(28svh, 150px) + 64px); right: auto; top: auto; bottom: 9svh; width: min(30vw, 400px); text-align: left; }
+  .cine-on .scene-count { justify-content: flex-start; margin-bottom: 18px; }
+  .cine-on .scenes { height: 9em; }
+  .cine-on .scene h2 { font-size: clamp(2rem, 3.4vw, 3.2rem); }
 }
 
 /* ---------- 만든 앱 ---------- */
-main > section.apps { padding-top: 72px; padding-bottom: 96px; }
+main > section.apps { padding-top: 56px; padding-bottom: 96px; overflow-x: clip; }
+.marquee { overflow: hidden; margin: 0 0 56px; }
+.marquee-track { display: flex; gap: .4em; width: max-content; font-size: clamp(56px, 13vw, 220px); font-weight: 800; line-height: 1;
+                 letter-spacing: -0.055em; white-space: nowrap; transform: translateX(calc(var(--mq, 0) * -1px)); }
+.marquee-track span:nth-child(odd) { color: var(--ink); }
+.marquee-track span:nth-child(even) { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
 .apps-title { margin: 0 0 28px; font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: -0.04em; line-height: 1.15; }
 .app-card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 28px; padding: 28px 24px 32px; overflow: visible; }
 .app-head { display: flex; align-items: center; gap: 16px; }
@@ -155,7 +217,8 @@ main > section.apps { padding-top: 72px; padding-bottom: 96px; }
 .app-more:hover span { transform: translateX(4px); }
 .sori-card { position: absolute; width: 120px; left: auto; right: 12px; top: -84px; bottom: auto; }
 @media (min-width: 900px) {
-  main > section.apps { padding-top: 120px; padding-bottom: 140px; }
+  main > section.apps { padding-top: 96px; padding-bottom: 140px; }
+  .marquee { margin-bottom: 96px; }
   .app-card { padding: 44px 48px 48px; padding-right: 300px; }
   .sori-card { width: 230px; right: 44px; top: auto; bottom: 0; }
 }
@@ -182,13 +245,16 @@ html:not([lang^="zh"]).os-android .store-btn--play { order: -1; }
 html:not([lang^="zh"]).os-ios .store-btn--play, html:not([lang^="zh"]).os-android .store-btn--apple { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px #cfcfcf; }
 html:not([lang^="zh"]).os-ios .store-btn--play .btn-roll__chip, html:not([lang^="zh"]).os-android .store-btn--apple .btn-roll__chip { background: var(--btn); color: #fff; }
 
-/* ---------- 등장 ---------- */
+/* ---------- 움직임 ---------- */
 @keyframes blurRise { from { opacity: 0; transform: translateY(26px); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
 @keyframes fadeRise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes drawLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes ring { 0% { transform: translate(-50%, -50%) scale(.45); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.25); opacity: 0; } }
+@keyframes scrollLine { 0% { transform: scaleY(0); } 45% { transform: scaleY(1); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
 .js .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .ch, .tagline-in, .scroll-in, .scroll-line { animation: none; }
+  .ch, .tagline-in, .scroll-in, .scroll-line, .line { animation: none; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
 }
 

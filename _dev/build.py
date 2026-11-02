@@ -72,9 +72,9 @@ APP = {
     "template": DEV / "template.html",
     "strings": DEV / "strings",
 }
-# 루트: tigerstone 페이지. 앱 화면은 앱 폴더의 언어별 캡처를 그대로 쓴다.
+# 루트: TigerStone1263 스튜디오 페이지. 앱 화면은 앱 폴더의 언어별 캡처를 그대로 쓴다.
 STUDIO = {
-    "name": "tigerstone",
+    "name": "TigerStone1263",
     "base": "/",
     "assets": "/assets",
     "shots": "/AbsoluteEar/assets/img/shots",
@@ -175,7 +175,7 @@ NOT_FOUND = """<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>404 · tigerstone</title>
+<title>404 · TigerStone1263</title>
 <link rel="icon" type="image/png" href="/favicon.png">
 <script>
 (function () {

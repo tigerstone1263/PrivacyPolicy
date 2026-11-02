@@ -410,7 +410,7 @@ SORI_CLIPS = ["idle", "listen", "celebrate", "wave"]
 
 
 def check_studio(lang, rel):
-    """루트(tigerstone) 페이지: 주소 메타, AE 로 가는 길, 스토어 버튼, 금지 표현, 연출 뼈대."""
+    """루트(TigerStone1263) 페이지: 주소 메타, AE 로 가는 길, 스토어 버튼, 금지 표현, 연출 뼈대."""
     path = ROOT / rel
     if not path.exists():
         fail(f"[root/{lang}] {rel} 없음")
@@ -462,11 +462,18 @@ def check_studio(lang, rel):
     for t, a in p.attrs_all:
         if t == "a" and a.get("data-lang") and not a.get("lang"):
             fail(f"{tag} 언어 링크에 lang 속성 없음: {a.get('href')}")
-    # 연출 뼈대: 무대, 갈라지는 두 덩이 글자(장식이라 aria-hidden, h1 에 aria-label), 장면 3개, 소리 자리 2곳
+    # 연출 뼈대: 무대, 흩어지는 세 덩이 글자 Tiger·Stone·1263(장식이라 aria-hidden, h1 에 aria-label), 장면 3개, 소리 자리 2곳
     if '<section id="stage" class="stage" data-scene="0">' not in html:
         fail(f"{tag} 스크롤 무대 없음")
-    if not re.search(r'<h1 class="mark" aria-label="tigerstone">', html) or html.count('class="mark-half') != 2:
-        fail(f"{tag} tigerstone 글자 무대(두 덩이) 없음")
+    if not re.search(r'<h1 class="mark" aria-label="TigerStone1263">', html) or html.count('class="mark-part') != 3:
+        fail(f"{tag} TigerStone1263 글자 무대(세 덩이) 없음")
+    for deco in ("iris", "big-num", "staff", "rings", "route", "marquee"):
+        if not re.search(rf'<(?:div|svg) class="{deco}" aria-hidden="true"', html):
+            fail(f"{tag} 장식 도형 {deco} 이 없거나 aria-hidden 이 아님")
+    if html.count('class="line"') != 5:
+        fail(f"{tag} 오선이 다섯 줄이 아님")
+    if "© TigerStone1263" not in html or re.search(r"(?<![\w.@/])tigerstone(?![\w.@])", text):
+        fail(f"{tag} 스튜디오 이름은 TigerStone1263 으로 쓴다")
     if len(re.findall(r'<li class="scene scene-\d">', html)) != 3:
         fail(f"{tag} 장면 3개가 아님")
     for spot in ("stage", "card"):

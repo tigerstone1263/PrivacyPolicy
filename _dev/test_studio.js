@@ -10,22 +10,29 @@ let bad = 0;
 const ok = (c, m) => { if (!c) { bad++; console.log('studio: ' + m); } };
 ok(S, 'Studio 없음');
 
-// 처음엔 글자가 붙어 있고 폰은 아래에 숨어 있다
+// 처음엔 글자가 붙어 있고 원은 닫혀 있고 폰은 아래에 숨어 있다
 let f = S.frame(0);
-ok(f.split === 0 && f.rise === 0 && f.scene === 0, `p=0 → ${JSON.stringify(f)}`);
-// 글자가 다 갈라진 뒤에 장면 1 이 시작된다 (폰이 다 올라온 뒤)
-ok(S.frame(0.16).split === 1, 'p=.16 에서 글자가 다 갈라지지 않음');
-ok(S.frame(0.26).rise === 1, 'p=.26 에서 폰이 다 올라오지 않음');
-ok(S.SCENES[0] >= 0.26, '폰이 다 올라오기 전에 장면 1 이 시작됨');
+ok(f.split === 0 && f.iris === 0 && f.rise === 0 && f.scene === 0, `p=0 → ${JSON.stringify(f)}`);
+// 글자가 흩어지고 → 원이 열리고 → 폰이 다 올라온 뒤에 장면 1
+ok(S.frame(0.12).split === 1, 'p=.12 에서 글자가 다 흩어지지 않음');
+ok(S.frame(0.24).iris === 1, 'p=.24 에서 원이 다 열리지 않음');
+ok(S.frame(0.32).rise === 1, 'p=.32 에서 폰이 다 올라오지 않음');
+ok(S.SCENES[0] >= 0.32, '폰이 다 올라오기 전에 장면 1 이 시작됨');
+// 장면 내내 원은 열려 있고, 마지막에 닫힌다(장면 글이 흰 바탕에 흰 글로 남지 않게)
+for (const p of [0.34, 0.5, 0.7, 0.88]) ok(S.frame(p).iris === 1, `p=${p} 장면 중에 원이 닫힘`);
+ok(S.frame(1).iris === 0, '끝에서 원이 닫히지 않음');
 // 장면 순서와 경계
-const scenes = [0, 0.1, 0.27, 0.28, 0.5, 0.52, 0.75, 0.76, 1].map((p) => S.frame(p).scene);
+const scenes = [0, 0.2, 0.33, 0.34, 0.53, 0.54, 0.71, 0.72, 1].map((p) => S.frame(p).scene);
 ok(JSON.stringify(scenes) === JSON.stringify([0, 0, 0, 1, 1, 2, 2, 3, 3]), `장면 경계 ${scenes}`);
-// 값은 0~1 로 막히고 단조 증가
-let prev = { split: 0, rise: 0, scene: 0 };
+// 음표는 장면 2 동안 흐르고, 길은 장면 3 에서 그려지며 점 4개가 차례로 켜진다
+ok(S.frame(0.54).notes > 0 && S.frame(0.54).notes < 1 && S.frame(0.72).notes < 1, '음표가 장면 2 동안 흐르지 않음');
+ok(S.frame(0.71).route === 0 && S.frame(0.88).route === 1 && S.frame(0.88).nodes === 4, '길이 장면 3 에서 그려지지 않음');
+// 값은 0~1 로 막히고, iris 말고는 되돌아가지 않는다
+let prev = S.frame(-1);
 for (let p = -0.2; p <= 1.2; p += 0.01) {
   const g = S.frame(p);
-  ok(g.split >= 0 && g.split <= 1 && g.rise >= 0 && g.rise <= 1, `p=${p.toFixed(2)} 범위 밖 ${JSON.stringify(g)}`);
-  ok(g.split >= prev.split && g.rise >= prev.rise && g.scene >= prev.scene, `p=${p.toFixed(2)} 값이 되돌아감`);
+  for (const k of ['split', 'iris', 'num', 'rise', 'notes', 'route']) ok(g[k] >= 0 && g[k] <= 1, `p=${p.toFixed(2)} ${k} 범위 밖 ${g[k]}`);
+  for (const k of ['split', 'num', 'rise', 'notes', 'route', 'nodes', 'scene']) ok(g[k] >= prev[k], `p=${p.toFixed(2)} ${k} 값이 되돌아감`);
   prev = g;
 }
 // 반응: 장면 1 듣기, 장면 3 축하, 장면 2 는 idle (영상 파일이 있어야 한다)
