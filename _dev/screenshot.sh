@@ -11,7 +11,7 @@ shot() { # name width height path scale
     "http://localhost:8765/_dev/frame.html?w=$2&h=$3&p=$4&scale=$5" >/dev/null 2>&1
 }
 for lang in ko en zh; do
-  p=/; [ "$lang" != ko ] && p=/$lang/
+  p=/AbsoluteEar/; [ "$lang" != ko ] && p=/AbsoluteEar/$lang/
   shot "$lang-360" 360 9800 "$p" 1
   shot "$lang-360x115" 360 11000 "$p" 1.15
   shot "$lang-768" 768 7600 "$p" 1

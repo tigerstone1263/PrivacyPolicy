@@ -18,6 +18,8 @@ A = "/AbsoluteEar/assets"            # AE 전용 에셋 주소
 AE_ASSETS = ROOT / "AbsoluteEar" / "assets"
 CSS = AE_ASSETS / "css" / "site.css"
 PAGES = {"ko": "AbsoluteEar/index.html", "en": "AbsoluteEar/en/index.html", "zh": "AbsoluteEar/zh/index.html"}
+STUDIO_PAGES = {"ko": "index.html", "en": "en/index.html", "zh": "zh/index.html"}
+STUDIO_CSS = ROOT / "assets" / "css" / "studio.css"
 
 APP_STORE = "apps.apple.com/app/id6739764701"
 PLAY = "id=com.tigerstone.AbsoluteEar"
@@ -403,6 +405,114 @@ def check_sitemap():
         fail("robots.txt 없음")
 
 
+STUDIO_FORBIDDEN = ["작곡", "compos", "作曲", "创作", "나리", "₩", "$"]
+SORI_CLIPS = ["idle", "listen", "celebrate", "wave"]
+
+
+def check_studio(lang, rel):
+    """루트(tigerstone) 페이지: 주소 메타, AE 로 가는 길, 스토어 버튼, 금지 표현, 연출 뼈대."""
+    path = ROOT / rel
+    if not path.exists():
+        fail(f"[root/{lang}] {rel} 없음")
+        return
+    html = path.read_text(encoding="utf-8")
+    p = parse(path)
+    tag = f"[root/{lang}]"
+    html_tag = next((a for t, a in p.attrs_all if t == "html"), {})
+    if html_tag.get("lang") != HTML_LANG[lang] or html_tag.get("data-base") != "/":
+        fail(f"{tag} <html lang/data-base> = {html_tag}")
+    want = {"ko": SITE + "/", "en": SITE + "/en/", "zh-Hans": SITE + "/zh/", "x-default": SITE + "/"}
+    alts = {a.get("hreflang"): a.get("href") for t, a in p.attrs_all if t == "link" and a.get("rel") == "alternate"}
+    if alts != want:
+        fail(f"{tag} hreflang 불일치: {alts}")
+    links = {a.get("rel"): a.get("href") for t, a in p.attrs_all if t == "link"}
+    if links.get("canonical") != want[HTML_LANG[lang]]:
+        fail(f"{tag} canonical 오류: {links.get('canonical')}")
+    metas = {(a.get("property") or a.get("name")): a.get("content") for t, a in p.attrs_all if t == "meta"}
+    for k in ("description", "og:title", "og:description", "og:image", "og:url"):
+        if not metas.get(k):
+            fail(f"{tag} meta {k} 없음")
+    img = (metas.get("og:image") or "").replace(SITE, "")
+    if not img.startswith("/assets/") or not (ROOT / img.lstrip("/")).exists():
+        fail(f"{tag} og:image 가 루트 전용 이미지가 아님: {img}")
+    if not "".join(p.title_text).strip():
+        fail(f"{tag} title 없음")
+    # 앱으로 가는 길: 같은 언어의 AE 페이지, 스토어 버튼 2개(utm studio)
+    if build.lang_path(AE_BASE, lang) not in p.links:
+        fail(f"{tag} 같은 언어 AE 페이지 링크 없음")
+    m = re.search(r'<section id="apps".*?</section>', html, re.S)
+    btns = re.findall(r'<a class="store-btn[^"]*".*?</a>', m.group(0) if m else "", re.S)
+    if len(btns) != 2 or not all("btn-roll__chip" in b for b in btns):
+        fail(f"{tag} 앱 카드 스토어 버튼 {len(btns)}개 (굴러가는 알약 2개여야 함)")
+    if not any(PLAY in h and "utm_campaign%3Dstudio" in h for h in p.links) or not any(APP_STORE in h for h in p.links):
+        fail(f"{tag} 스토어 링크(Play utm studio·App Store) 없음")
+    if "mailto:tigerstone1263@gmail.com" not in p.links:
+        fail(f"{tag} 문의 메일 링크 없음")
+    text = "".join(p.text)
+    for w in STUDIO_FORBIDDEN:
+        if w in text:
+            fail(f"{tag} 금지 표현: {w}")
+    if "Google LLC" not in text or "Apple Inc." not in text:
+        fail(f"{tag} 스토어 상표 고지 없음")
+    for src in p.scripts:
+        if src and src.startswith(("http:", "https:", "//")):
+            fail(f"{tag} 외부 스크립트: {src}")
+    if any(not a.get("aria-label") for t, a in p.attrs_all if t == "nav"):
+        fail(f"{tag} aria-label 없는 nav")
+    for t, a in p.attrs_all:
+        if t == "a" and a.get("data-lang") and not a.get("lang"):
+            fail(f"{tag} 언어 링크에 lang 속성 없음: {a.get('href')}")
+    # 연출 뼈대: 무대, 갈라지는 두 덩이 글자(장식이라 aria-hidden, h1 에 aria-label), 장면 3개, 소리 자리 2곳
+    if '<section id="stage" class="stage" data-scene="0">' not in html:
+        fail(f"{tag} 스크롤 무대 없음")
+    if not re.search(r'<h1 class="mark" aria-label="tigerstone">', html) or html.count('class="mark-half') != 2:
+        fail(f"{tag} tigerstone 글자 무대(두 덩이) 없음")
+    if len(re.findall(r'<li class="scene scene-\d">', html)) != 3:
+        fail(f"{tag} 장면 3개가 아님")
+    for spot in ("stage", "card"):
+        if f'data-sori="{spot}"' not in html:
+            fail(f"{tag} 소리 자리({spot}) 없음")
+    if html.count('class="sori-still"') != 2:
+        fail(f"{tag} 소리 정지 그림(동작 줄이기·재생 실패 대비) 없음")
+    if '<script src="/assets/js/studio.js" defer></script>' not in html:
+        fail(f"{tag} studio.js(defer) 없음")
+    for other in STUDIO_PAGES:
+        if other != lang and f"/shots/{other}/" in html:
+            fail(f"{tag} 다른 언어({other}) 앱 화면을 쓴다")
+    banner = [a for t, a in p.attrs_all if t == "div" and a.get("id") == "lang-banner"]
+    if (lang == "ko") != bool(banner):
+        fail(f"{tag} 언어 안내 띠는 한국어 루트에만")
+    if lang == "ko":
+        for target in ("en", "zh"):
+            if not any(t == "a" and a.get("data-lang") == target and a.get("href") == f"/{target}/" for t, a in p.attrs_all):
+                fail(f"{tag} 안내 띠에 {target} 링크 없음")
+
+
+def check_studio_assets():
+    css = re.sub(r"/\*.*?\*/", "", STUDIO_CSS.read_text(encoding="utf-8"), flags=re.S)
+    if re.search(r"radial-gradient|linear-gradient|conic-gradient|backdrop-filter|text-shadow", css):
+        fail("studio.css: 그라데이션·블러 배경·글로우 사용 (흑백·평면 톤 유지)")
+    for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
+        if ".reveal" in sel and "opacity: 0" in body and not all(part.strip().startswith(".js ") for part in sel.split(",")):
+            fail(f"studio.css: JS 없이도 숨겨지는 reveal 규칙: {sel.strip()}")
+        if "height" in body and "svh" in body and ".stage" in sel and ".cine-on" not in sel:
+            fail(f"studio.css: 활주로 높이가 cine-on 없이 걸림: {sel.strip()}")
+        # 등장 애니메이션(fill both)이 스크롤로 바꾸는 투명도를 덮어쓰지 않게: 같은 규칙에 둘 다 두지 않는다
+        if "animation:" in body and "var(--split" in body:
+            fail(f"studio.css: 스크롤 투명도와 등장 애니메이션이 같은 요소에: {sel.strip()}")
+    for sel in re.findall(r"([^{}]*\.os-(?:android|ios)[^{}]*)\{", css):
+        for part in sel.split(","):
+            if ".os-" in part and ':not([lang^="zh"])' not in part:
+                fail(f"studio.css: 기기별 스토어 강조가 중국어 페이지에도 걸림: {part.strip()}")
+    for name in SORI_CLIPS:
+        for ext in ("webm", "mov"):
+            f = ROOT / "assets" / "media" / f"sori-{name}.{ext}"
+            if not f.exists():
+                fail(f"소리 영상 없음: {f.relative_to(ROOT)}")
+            elif f.stat().st_size > 260_000:
+                fail(f"소리 영상 {f.name} {f.stat().st_size // 1000}KB (260KB 이하)")
+
+
 def check_policy_copies():
     """앱 폴더의 정책 주소는 루트 정책 파일의 사본이다. 지정한 치환 말고는 한 글자도 달라선 안 된다."""
     for dst, (src, subs) in build.POLICY_COPIES.items():
@@ -432,7 +542,7 @@ def resolve(url_path):
 
 def check_internal_refs():
     """만든 페이지 안의 모든 내부 주소(href·src·srcset·data-frame-*)가 실제 파일로 열려야 한다. 404 구제 목록도 같다."""
-    files = list(PAGES.values()) + ["get/index.html", "AbsoluteEar/get/index.html", "404.html"]
+    files = list(STUDIO_PAGES.values()) + list(PAGES.values()) + ["get/index.html", "AbsoluteEar/get/index.html", "404.html"]
     for rel in files:
         html = (ROOT / rel).read_text(encoding="utf-8")
         refs = re.findall(r'(?:href|src|data-frame-[a-z]+)="(/[^"/][^"]*|/)"', html)
@@ -453,17 +563,22 @@ def check_internal_refs():
 
 
 def check_zh_spacing():
-    import re
-    d = json.loads((DEV / "strings" / "zh.json").read_text(encoding="utf-8"))
+    d = {**json.loads((DEV / "strings" / "zh.json").read_text(encoding="utf-8")),
+         **{"studio." + k: v for k, v in json.loads((DEV / "studio" / "strings" / "zh.json").read_text(encoding="utf-8")).items()}}
     for k, v in d.items():
         if re.search(r"[\u4e00-\u9fff，、。](</span>)? (<span[^>]*>)?[\u4e00-\u9fff]", v):
             fail(f"[zh] {k}: 한자 사이에 공백")
 
 
 def check_string_keys():
+    for folder in (DEV / "strings", DEV / "studio" / "strings"):
+        check_string_keys_in(folder)
+
+
+def check_string_keys_in(folder):
     keys = {}
     for lang in PAGES:
-        f = DEV / "strings" / f"{lang}.json"
+        f = folder / f"{lang}.json"
         if f.exists():
             keys[lang] = set(json.loads(f.read_text(encoding="utf-8")))
         else:
@@ -533,7 +648,7 @@ def check_get_page():
 
 def check_node_tests():
     import subprocess
-    for t in ("test_eartest.js", "test_eartest_dom.js", "test_os.js", "test_cine.js", "test_404.js"):
+    for t in ("test_eartest.js", "test_eartest_dom.js", "test_os.js", "test_cine.js", "test_404.js", "test_studio.js"):
         r = subprocess.run(["node", str(DEV / t)], capture_output=True, text=True)
         if r.returncode != 0:
             fail((r.stdout.strip() or r.stderr.strip().splitlines()[-1]) + f" ({t})")
@@ -547,7 +662,7 @@ def check_lang_js():
 
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-LAYOUTS = [(360, 1), (360, 1.15), (320, 1), (320, 1.15), (768, 1), (1024, 1), (1280, 1)]
+LAYOUTS = [(360, 1), (360, 1.15), (320, 1), (320, 1.15), (390, 1.15), (768, 1), (1024, 1), (1280, 1), (1440, 1)]
 
 
 def check_layout():
@@ -562,8 +677,9 @@ def check_layout():
                               cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         import time; time.sleep(0.8)
-        for lang in PAGES:
-            path = build.lang_path(AE_BASE, lang)
+        targets = [(f"{lang}", build.lang_path(AE_BASE, lang)) for lang in PAGES] + \
+                  [(f"root/{lang}", build.lang_path("/", lang)) for lang in STUDIO_PAGES]
+        for lang, path in targets:
             for w, scale in LAYOUTS:
                 url = f"http://127.0.0.1:{port}/_dev/layout_check.html?w={w}&p={path}&scale={scale}"
                 out = ""
@@ -614,6 +730,9 @@ def main():
     check_string_keys()
     check_zh_spacing()
     check_build_rejects_missing_key()
+    for lang, rel in STUDIO_PAGES.items():
+        check_studio(lang, rel)
+    check_studio_assets()
     for lang, rel in PAGES.items():
         p = check_page(lang, rel)
         if p:

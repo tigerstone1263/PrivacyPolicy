@@ -25,8 +25,8 @@ f.onload = async () => {
     const words = t.split(/\s+/).length; const lines = Math.round((b.clientHeight - parseFloat(getComputedStyle(b).paddingTop) - parseFloat(getComputedStyle(b).paddingBottom)) / lh);
     if (lines > words) bad.push('보기 버튼 글자가 단어 중간에서 끊김: ' + t + ' (' + lines + '줄)');
   }
-  // 구역 사이 여백: 첫 화면을 뺀 main 의 구역은 위아래 여백이 있어야 한다
-  for (const sec of d.querySelectorAll('main > section:not(#hero)')) {
+  // 구역 사이 여백: 첫 화면(AE #hero, 루트 #stage)을 뺀 main 의 구역은 위아래 여백이 있어야 한다
+  for (const sec of d.querySelectorAll('main > section:not(#hero):not(#stage)')) {
     const cs = getComputedStyle(sec);
     if (parseFloat(cs.paddingTop) < 40 || parseFloat(cs.paddingBottom) < 40)
       bad.push('구역 여백 부족 #' + sec.id + ' ' + cs.paddingTop + '/' + cs.paddingBottom);

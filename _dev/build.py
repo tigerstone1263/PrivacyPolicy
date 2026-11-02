@@ -68,10 +68,20 @@ APP = {
     "name": "AbsoluteEar",
     "base": "/AbsoluteEar/",
     "assets": "/AbsoluteEar/assets",
+    "shots": "/AbsoluteEar/assets/img/shots",
     "template": DEV / "template.html",
     "strings": DEV / "strings",
 }
-GROUPS = [APP]
+# 루트: tigerstone 페이지. 앱 화면은 앱 폴더의 언어별 캡처를 그대로 쓴다.
+STUDIO = {
+    "name": "tigerstone",
+    "base": "/",
+    "assets": "/assets",
+    "shots": "/AbsoluteEar/assets/img/shots",
+    "template": DEV / "studio" / "template.html",
+    "strings": DEV / "studio" / "strings",
+}
+GROUPS = [STUDIO, APP]
 
 # 스토어에 등록된 루트 정책 파일은 바이트 하나도 바꾸지 않는다(policy_hashes.json).
 # 앱 폴더의 새 주소는 그 사본이다. 치환은 (찾을 문구, 바꿀 문구) — 각각 정확히 한 번 나와야 한다.
@@ -109,11 +119,13 @@ def computed(lang, s, g):
         "badges_hero": badges(lang, s, "hero"),
         "badges_cta": badges(lang, s, "footer-cta"),
         "badges_try": badges(lang, s, "try"),
-        "hero_lines": hero_lines(s["hero_title"]),
+        "badges_studio": badges(lang, s, "studio"),
+        "hero_lines": hero_lines(s["hero_title"]) if "hero_title" in s else "",
+        "app_lang_path": "" if lang == "ko" else f"{lang}/",
         "url": SITE + lang_path(base, lang),
         "alternates": alternates(base),
         "site": SITE,
-        "shots": f"{a}/img/shots/{lang}",
+        "shots": f"{g['shots']}/{lang}",
         "lang_banner": LANG_BANNER.format(base=base) if lang == "ko" else "",
         **{f"cur_{l}": 'aria-current="true"' if l == lang else "" for l in LANGS},
     }

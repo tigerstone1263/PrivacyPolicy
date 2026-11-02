@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="{{html_lang}}" data-base="{{@base}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{@url}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="tigerstone">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{@url}}">
+<meta property="og:image" content="{{@site}}{{@a}}/img/og-{{@lang}}.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#fafafa">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+{{@alternates}}
+<script id="os-detect">
+// <html> 에 js(JS 전용 스타일)와 기기 클래스(os-ios / os-android)를 단다 — 스토어 버튼 순서·소리 영상 형식에 쓴다
+(function (h) {
+  h.classList.add('js');
+  var ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) h.classList.add('os-ios');
+  else if (/Android/.test(ua)) h.classList.add('os-android');
+})(document.documentElement);
+</script>
+<script src="/assets/js/lang.js"></script>
+<script src="/assets/js/reveal.js" defer></script>
+<script src="{{@a}}/js/studio.js" defer></script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
+<link rel="stylesheet" href="{{@a}}/css/studio.css">
+</head>
+<body>
+<div class="page-grain" aria-hidden="true"></div>
+{{@lang_banner}}
+
+<header class="top">
+  <div class="top-inner">
+    <a class="top-mark" href="{{@base}}">tigerstone</a>
+    <nav class="top-langs" aria-label="Language">
+      <a href="{{@base}}?lang=ko" hreflang="ko" lang="ko" data-lang="ko" {{@cur_ko}}>KO</a>
+      <a href="{{@base}}en/" hreflang="en" lang="en" data-lang="en" {{@cur_en}}>EN</a>
+      <a href="{{@base}}zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- 스크롤 무대: JS 가 cine-on 을 달면 긴 활주로 위에 화면이 고정되고 장면이 바뀐다. 없으면 위에서 아래로 읽는 정적 구성. -->
+  <section id="stage" class="stage" data-scene="0">
+    <div class="stage-pin">
+      <h1 class="mark" aria-label="tigerstone">
+        <span class="mark-half mark-l" aria-hidden="true"><span class="ch" style="--i:0">t</span><span class="ch" style="--i:1">i</span><span class="ch" style="--i:2">g</span><span class="ch" style="--i:3">e</span><span class="ch" style="--i:4">r</span></span><span class="mark-half mark-r" aria-hidden="true"><span class="ch" style="--i:5">s</span><span class="ch" style="--i:6">t</span><span class="ch" style="--i:7">o</span><span class="ch" style="--i:8">n</span><span class="ch" style="--i:9">e</span></span>
+      </h1>
+      <p class="tagline"><span class="tagline-in">{{tagline}}</span></p>
+      <p class="scroll-hint" aria-hidden="true"><span class="scroll-in"><span>{{scroll_hint}}</span><span class="scroll-line"></span></span></p>
+
+      <div class="show">
+        <div class="phone">
+          <img class="shot shot-1" src="{{@shots}}/feat-ear.webp" alt="{{scene1_alt}}" width="720" height="1564">
+          <img class="shot shot-2" src="{{@shots}}/feat-staff.webp" alt="{{scene2_alt}}" width="720" height="1564" loading="lazy">
+          <img class="shot shot-3" src="{{@shots}}/game-map.webp" alt="{{scene3_alt}}" width="720" height="1564" loading="lazy">
+        </div>
+        <div class="sori" data-sori="stage" aria-hidden="true">
+          <img class="sori-still" src="{{@a}}/img/sori-still.webp" alt="" width="400" height="424">
+        </div>
+      </div>
+
+      <ol class="scenes">
+        <li class="scene scene-1"><p class="scene-num">01</p><h2>{{scene1_t}}</h2><p>{{scene1_d}}</p></li>
+        <li class="scene scene-2"><p class="scene-num">02</p><h2>{{scene2_t}}</h2><p>{{scene2_d}}</p></li>
+        <li class="scene scene-3"><p class="scene-num">03</p><h2>{{scene3_t}}</h2><p>{{scene3_d}}</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="apps" class="apps">
+    <div class="wrap">
+      <h2 class="apps-title reveal">{{apps_title}}</h2>
+      <article class="app-card reveal">
+        <div class="app-head">
+          <img class="app-icon" src="/AbsoluteEar/assets/img/app-icon.png" alt="" width="72" height="72">
+          <div>
+            <h3>Absolute Ear</h3>
+            <p class="app-line">{{app_line}}</p>
+          </div>
+        </div>
+        <p class="app-desc">{{app_desc}}</p>
+        <div class="app-actions">
+          <a class="app-more" href="/AbsoluteEar/{{@app_lang_path}}">{{app_more}} <span aria-hidden="true">→</span></a>
+          <div class="store-btns">{{@badges_studio}}</div>
+        </div>
+        <div class="sori sori-card" data-sori="card" aria-hidden="true">
+          <img class="sori-still" src="{{@a}}/img/sori-still.webp" alt="" width="400" height="424" loading="lazy">
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer id="footer" class="footer">
+  <div class="wrap footer-inner">
+    <p class="footer-mark">tigerstone</p>
+    <nav class="footer-links" aria-label="{{footer_nav_label}}">
+      <a href="mailto:tigerstone1263@gmail.com">{{footer_contact}}</a>
+      <a href="{{@base}}?lang=ko" hreflang="ko" lang="ko" data-lang="ko" {{@cur_ko}}>한국어</a>
+      <a href="{{@base}}en/" hreflang="en" lang="en" data-lang="en" {{@cur_en}}>English</a>
+      <a href="{{@base}}zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
+    </nav>
+    <p class="trademark">{{footer_tm}}</p>
+    <p class="copyright">© tigerstone</p>
+  </div>
+</footer>
+
+</body>
+</html>
