@@ -8,7 +8,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEV = ROOT / "_dev"
-PAGES = {"ko": "index.html", "en": "en/index.html", "zh": "zh/index.html"}
+sys.dont_write_bytecode = True  # _dev/__pycache__ 가 저장소에 끼지 않게
+sys.path.insert(0, str(DEV))
+import build  # noqa: E402  주소 규칙(GROUPS·POLICY_COPIES·known_paths)을 빌드와 같은 곳에서 읽는다
+
+SITE = "https://tigerstone1263.com"
+AE_BASE = "/AbsoluteEar/"
+A = "/AbsoluteEar/assets"            # AE 전용 에셋 주소
+AE_ASSETS = ROOT / "AbsoluteEar" / "assets"
+CSS = AE_ASSETS / "css" / "site.css"
+PAGES = {"ko": "AbsoluteEar/index.html", "en": "AbsoluteEar/en/index.html", "zh": "AbsoluteEar/zh/index.html"}
 
 APP_STORE = "apps.apple.com/app/id6739764701"
 PLAY = "id=com.tigerstone.AbsoluteEar"
@@ -102,7 +111,7 @@ def check_page(lang, rel):
     for h in links:
         if h.startswith("javascript:"):
             fail(f"[{lang}] JS 링크 사용: {h}")
-    for need in ("/AbsoluteEarPolicy.html", "/termsOfService.html", "mailto:tigerstone1263@gmail.com"):
+    for need in ("/AbsoluteEar/PrivacyPolicy", "/AbsoluteEar/TermsOfService", "mailto:tigerstone1263@gmail.com"):
         if need not in links:
             fail(f"[{lang}] 링크 없음: {need}")
     if any("privacyPolicy.html" in h for h in links):
@@ -146,8 +155,8 @@ def check_sections(lang, html):
 
 
 HTML_LANG = {"ko": "ko", "en": "en", "zh": "zh-Hans"}
-HREFLANG = {"ko": "https://tigerstone1263.com/", "en": "https://tigerstone1263.com/en/",
-            "zh-Hans": "https://tigerstone1263.com/zh/", "x-default": "https://tigerstone1263.com/"}
+HREFLANG = {"ko": SITE + AE_BASE, "en": SITE + AE_BASE + "en/",
+            "zh-Hans": SITE + AE_BASE + "zh/", "x-default": SITE + AE_BASE}
 
 
 def check_lang_meta(lang, p):
@@ -160,6 +169,8 @@ def check_lang_meta(lang, p):
         fail(f"[{lang}] hreflang 불일치: {alts}")
     if not any(t == "script" and a.get("src") == "/assets/js/lang.js" for t, a in p.attrs_all):
         fail(f"[{lang}] lang.js 없음")
+    if html_tag.get("data-base") != AE_BASE:
+        fail(f"[{lang}] <html data-base> = {html_tag.get('data-base')} (lang.js 가 묶음 주소를 읽는 곳)")
 
 
 def check_meta(lang, p):
@@ -193,7 +204,7 @@ def check_shot_resolution():
     from PIL import Image
     for lang in PAGES:
         for n in SHOTS:
-            f = ROOT / "assets" / "img" / "shots" / lang / f"{n}.webp"
+            f = AE_ASSETS / "img" / "shots" / lang / f"{n}.webp"
             if not f.exists():
                 fail(f"shots/{lang}/{n}.webp 없음")
                 continue
@@ -205,9 +216,9 @@ def check_shot_resolution():
         # 언어 페이지는 자기 언어의 앱 화면만 쓴다
         html = (ROOT / PAGES[lang]).read_text(encoding="utf-8")
         for other in PAGES:
-            if other != lang and f"/assets/img/shots/{other}/" in html:
+            if other != lang and f"{A}/img/shots/{other}/" in html:
                 fail(f"[{lang}] 다른 언어({other}) 앱 화면을 쓴다")
-        if f"/assets/img/shots/{lang}/" not in html:
+        if f"{A}/img/shots/{lang}/" not in html:
             fail(f"[{lang}] 자기 언어 앱 화면이 없다")
 
 
@@ -224,7 +235,7 @@ def check_lang_banner(lang, p):
     if len(banner) != 1 or "hidden" not in banner[0]:
         fail("[ko] 숨겨진 #lang-banner 없음")
     for target in ("en", "zh"):
-        if not any(t == "a" and a.get("data-lang") == target and a.get("href") == f"/{target}/" and a.get("class") == "lang-banner-link"
+        if not any(t == "a" and a.get("data-lang") == target and a.get("href") == f"{AE_BASE}{target}/" and a.get("class") == "lang-banner-link"
                    for t, a in p.attrs_all):
             fail(f"[ko] 안내 띠에 {target} 링크 없음")
 
@@ -258,10 +269,10 @@ def check_design(lang, p, html):
             fail(f"[{lang}] 체험을 못 할 때의 안내(try-fallback) 없음")
         if 'role="status"' not in sec_try.group(0):
             fail(f"[{lang}] 결과 문장에 role=status 없음")
-    if not any(t == "script" and a.get("src") == "/assets/js/eartest.js" and "defer" in a for t, a in p.attrs_all):
+    if not any(t == "script" and a.get("src") == f"{A}/js/eartest.js" and "defer" in a for t, a in p.attrs_all):
         fail(f"[{lang}] eartest.js(defer) 없음")
-    # 데스크톱 QR → /get/ (기기에 맞는 스토어로 이동)
-    if not any(t == "img" and a.get("src") == "/assets/img/qr-get.svg" for t, a in p.attrs_all):
+    # 데스크톱 QR → /AbsoluteEar/get/ (기기에 맞는 스토어로 이동)
+    if not any(t == "img" and a.get("src") == f"{A}/img/qr-get.svg" for t, a in p.attrs_all):
         fail(f"[{lang}] 설치 QR 없음")
     if not any(t == "script" and a.get("src") == "/assets/js/reveal.js" and "defer" in a for t, a in p.attrs_all):
         fail(f"[{lang}] reveal.js(defer) 없음")
@@ -277,7 +288,7 @@ def check_design(lang, p, html):
         n = len(re.findall(r'<a class="store-btn', m.group(0))) if m else 0
         if n != 2:
             fail(f"[{lang}] {zone} 구역 스토어 버튼 {n}개 (2개여야 함)")
-    if re.search(r"radial-gradient|linear-gradient|backdrop-filter", (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8")):
+    if re.search(r"radial-gradient|linear-gradient|backdrop-filter", CSS.read_text(encoding="utf-8")):
         fail(f"[{lang}] 그라데이션·블러 장식 사용 (흑백·평면 톤 유지)")
     cards = re.findall(r'<article class="fcard', html)
     if len(cards) != 4:
@@ -288,7 +299,7 @@ def check_design(lang, p, html):
     # 워드마크는 장식 — 실제 글자로 두면 접근성 대비 검사에 걸리므로 CSS 의사 요소(data-text)로 그린다
     if not re.search(r'<div class="hero-wordmark" aria-hidden="true" data-text="Absolute Ear"></div>', hero_html):
         fail(f"[{lang}] 첫 화면 시그니처 워드마크 없음(장식은 data-text 의사 요소로)")
-    css = (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8")
+    css = CSS.read_text(encoding="utf-8")
     m = re.search(r"@keyframes riseIn \{([^}]*\})", css)
     if not m or "opacity" in m.group(1):
         fail("첫 화면 폰(LCP) 등장 애니메이션이 투명도를 바꿈 — LCP 가 늦어진다")
@@ -305,9 +316,9 @@ def check_design(lang, p, html):
     # 스크롤 연출: 무대(hero-stage)와 자막, cine.js(defer). 긴 활주로 높이는 JS 가 cine-on 을 달 때만 (JS 없으면 정적 첫 화면)
     if '<div class="hero-stage">' not in hero_html or 'class="hero-caption"' not in hero_html:
         fail(f"[{lang}] 첫 화면 연출 무대·자막 없음")
-    if not any(t == "script" and a.get("src") == "/assets/js/cine.js" and "defer" in a for t, a in p.attrs_all):
+    if not any(t == "script" and a.get("src") == f"{A}/js/cine.js" and "defer" in a for t, a in p.attrs_all):
         fail(f"[{lang}] cine.js(defer) 없음")
-    css_all = re.sub(r"/\*.*?\*/", "", (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8"), flags=re.S)
+    css_all = re.sub(r"/\*.*?\*/", "", CSS.read_text(encoding="utf-8"), flags=re.S)
     for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css_all):
         if "--runway" in body and "height" in body and ".cine-on" not in sel:
             fail(f"연출 활주로 높이가 cine-on 없이 걸림: {sel.strip()}")
@@ -323,7 +334,7 @@ def check_try_frames():
     """청음 맛보기의 소리 프레임 4장은 모두 같은 배경(음정 카테고리 #b6c6d8)이어야 한다 — 상태마다 색이 바뀌면 안 됨."""
     from PIL import Image
     for name in ("idle", "listen", "yes", "no"):
-        im = Image.open(ROOT / "assets" / "img" / "poses" / f"try-{name}.webp").convert("RGB")
+        im = Image.open(AE_ASSETS / "img" / "poses" / f"try-{name}.webp").convert("RGB")
         w, h = im.size
         for x, y in ((3, 3), (w - 4, 3), (3, h - 4), (w - 4, h - 4)):
             px = im.getpixel((x, y))
@@ -334,7 +345,7 @@ def check_try_frames():
 
 def check_zh_store_order():
     """중국어 페이지는 기기와 상관없이 App Store 먼저 — 기기별 강조 규칙은 zh 를 빼고 걸어야 한다."""
-    css = (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8")
+    css = CSS.read_text(encoding="utf-8")
     for sel in re.findall(r"([^{}]*\.os-(?:android|ios)[^{}]*)\{", css):
         for part in sel.split(","):
             if ".os-" in part and ':not([lang^="zh"])' not in part:
@@ -344,7 +355,7 @@ def check_zh_store_order():
 def check_reveal_needs_js():
     """등장 애니메이션은 <html class="js"> 일 때만 숨긴다 — JS 가 없으면 내용이 처음부터 보여야 한다."""
     import re
-    css = (ROOT / "assets" / "css" / "site.css").read_text(encoding="utf-8")
+    css = CSS.read_text(encoding="utf-8")
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
     for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
         if ".reveal" in sel and "opacity: 0" in body and not all(part.strip().startswith(".js ") for part in sel.split(",")):
@@ -355,7 +366,7 @@ def check_mascot(lang, html):
     """마스코트 그림은 앱 원본 소리여야 한다 (생성 그림은 생김새가 달라 사용자 반려)."""
     import re
     srcs = re.findall(r'<img class="(?:hero|cta)-sori" src="([^"]+)"', html)
-    if len(srcs) != 2 or any(s != "/assets/img/sori.webp" for s in srcs):
+    if len(srcs) != 2 or any(s != f"{A}/img/sori.webp" for s in srcs):
         fail(f"[{lang}] 히어로·CTA 마스코트가 sori.webp 가 아님: {srcs}")
 
 
@@ -363,7 +374,7 @@ def check_mascot_matches_app():
     from PIL import Image, ImageChops, ImageStat
     if not APP_SORI.exists():
         return
-    site = Image.open(ROOT / "assets" / "img" / "sori.webp").convert("RGBA")
+    site = Image.open(AE_ASSETS / "img" / "sori.webp").convert("RGBA")
     app = Image.open(APP_SORI).convert("RGBA")
     app = app.crop(app.getbbox())
     a, b = site.resize((64, 64)), app.resize((64, 64))
@@ -378,16 +389,67 @@ def check_sitemap():
         fail("sitemap.xml 없음")
         return
     xml = f.read_text(encoding="utf-8")
-    for url in ("https://tigerstone1263.com/", "https://tigerstone1263.com/en/", "https://tigerstone1263.com/zh/"):
+    want = [SITE + build.lang_path(g["base"], l) for g in build.GROUPS for l in build.LANGS]
+    if sorted(re.findall(r"<loc>([^<]+)</loc>", xml)) != sorted(want):
+        fail(f"sitemap 주소 불일치: {re.findall(r'<loc>([^<]+)</loc>', xml)}")
+    for url in want:
         if f"<loc>{url}</loc>" not in xml:
             fail(f"sitemap 에 {url} 없음")
-    import re
     for block in re.findall(r"<url>(.*?)</url>", xml, re.S):
         alts = dict(re.findall(r'hreflang="([^"]+)" href="([^"]+)"', block))
         if set(alts) != {"ko", "en", "zh-Hans", "x-default"}:
             fail(f"sitemap hreflang 불완전: {sorted(alts)}")
     if not (ROOT / "robots.txt").exists():
         fail("robots.txt 없음")
+
+
+def check_policy_copies():
+    """앱 폴더의 정책 주소는 루트 정책 파일의 사본이다. 지정한 치환 말고는 한 글자도 달라선 안 된다."""
+    for dst, (src, subs) in build.POLICY_COPIES.items():
+        f = ROOT / dst
+        if not f.exists():
+            fail(f"정책 사본 없음: {dst}")
+            continue
+        want = build.policy_copy((ROOT / src).read_text(encoding="utf-8"), subs)
+        if f.read_text(encoding="utf-8") != want:
+            fail(f"정책 사본이 원본({src})+지정 치환과 다름: {dst}")
+    if (ROOT / "AbsoluteEar" / "PrivacyPolicy.html").read_bytes() != (ROOT / "AbsoluteEarPolicy.html").read_bytes():
+        fail("AbsoluteEar/PrivacyPolicy.html 이 AbsoluteEarPolicy.html 과 바이트가 다름")
+    if "Real Absolute Pitch" in (ROOT / "AbsoluteEar" / "TermsOfService.html").read_text(encoding="utf-8"):
+        fail("AbsoluteEar/TermsOfService.html 에 다른 앱 이름이 남음")
+
+
+def resolve(url_path):
+    """GitHub Pages 가 그 주소에 내주는 파일. 끝이 / 면 index.html, 확장자가 없으면 .html 을 붙인다."""
+    rel = url_path.split("#")[0].split("?")[0].lstrip("/")
+    if rel == "" or rel.endswith("/"):
+        return ROOT / rel / "index.html"
+    f = ROOT / rel
+    if "." not in rel.rsplit("/", 1)[-1]:
+        return f.with_name(f.name + ".html")
+    return f
+
+
+def check_internal_refs():
+    """만든 페이지 안의 모든 내부 주소(href·src·srcset·data-frame-*)가 실제 파일로 열려야 한다. 404 구제 목록도 같다."""
+    files = list(PAGES.values()) + ["get/index.html", "AbsoluteEar/get/index.html", "404.html"]
+    for rel in files:
+        html = (ROOT / rel).read_text(encoding="utf-8")
+        refs = re.findall(r'(?:href|src|data-frame-[a-z]+)="(/[^"/][^"]*|/)"', html)
+        for srcset in re.findall(r'srcset="([^"]+)"', html):
+            refs += [part.strip().split(" ")[0] for part in srcset.split(",")]
+        for ref in refs:
+            if ref.startswith("//"):
+                continue
+            if not resolve(ref).exists():
+                fail(f"[{rel}] 열리지 않는 내부 주소: {ref}")
+    known = build.known_paths(build.GROUPS)
+    m = re.search(r"var KNOWN = (\[.*?\]);", (ROOT / "404.html").read_text(encoding="utf-8"))
+    if not m or json.loads(m.group(1)) != known:
+        fail("404.html 의 구제 목록이 build.known_paths 와 다름")
+    for k in known:
+        if not resolve(k).exists():
+            fail(f"404 구제 목록의 주소가 열리지 않음: {k}")
 
 
 def check_zh_spacing():
@@ -412,14 +474,32 @@ def check_string_keys():
             fail(f"[{lang}] 키 불일치: 빠짐 {sorted(base - k)} / 남음 {sorted(k - base)}")
 
 
-def check_build_rejects_missing_key():
+def temp_site(tmp):
+    """빌드에 필요한 것만 임시 폴더로 복사하고, 고치지 않은 상태로는 빌드가 성공하는지 먼저 확인한다
+    (필요한 파일이 빠져 엉뚱한 이유로 실패하면 '실패해야 하는' 검사가 거짓 통과한다)."""
     import shutil
+    import subprocess
+    shutil.copytree(DEV, tmp / "_dev")
+    shutil.copytree(ROOT / "assets", tmp / "assets")
+    shutil.copytree(ROOT / "AbsoluteEar", tmp / "AbsoluteEar")
+    for name in json.loads((DEV / "policy_hashes.json").read_text()):
+        shutil.copy(ROOT / name, tmp / name)
+    r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True, text=True)
+    if r.returncode != 0:
+        fail("임시 폴더 빌드가 그대로도 실패함: " + (r.stderr.strip().splitlines() or ["?"])[-1])
+        return False
+    for f in [tmp / rel for rel in PAGES.values()]:
+        f.unlink()
+    return True
+
+
+def check_build_rejects_missing_key():
     import subprocess
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        shutil.copytree(DEV, tmp / "_dev")
-        shutil.copytree(ROOT / "assets", tmp / "assets")
+        if not temp_site(tmp):
+            return
         f = tmp / "_dev" / "strings" / "en.json"
         if not f.exists():
             fail("빌드 키 누락 검사: en.json 없음")
@@ -433,24 +513,27 @@ def check_build_rejects_missing_key():
 
 
 def check_get_page():
-    f = ROOT / "get" / "index.html"
+    f = ROOT / "AbsoluteEar" / "get" / "index.html"
     if not f.exists():
-        fail("get/index.html 없음")
+        fail("AbsoluteEar/get/index.html 없음")
         return
+    old = ROOT / "get" / "index.html"
+    if not old.exists() or old.read_bytes() != f.read_bytes():
+        fail("옛 QR 주소 get/index.html 이 AbsoluteEar/get/index.html 과 다름 (build.py 가 복사)")
     html = f.read_text(encoding="utf-8")
     for need in ("apps.apple.com/app/id6739764701", "id=com.tigerstone.AbsoluteEar", 'name="robots" content="noindex"'):
         if need not in html:
             fail(f"get/index.html 에 {need} 없음")
     if re.search(r'<script[^>]+src=', html):
         fail("get/index.html 에 외부 스크립트")
-    qr = ROOT / "assets" / "img" / "qr-get.svg"
+    qr = AE_ASSETS / "img" / "qr-get.svg"
     if not qr.exists() or "<svg" not in qr.read_text(encoding="utf-8"):
-        fail("assets/img/qr-get.svg 없음")
+        fail("AbsoluteEar/assets/img/qr-get.svg 없음")
 
 
 def check_node_tests():
     import subprocess
-    for t in ("test_eartest.js", "test_eartest_dom.js", "test_os.js", "test_cine.js"):
+    for t in ("test_eartest.js", "test_eartest_dom.js", "test_os.js", "test_cine.js", "test_404.js"):
         r = subprocess.run(["node", str(DEV / t)], capture_output=True, text=True)
         if r.returncode != 0:
             fail((r.stdout.strip() or r.stderr.strip().splitlines()[-1]) + f" ({t})")
@@ -480,7 +563,7 @@ def check_layout():
     try:
         import time; time.sleep(0.8)
         for lang in PAGES:
-            path = "/" if lang == "ko" else f"/{lang}/"
+            path = build.lang_path(AE_BASE, lang)
             for w, scale in LAYOUTS:
                 url = f"http://127.0.0.1:{port}/_dev/layout_check.html?w={w}&p={path}&scale={scale}"
                 out = ""
@@ -506,23 +589,24 @@ def check_layout():
 
 
 def check_build_requires_all_langs():
-    import shutil
     import subprocess
     import tempfile
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        shutil.copytree(DEV, tmp / "_dev")
-        shutil.copytree(ROOT / "assets", tmp / "assets")
+        if not temp_site(tmp):
+            return
         (tmp / "_dev" / "strings" / "zh.json").unlink()
         r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True)
         if r.returncode == 0:
             fail("언어 JSON 이 없어도 빌드가 성공함")
-        if (tmp / "index.html").exists():
+        if any((tmp / rel).exists() for rel in PAGES.values()):
             fail("빌드가 실패했는데 일부 언어 html 을 써 버림")
 
 
 def main():
     check_policy_files()
+    check_policy_copies()
+    check_internal_refs()
     check_build_requires_all_langs()
     check_lang_js()
     check_node_tests()

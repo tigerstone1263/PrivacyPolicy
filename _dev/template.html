@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{html_lang}}">
+<html lang="{{html_lang}}" data-base="{{@base}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,7 @@
 <meta property="og:title" content="{{title}}">
 <meta property="og:description" content="{{description}}">
 <meta property="og:url" content="{{@url}}">
-<meta property="og:image" content="{{@site}}/assets/img/og-{{@lang}}.png">
+<meta property="og:image" content="{{@site}}{{@a}}/img/og-{{@lang}}.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -19,10 +19,7 @@
 <meta name="theme-color" content="#2c3048">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="alternate" hreflang="ko" href="https://tigerstone1263.com/">
-<link rel="alternate" hreflang="en" href="https://tigerstone1263.com/en/">
-<link rel="alternate" hreflang="zh-Hans" href="https://tigerstone1263.com/zh/">
-<link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/">
+{{@alternates}}
 <script id="os-detect">
 // <html> 에 js(스크롤 등장 등 JS 전용 스타일)와 기기 클래스(os-ios / os-android)를 단다 — 스토어 버튼 순서·강조에 쓴다
 (function (h) {
@@ -34,12 +31,12 @@
 </script>
 <script src="/assets/js/lang.js"></script>
 <script src="/assets/js/reveal.js" defer></script>
-<script src="/assets/js/cine.js" defer></script>
-<script src="/assets/js/eartest.js" defer></script>
+<script src="{{@a}}/js/cine.js" defer></script>
+<script src="{{@a}}/js/eartest.js" defer></script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
-<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="{{@a}}/css/site.css">
 </head>
 <body>
 <div class="page-grain" aria-hidden="true"></div>
@@ -48,14 +45,14 @@
 <header class="top in-down">
   <nav class="topnav" aria-label="{{nav_label}}">
     <div class="wrap topnav-inner">
-      <a class="brand" href="#hero"><img src="/assets/img/app-icon.png" alt="" width="30" height="30">Absolute Ear</a>
+      <a class="brand" href="#hero"><img src="{{@a}}/img/app-icon.png" alt="" width="30" height="30">Absolute Ear</a>
       <div class="topnav-right">
         <a class="nav-link" href="#features">{{hero_tour}}</a>
         <a class="nav-link" href="#faq">{{faq_title}}</a>
         <span class="nav-langs">
-          <a href="/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" {{@cur_ko}}>KO</a>
-          <a href="/en/" hreflang="en" lang="en" data-lang="en" {{@cur_en}}>EN</a>
-          <a href="/zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
+          <a href="{{@base}}?lang=ko" hreflang="ko" lang="ko" data-lang="ko" {{@cur_ko}}>KO</a>
+          <a href="{{@base}}en/" hreflang="en" lang="en" data-lang="en" {{@cur_en}}>EN</a>
+          <a href="{{@base}}zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
         </span>
         <a class="nav-cta" href="#cta">{{nav_download}}</a>
       </div>
@@ -77,7 +74,7 @@
       <div class="hero-visual in-rise" style="--d:350ms">
         <img class="phone phone-back" src="{{@shots}}/feat-ear-480.webp" srcset="{{@shots}}/feat-ear-480.webp 480w, {{@shots}}/feat-ear.webp 720w" sizes="(min-width: 1100px) 220px, (min-width: 768px) 190px, 40vw" alt="" width="720" height="1564" fetchpriority="low">
         <img class="phone phone-front" src="{{@shots}}/phone-hero-480.webp" srcset="{{@shots}}/phone-hero-480.webp 480w, {{@shots}}/phone-hero.webp 720w" sizes="(min-width: 1100px) 270px, (min-width: 768px) 236px, 50vw" alt="{{hero_phone_alt}}" width="720" height="1564" fetchpriority="high">
-        <img class="hero-sori" src="/assets/img/sori.webp" alt="" width="440" height="431">
+        <img class="hero-sori" src="{{@a}}/img/sori.webp" alt="" width="440" height="431">
       </div>
     </div>
     <p class="hero-caption">{{hero_caption}}</p>
@@ -85,7 +82,7 @@
    </div>
   </section>
 
-  <section id="try" class="try" data-q="{{try_q}}" data-correct="{{try_correct}}" data-wrong="{{try_wrong}}" data-result="{{try_result}}" data-perfect="{{try_perfect}}" data-keep="{{try_keep}}" data-play="{{try_play}}" data-replay="{{try_replay}}" data-zero="{{try_zero}}" data-frame-idle="/assets/img/poses/try-idle.webp" data-frame-listen="/assets/img/poses/try-listen.webp" data-frame-yes="/assets/img/poses/try-yes.webp" data-frame-no="/assets/img/poses/try-no.webp">
+  <section id="try" class="try" data-q="{{try_q}}" data-correct="{{try_correct}}" data-wrong="{{try_wrong}}" data-result="{{try_result}}" data-perfect="{{try_perfect}}" data-keep="{{try_keep}}" data-play="{{try_play}}" data-replay="{{try_replay}}" data-zero="{{try_zero}}" data-frame-idle="{{@a}}/img/poses/try-idle.webp" data-frame-listen="{{@a}}/img/poses/try-listen.webp" data-frame-yes="{{@a}}/img/poses/try-yes.webp" data-frame-no="{{@a}}/img/poses/try-no.webp">
     <div class="wrap try-inner">
       <div class="section-head reveal">
         <p class="eyebrow">{{try_eyebrow}}</p>
@@ -94,7 +91,7 @@
         <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>{{try_note}}</p>
       </div>
       <div class="try-card reveal">
-        <div class="try-stage"><img src="/assets/img/poses/try-idle.webp" alt="" width="600" height="450" loading="lazy"></div>
+        <div class="try-stage"><img src="{{@a}}/img/poses/try-idle.webp" alt="" width="600" height="450" loading="lazy"></div>
         <div class="try-live">
           <p class="try-progress"></p>
           <button type="button" class="try-play"><span class="ico" aria-hidden="true">▶</span> <span class="lbl">{{try_play}}</span></button>
@@ -202,11 +199,11 @@
 
   <section id="cta" class="wrap">
     <div class="cta-card reveal">
-      <img class="cta-sori" src="/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy">
+      <img class="cta-sori" src="{{@a}}/img/sori.webp" alt="" width="440" height="431" loading="lazy">
       <h2>{{hero_title}}</h2>
       <div class="store-btns">{{@badges_cta}}</div>
       <p class="store-note">{{hero_note}}</p>
-      <div class="cta-qr"><img src="/assets/img/qr-get.svg" alt="" width="112" height="112" loading="lazy"><p>{{cta_qr}}</p></div>
+      <div class="cta-qr"><img src="{{@a}}/img/qr-get.svg" alt="" width="112" height="112" loading="lazy"><p>{{cta_qr}}</p></div>
     </div>
   </section>
 </main>
@@ -214,14 +211,14 @@
 <footer id="footer" class="footer">
   <div class="wrap footer-inner">
     <nav class="footer-links" aria-label="{{footer_nav_label}}">
-      <a href="/AbsoluteEarPolicy.html">{{footer_privacy}}</a>
-      <a href="/termsOfService.html">{{footer_terms}}</a>
+      <a href="{{@base}}PrivacyPolicy">{{footer_privacy}}</a>
+      <a href="{{@base}}TermsOfService">{{footer_terms}}</a>
       <a href="mailto:tigerstone1263@gmail.com">{{footer_contact}}</a>
     </nav>
     <nav class="lang-switch" aria-label="Language">
-      <a href="/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" {{@cur_ko}}>한국어</a>
-      <a href="/en/" hreflang="en" lang="en" data-lang="en" {{@cur_en}}>English</a>
-      <a href="/zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
+      <a href="{{@base}}?lang=ko" hreflang="ko" lang="ko" data-lang="ko" {{@cur_ko}}>한국어</a>
+      <a href="{{@base}}en/" hreflang="en" lang="en" data-lang="en" {{@cur_en}}>English</a>
+      <a href="{{@base}}zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" {{@cur_zh}}>中文</a>
     </nav>
     <p class="trademark">{{footer_tm}}</p>
     <p class="copyright">© tigerstone</p>

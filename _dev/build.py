@@ -1,7 +1,8 @@
-"""strings/<lang>.json 을 template.html 에 채워 언어별 index.html 을 만든다.
+"""문구 JSON 을 템플릿에 채워 페이지 묶음(앱 폴더·루트)마다 언어별 index.html 을 만든다.
 
 템플릿의 {{key}} 는 문구 JSON 값으로, {{@name}} 은 아래 계산값으로 채운다.
 JSON 에 없는 키가 템플릿에 있으면 KeyError 로 빌드를 멈춘다.
+같이 만드는 것: 앱 폴더의 정책 사본, 옛 /get/ 사본, sitemap.xml, 404.html(대소문자 틀린 주소 구제).
 """
 import json
 import re
@@ -10,7 +11,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEV = ROOT / "_dev"
-LANGS = {"ko": "index.html", "en": "en/index.html", "zh": "zh/index.html"}
+LANGS = ("ko", "en", "zh")
+HREFLANG = {"ko": "ko", "en": "en", "zh": "zh-Hans"}
 SITE = "https://tigerstone1263.com"
 APP_STORE = "https://apps.apple.com/app/id6739764701"
 PLAY = "https://play.google.com/store/apps/details?id=com.tigerstone.AbsoluteEar"
@@ -53,25 +55,66 @@ def hero_lines(title):
     return "".join(f'<span class="in-blur h1-line" style="--d:{250 + i * 170}ms">{ln}</span>' for i, ln in enumerate(lines))
 
 
-# 루트(한국어) 페이지에만 넣는 언어 안내 띠. 문구는 안내받을 사람의 언어로 쓴다.
+# 묶음의 한국어 페이지에만 넣는 언어 안내 띠. 문구는 안내받을 사람의 언어로 쓴다.
 LANG_BANNER = """<div id="lang-banner" class="lang-banner" hidden>
-  <p data-for="en" lang="en">This page is also available in English. <a class="lang-banner-link" href="/en/" lang="en" data-lang="en">View in English →</a></p>
-  <p data-for="zh" lang="zh-Hans">本页面也有中文版。<a class="lang-banner-link" href="/zh/" lang="zh-Hans" data-lang="zh">查看中文版 →</a></p>
+  <p data-for="en" lang="en">This page is also available in English. <a class="lang-banner-link" href="{base}en/" lang="en" data-lang="en">View in English →</a></p>
+  <p data-for="zh" lang="zh-Hans">本页面也有中文版。<a class="lang-banner-link" href="{base}zh/" lang="zh-Hans" data-lang="zh">查看中文版 →</a></p>
   <button type="button" class="lang-banner-close" aria-label="닫기 / Close">×</button>
 </div>"""
 
 
-def computed(lang, s):
+# 페이지 묶음. base 는 주소 앞부분, assets 는 그 묶음 전용 에셋 폴더(주소).
+APP = {
+    "name": "AbsoluteEar",
+    "base": "/AbsoluteEar/",
+    "assets": "/AbsoluteEar/assets",
+    "template": DEV / "template.html",
+    "strings": DEV / "strings",
+}
+GROUPS = [APP]
+
+# 스토어에 등록된 루트 정책 파일은 바이트 하나도 바꾸지 않는다(policy_hashes.json).
+# 앱 폴더의 새 주소는 그 사본이다. 치환은 (찾을 문구, 바꿀 문구) — 각각 정확히 한 번 나와야 한다.
+POLICY_COPIES = {
+    "AbsoluteEar/PrivacyPolicy.html": ("AbsoluteEarPolicy.html", []),
+    "AbsoluteEar/TermsOfService.html": ("termsOfService.html",
+                                        [("Real Absolute Pitch Infinite Note", "Absolute Ear Infinite Note")]),
+}
+# 옛 QR 주소(/get/)는 앱 폴더 것과 같은 내용으로 둔다 — 한 번 더 이동시키지 않으려고.
+GET_COPY = ("AbsoluteEar/get/index.html", "get/index.html")
+# 404 구제 대상이 되는, 페이지 묶음 밖의 정식 주소
+EXTRA_PATHS = ["/AbsoluteEar/get/", "/get/", "/AbsoluteEar/PrivacyPolicy", "/AbsoluteEar/TermsOfService",
+               "/AbsoluteEarPolicy.html", "/termsOfService.html", "/privacyPolicy.html", "/PitchRunner.html"]
+
+
+def lang_path(base, lang):
+    return base if lang == "ko" else f"{base}{lang}/"
+
+
+def out_file(base, lang):
+    return lang_path(base, lang).lstrip("/") + "index.html"
+
+
+def alternates(base):
+    rows = [(HREFLANG[l], SITE + lang_path(base, l)) for l in LANGS] + [("x-default", SITE + base)]
+    return "\n".join(f'<link rel="alternate" hreflang="{h}" href="{u}">' for h, u in rows)
+
+
+def computed(lang, s, g):
+    base, a = g["base"], g["assets"]
     return {
         "lang": lang,
+        "base": base,
+        "a": a,
         "badges_hero": badges(lang, s, "hero"),
         "badges_cta": badges(lang, s, "footer-cta"),
         "badges_try": badges(lang, s, "try"),
         "hero_lines": hero_lines(s["hero_title"]),
-        "url": SITE + "/" + ("" if lang == "ko" else f"{lang}/"),
+        "url": SITE + lang_path(base, lang),
+        "alternates": alternates(base),
         "site": SITE,
-        "shots": f"/assets/img/shots/{lang}",
-        "lang_banner": LANG_BANNER if lang == "ko" else "",
+        "shots": f"{a}/img/shots/{lang}",
+        "lang_banner": LANG_BANNER.format(base=base) if lang == "ko" else "",
         **{f"cur_{l}": 'aria-current="true"' if l == lang else "" for l in LANGS},
     }
 
@@ -86,25 +129,110 @@ def render(template, strings, calc):
     return re.sub(r"\{\{\s*(@?[\w.-]+)\s*\}\}", sub, template)
 
 
+def policy_copy(src_text, subs):
+    for old, new in subs:
+        n = src_text.count(old)
+        if n != 1:
+            raise ValueError(f"정책 치환 대상이 {n}번 나옴: {old}")
+        src_text = src_text.replace(old, new)
+    return src_text
+
+
+def sitemap(groups):
+    urls = []
+    for g in groups:
+        alts = [(HREFLANG[l], SITE + lang_path(g["base"], l)) for l in LANGS] + [("x-default", SITE + g["base"])]
+        links = "\n".join(f'    <xhtml:link rel="alternate" hreflang="{h}" href="{u}"/>' for h, u in alts)
+        for l in LANGS:
+            urls.append(f"  <url>\n    <loc>{SITE + lang_path(g['base'], l)}</loc>\n{links}\n  </url>")
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+            + "\n".join(urls) + "\n</urlset>\n")
+
+
+def known_paths(groups):
+    return [lang_path(g["base"], l) for g in groups for l in LANGS] + EXTRA_PATHS
+
+
+# GitHub Pages 는 주소의 대소문자를 구분한다(/absoluteear → 404). 맥은 대소문자만 다른 폴더를 둘 수 없으므로
+# 404 페이지에서 알려진 정식 주소로 보낸다. 비교 키: 소문자, .html·index.html·끝 / 를 뗀 것.
+NOT_FOUND = """<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>404 · tigerstone</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<script>
+(function () {
+  var KNOWN = __KNOWN__;
+  function key(p) { return p.toLowerCase().replace(/\\/index\\.html$/, '/').replace(/\\.html$/, '').replace(/\\/+$/, ''); }
+  var here, to = null;
+  try { here = key(decodeURI(location.pathname)); } catch (e) { here = key(location.pathname); }
+  for (var i = 0; i < KNOWN.length && !to; i++) if (key(KNOWN[i]) === here) to = KNOWN[i];
+  if (!to) {  // 앱 폴더 안의 모르는 주소는 그 앱 첫 화면으로
+    var seg = here.split('/')[1] || '';
+    for (var j = 0; j < KNOWN.length && !to; j++) {
+      var top = KNOWN[j].split('/')[1] || '';
+      if (top && top.indexOf('.') < 0 && top.toLowerCase() === seg) to = '/' + top + '/';
+    }
+  }
+  if (to && to !== location.pathname) location.replace(to + location.search + location.hash);
+})();
+</script>
+<style>
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #fafafa; color: #191919;
+         font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; text-align: center; }
+  h1 { font-size: 3rem; margin: 0 0 12px; letter-spacing: -0.03em; }
+  p { margin: 6px 0; color: #6b6b6b; }
+  a { color: #191919; font-weight: 700; }
+</style>
+</head>
+<body>
+<main>
+  <h1>404</h1>
+  <p>페이지를 찾을 수 없어요.</p>
+  <p lang="en">Page not found.</p>
+  <p lang="zh-Hans">找不到该页面。</p>
+  <p><a href="/">tigerstone1263.com</a></p>
+</main>
+</body>
+</html>
+"""
+
+
 def build(dev=DEV, root=ROOT):
-    """세 언어를 모두 렌더링한 뒤에만 쓴다 — 하나라도 실패하면 아무 파일도 바꾸지 않는다."""
-    template = (dev / "template.html").read_text(encoding="utf-8")
-    pages = {}
-    for lang, rel in LANGS.items():
-        src = dev / "strings" / f"{lang}.json"
-        if not src.exists():
-            print(f"[{lang}] 문구 파일 없음: {src.name}", file=sys.stderr)
-            sys.exit(1)
-        strings = json.loads(src.read_text(encoding="utf-8"))
+    """모든 파일을 메모리에서 만든 뒤에만 쓴다 — 하나라도 실패하면 아무 파일도 바꾸지 않는다."""
+    out = {}
+    for g in GROUPS:
+        tpl_path = dev / g["template"].relative_to(DEV)
+        str_dir = dev / g["strings"].relative_to(DEV)
+        template = tpl_path.read_text(encoding="utf-8")
+        for lang in LANGS:
+            src = str_dir / f"{lang}.json"
+            if not src.exists():
+                print(f"[{g['name']}/{lang}] 문구 파일 없음: {src.name}", file=sys.stderr)
+                sys.exit(1)
+            strings = json.loads(src.read_text(encoding="utf-8"))
+            try:
+                out[out_file(g["base"], lang)] = render(template, strings, computed(lang, strings, g))
+            except KeyError as e:
+                print(f"[{g['name']}/{lang}] 문구 키 없음: {e.args[0]}", file=sys.stderr)
+                sys.exit(1)
+    for dst, (src, subs) in POLICY_COPIES.items():
         try:
-            pages[rel] = render(template, strings, computed(lang, strings))
-        except KeyError as e:
-            print(f"[{lang}] 문구 키 없음: {e.args[0]}", file=sys.stderr)
+            out[dst] = policy_copy((root / src).read_text(encoding="utf-8"), subs)
+        except ValueError as e:
+            print(f"[{dst}] {e}", file=sys.stderr)
             sys.exit(1)
-    for rel, html in pages.items():
-        out = root / rel
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(html, encoding="utf-8")
+    out[GET_COPY[1]] = (root / GET_COPY[0]).read_text(encoding="utf-8")
+    out["sitemap.xml"] = sitemap(GROUPS)
+    out["404.html"] = NOT_FOUND.replace("__KNOWN__", json.dumps(known_paths(GROUPS)))
+    for rel, text in out.items():
+        f = root / rel
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(text, encoding="utf-8")
         print(f"wrote {rel}")
 
 

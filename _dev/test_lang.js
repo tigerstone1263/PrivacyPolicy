@@ -1,13 +1,14 @@
 // lang.js 를 가짜 브라우저 환경에서 실행해 이동·안내 띠 규칙을 확인한다. 실패 시 exit 1.
-// 규칙: 브라우저 언어만으로는 이동하지 않는다(검색 로봇이 / 를 리디렉션으로 보지 않게).
-//       루트(/)에서 브라우저 언어가 ko 가 아니면 그 언어 안내 띠를 보여 준다.
+// 규칙: 브라우저 언어만으로는 이동하지 않는다(검색 로봇이 한국어 주소를 리디렉션으로 보지 않게).
+//       묶음의 한국어 주소(<html data-base>, 없으면 /)에서 브라우저 언어가 ko 가 아니면 그 언어 안내 띠를 보여 준다.
 //       방문자가 직접 고른 언어(저장값·?lang=)만 이동 근거가 된다.
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const src = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'lang.js'), 'utf8');
 
-function run({ path: p, langs, saved, search = '', blocked = false }) {
+
+function run({ path: p, langs, saved, search = '', blocked = false, base = null }) {
   let replaced = null;
   let shown = null;
   const listeners = {};
@@ -29,6 +30,7 @@ function run({ path: p, langs, saved, search = '', blocked = false }) {
       readyState: 'loading',
       addEventListener: (ev, fn) => { (listeners[ev] = listeners[ev] || []).push(fn); },
       getElementById: (id) => (id === 'lang-banner' ? banner : null),
+      documentElement: { getAttribute: (k) => (k === 'data-base' ? base : null) },
     },
   };
   vm.runInNewContext(src, ctx);
@@ -57,8 +59,18 @@ const cases = [
   [{ path: '/', langs: ['en-US'], search: '?utm_source=x' }, R(null, 'en')],
   [{ path: '/', langs: ['ko-KR'], search: '?lang=en&utm_source=x' }, R('/en/?utm_source=x')],
 ];
+// 같은 규칙이 앱 폴더(/AbsoluteEar/)에서도 그대로: 경로·이동 대상에 앞부분만 붙는다
+const AE = '/AbsoluteEar/';
+const pre = (u) => (u && u.startsWith('/') ? AE + u.slice(1) : u);
+const appCases = cases.map(([i, w]) => [{ ...i, base: AE, path: pre(i.path) }, R(pre(w.replaced), w.banner)]);
+const cross = [
+  // 루트 묶음의 스크립트는 앱 폴더 주소에서 아무것도 하지 않고, 반대도 같다
+  [{ path: AE, langs: ['ko-KR'], saved: 'zh', base: '/' }, R(null)],
+  [{ path: '/', langs: ['ko-KR'], saved: 'zh', base: AE }, R(null)],
+  [{ path: '/', langs: ['ko-KR'], saved: 'en', base: '/' }, R('/en/')],
+];
 let bad = 0;
-for (const [input, want] of cases) {
+for (const [input, want] of [...cases, ...appCases, ...cross]) {
   const got = run(input);
   if (got.replaced !== want.replaced || got.banner !== want.banner) {
     bad++;

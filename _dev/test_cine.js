@@ -1,8 +1,8 @@
-// 첫 화면 스크롤 연출(assets/js/cine.js)의 켜짐 조건과 장면 값을 DOM 없이 확인한다. 실패 시 exit 1.
+// 첫 화면 스크롤 연출(AbsoluteEar/assets/js/cine.js)의 켜짐 조건과 장면 값을 DOM 없이 확인한다. 실패 시 exit 1.
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
-const src = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'cine.js'), 'utf8');
+const src = fs.readFileSync(path.join(__dirname, '..', 'AbsoluteEar', 'assets', 'js', 'cine.js'), 'utf8');
 const ctx = {}; ctx.window = ctx;
 vm.runInNewContext(src, ctx);
 const C = ctx.Cine;

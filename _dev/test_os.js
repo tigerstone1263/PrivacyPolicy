@@ -1,4 +1,4 @@
-// 기기 판별(템플릿 head 의 #os-detect)과 /get/ 이동 규칙을 확인한다. 실패 시 exit 1.
+// 기기 판별(템플릿 head 의 #os-detect)과 /AbsoluteEar/get/·/get/ 이동 규칙을 확인한다. 실패 시 exit 1.
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
@@ -31,7 +31,9 @@ if (m) for (const [k, ua] of Object.entries(UA)) {
 }
 
 // 2) /get/ : iOS → App Store, Android → Google Play(utm_campaign=qr), 그 외는 이동하지 않음
-const getHtml = fs.readFileSync(path.join(root, 'get', 'index.html'), 'utf8');
+const getHtml = fs.readFileSync(path.join(root, 'AbsoluteEar', 'get', 'index.html'), 'utf8');
+// 옛 QR 주소 /get/ 은 앱 폴더 것과 같은 내용이어야 한다(build.py 가 복사)
+ok(fs.readFileSync(path.join(root, 'get', 'index.html'), 'utf8') === getHtml, '/get/ 이 /AbsoluteEar/get/ 과 다름');
 const g = /<script>([\s\S]*?)<\/script>/.exec(getHtml);
 ok(g, '/get/ 이동 스크립트 없음');
 if (g) for (const [k, ua] of Object.entries(UA)) {

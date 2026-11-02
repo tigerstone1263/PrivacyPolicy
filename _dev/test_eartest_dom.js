@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
-const src = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'eartest.js'), 'utf8');
+const src = fs.readFileSync(path.join(__dirname, '..', 'AbsoluteEar', 'assets', 'js', 'eartest.js'), 'utf8');
 let bad = 0;
 const ok = (c, m) => { if (!c) { bad++; console.log('eartest-dom: ' + m); } };
 

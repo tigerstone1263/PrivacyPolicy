@@ -1,8 +1,8 @@
-// 청음 맛보기(assets/js/eartest.js)의 문제 생성·채점 로직을 DOM 없이 확인한다. 실패 시 exit 1.
+// 청음 맛보기(AbsoluteEar/assets/js/eartest.js)의 문제 생성·채점 로직을 DOM 없이 확인한다. 실패 시 exit 1.
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
-const src = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'eartest.js'), 'utf8');
+const src = fs.readFileSync(path.join(__dirname, '..', 'AbsoluteEar', 'assets', 'js', 'eartest.js'), 'utf8');
 const ctx = {};
 ctx.window = ctx;
 vm.runInNewContext(src, ctx);
