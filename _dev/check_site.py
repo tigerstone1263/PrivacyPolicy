@@ -527,6 +527,8 @@ def check_policy_copies():
         fail("AbsoluteEar/PrivacyPolicy.html 이 AbsoluteEarPolicy.html 과 바이트가 다름")
     if "Real Absolute Pitch" in (ROOT / "AbsoluteEar" / "TermsOfService.html").read_text(encoding="utf-8"):
         fail("AbsoluteEar/TermsOfService.html 에 다른 앱 이름이 남음")
+    if "<title>Terms of Service</title>" not in (ROOT / "AbsoluteEar" / "TermsOfService.html").read_text(encoding="utf-8"):
+        fail("AbsoluteEar/TermsOfService.html 의 탭 제목이 Terms of Service 가 아님")
 
 
 def resolve(url_path):

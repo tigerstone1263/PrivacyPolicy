@@ -88,7 +88,8 @@ GROUPS = [STUDIO, APP]
 POLICY_COPIES = {
     "AbsoluteEar/PrivacyPolicy.html": ("AbsoluteEarPolicy.html", []),
     "AbsoluteEar/TermsOfService.html": ("termsOfService.html",
-                                        [("Real Absolute Pitch Infinite Note", "Absolute Ear Infinite Note")]),
+                                        [("Real Absolute Pitch Infinite Note", "Absolute Ear Infinite Note"),
+                                         ("<title>Privacy Policy</title>", "<title>Terms of Service</title>")]),
 }
 # 옛 QR 주소(/get/)는 앱 폴더 것과 같은 내용으로 둔다 — 한 번 더 이동시키지 않으려고.
 GET_COPY = ("AbsoluteEar/get/index.html", "get/index.html")
