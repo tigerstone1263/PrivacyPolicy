@@ -2,7 +2,7 @@
 
 템플릿의 {{key}} 는 문구 JSON 값으로, {{@name}} 은 아래 계산값으로 채운다.
 JSON 에 없는 키가 템플릿에 있으면 KeyError 로 빌드를 멈춘다.
-같이 만드는 것: 앱 폴더의 정책 사본, 옛 /get/ 사본, sitemap.xml, 404.html(대소문자 틀린 주소 구제).
+같이 만드는 것: 앱 폴더의 정책 페이지(_dev/policy 원본 복사), 옛 /get/ 사본, sitemap.xml, 404.html(대소문자 틀린 주소 구제).
 """
 import json
 import re
@@ -83,14 +83,15 @@ STUDIO = {
 }
 GROUPS = [STUDIO, APP]
 
-# 스토어에 등록된 루트 정책 파일은 바이트 하나도 바꾸지 않는다(policy_hashes.json).
-# 앱 폴더의 새 주소는 그 사본이다. 치환은 (찾을 문구, 바꿀 문구) — 각각 정확히 한 번 나와야 한다.
-POLICY_COPIES = {
-    "AbsoluteEar/PrivacyPolicy.html": ("AbsoluteEarPolicy.html", []),
-    "AbsoluteEar/TermsOfService.html": ("termsOfService.html",
-                                        [("Real Absolute Pitch Infinite Note", "Absolute Ear Infinite Note"),
-                                         ("<title>Privacy Policy</title>", "<title>Terms of Service</title>")]),
+# 스토어에 등록된 루트 정책 파일은 바이트 하나도 바꾸지 않는다(policy_hashes.json) — 옛 앱 버전과 스토어 등록이 그 주소를 연다.
+# 앱 폴더의 정책 주소는 _dev/policy 의 원본을 바이트 그대로 복사한다. 내용은 원본에서 고치고 빌드한다.
+# (_dev 는 GitHub Pages(Jekyll)가 내보내지 않으므로 원본 주소는 공개되지 않는다)
+POLICY_PAGES = {
+    "AbsoluteEar/PrivacyPolicy.html": DEV / "policy" / "PrivacyPolicy.html",
+    "AbsoluteEar/TermsOfService.html": DEV / "policy" / "TermsOfService.html",
 }
+# 원본에 남은 소유자 결정 자리. 게시 전에 모두 채운다(check_site.py --publish 가 막는다)
+POLICY_PLACEHOLDER = "[OWNER DECISION"
 # 옛 QR 주소(/get/)는 앱 폴더 것과 같은 내용으로 둔다 — 한 번 더 이동시키지 않으려고.
 GET_COPY = ("AbsoluteEar/get/index.html", "get/index.html")
 # 404 구제 대상이 되는, 페이지 묶음 밖의 정식 주소
@@ -140,15 +141,6 @@ def render(template, strings, calc):
         return strings[key]
 
     return re.sub(r"\{\{\s*(@?[\w.-]+)\s*\}\}", sub, template)
-
-
-def policy_copy(src_text, subs):
-    for old, new in subs:
-        n = src_text.count(old)
-        if n != 1:
-            raise ValueError(f"정책 치환 대상이 {n}번 나옴: {old}")
-        src_text = src_text.replace(old, new)
-    return src_text
 
 
 def sitemap(groups):
@@ -233,19 +225,22 @@ def build(dev=DEV, root=ROOT):
             except KeyError as e:
                 print(f"[{g['name']}/{lang}] 문구 키 없음: {e.args[0]}", file=sys.stderr)
                 sys.exit(1)
-    for dst, (src, subs) in POLICY_COPIES.items():
-        try:
-            out[dst] = policy_copy((root / src).read_text(encoding="utf-8"), subs)
-        except ValueError as e:
-            print(f"[{dst}] {e}", file=sys.stderr)
+    for dst, src in POLICY_PAGES.items():
+        src = dev / src.relative_to(DEV)
+        if not src.exists():
+            print(f"[{dst}] 정책 원본 없음: _dev/{src.relative_to(dev).as_posix()}", file=sys.stderr)
             sys.exit(1)
+        out[dst] = src.read_bytes()  # 바이트 그대로(줄바꿈·인코딩을 건드리지 않는다)
     out[GET_COPY[1]] = (root / GET_COPY[0]).read_text(encoding="utf-8")
     out["sitemap.xml"] = sitemap(GROUPS)
     out["404.html"] = NOT_FOUND.replace("__KNOWN__", json.dumps(known_paths(GROUPS)))
     for rel, text in out.items():
         f = root / rel
         f.parent.mkdir(parents=True, exist_ok=True)
-        f.write_text(text, encoding="utf-8")
+        if isinstance(text, bytes):
+            f.write_bytes(text)
+        else:
+            f.write_text(text, encoding="utf-8")
         print(f"wrote {rel}")
 
 

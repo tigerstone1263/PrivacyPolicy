@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DEV = ROOT / "_dev"
 sys.dont_write_bytecode = True  # _dev/__pycache__ 가 저장소에 끼지 않게
 sys.path.insert(0, str(DEV))
-import build  # noqa: E402  주소 규칙(GROUPS·POLICY_COPIES·known_paths)을 빌드와 같은 곳에서 읽는다
+import build  # noqa: E402  주소 규칙(GROUPS·POLICY_PAGES·known_paths)을 빌드와 같은 곳에서 읽는다
 
 SITE = "https://tigerstone1263.com"
 AE_BASE = "/AbsoluteEar/"
@@ -32,6 +32,7 @@ FORBIDDEN_BY_LANG = {
 }
 
 errors = []
+notes = []  # 실패는 아니지만 알릴 것(통과해도 출력한다)
 
 
 def fail(msg):
@@ -520,22 +521,117 @@ def check_studio_assets():
                 fail(f"소리 영상 {f.name} {f.stat().st_size // 1000}KB (260KB 이하)")
 
 
-def check_policy_copies():
-    """앱 폴더의 정책 주소는 루트 정책 파일의 사본이다. 지정한 치환 말고는 한 글자도 달라선 안 된다."""
-    for dst, (src, subs) in build.POLICY_COPIES.items():
-        f = ROOT / dst
-        if not f.exists():
-            fail(f"정책 사본 없음: {dst}")
+PRIVACY = "AbsoluteEar/PrivacyPolicy.html"
+TERMS = "AbsoluteEar/TermsOfService.html"
+# 개인정보처리방침이 밝혀야 하는 받는 곳과 그 회사 정책 주소(링크로 걸려 있어야 한다)
+POLICY_PROVIDERS = {
+    "Google Firebase": "https://firebase.google.com/support/privacy",
+    "Google AdMob": "https://policies.google.com/technologies/partner-sites",
+    "RevenueCat": "https://www.revenuecat.com/privacy",
+    "Amplitude": "https://amplitude.com/privacy",
+    "Microsoft Clarity": "https://www.microsoft.com/privacy/privacystatement",
+    "Meta App Events": "https://www.facebook.com/privacy/policy/",
+    "Shorebird": "https://shorebird.dev/privacy",
+}
+# 앱(기존 앱 줄기) pubspec 의 패키지 → 개인정보처리방침에 나와야 하는 이름. 앱 저장소가 이 맥에 있을 때만 본다
+APP_PUBSPEC = Path.home() / "abp" / "absolute_ear" / "pubspec.yaml"
+SDK_DISCLOSURE = {
+    "firebase_auth": "Firebase Authentication",
+    "cloud_firestore": "Cloud Firestore",
+    "firebase_messaging": "Firebase Cloud Messaging",
+    "firebase_analytics": "Google Analytics for Firebase",
+    "google_mobile_ads": "Google AdMob",
+    "purchases_flutter": "RevenueCat",
+    "amplitude_flutter": "Amplitude",
+    "clarity_flutter": "Microsoft Clarity",
+    "facebook_app_events": "Meta App Events",
+    "shorebird_code_push": "Shorebird",
+    "play_install_referrer": "install referrer",
+}
+# 지난 정책의 틀린 문장("기기에만 두고 수집하지 않는다")·템플릿 표기, 다른 앱 이름
+POLICY_FORBIDDEN = {
+    PRIVACY: ["not collected by me", "privacypolicytemplate", "Real Absolute Pitch"],
+    TERMS: ["Real Absolute Pitch"],
+}
+# 이용약관의 사용자 콘텐츠 조항(스토어 UGC 정책: 금지 콘텐츠·무관용·신고·차단·조치). 앱 화면 이름은 "Report"·"Block"
+TERMS_UGC = ['id="user-content"', "User Content and Conduct", "Prohibited content", "Prohibited conduct",
+             "zero tolerance", '"Report"', '"Block"', "Measures", "permanently banning", "tigerstone1263@gmail.com"]
+
+
+def check_policy_pages():
+    """앱 폴더의 정책 페이지는 _dev/policy 원본의 빌드 결과(바이트 그대로)다. 원본만 고치고 빌드한다.
+    루트 정책 파일(옛 앱·스토어 등록이 여는 주소)은 바꾸지 않는다 — check_policy_files 가 해시로 지킨다."""
+    for dst, src in build.POLICY_PAGES.items():
+        out = ROOT / dst
+        if not src.exists():
+            fail(f"정책 원본 없음: {src.relative_to(ROOT)}")
             continue
-        want = build.policy_copy((ROOT / src).read_text(encoding="utf-8"), subs)
-        if f.read_text(encoding="utf-8") != want:
-            fail(f"정책 사본이 원본({src})+지정 치환과 다름: {dst}")
-    if (ROOT / "AbsoluteEar" / "PrivacyPolicy.html").read_bytes() != (ROOT / "AbsoluteEarPolicy.html").read_bytes():
-        fail("AbsoluteEar/PrivacyPolicy.html 이 AbsoluteEarPolicy.html 과 바이트가 다름")
-    if "Real Absolute Pitch" in (ROOT / "AbsoluteEar" / "TermsOfService.html").read_text(encoding="utf-8"):
-        fail("AbsoluteEar/TermsOfService.html 에 다른 앱 이름이 남음")
-    if "<title>Terms of Service</title>" not in (ROOT / "AbsoluteEar" / "TermsOfService.html").read_text(encoding="utf-8"):
-        fail("AbsoluteEar/TermsOfService.html 의 탭 제목이 Terms of Service 가 아님")
+        if not out.exists() or out.read_bytes() != src.read_bytes():
+            fail(f"{dst} 이 원본 {src.relative_to(ROOT)} 과 다름 (python3 _dev/build.py 를 돌릴 것)")
+        html = src.read_text(encoding="utf-8")
+        for w in POLICY_FORBIDDEN.get(dst, []):
+            if w in html:
+                fail(f"{dst} 에 쓰면 안 되는 문구: {w}")
+        ids = set(re.findall(r'\bid="([^"]+)"', html))
+        for anchor in re.findall(r'href="#([^"]+)"', html):
+            if anchor not in ids:
+                fail(f"{dst} 의 쪽 안 링크 #{anchor} 가 가리키는 곳이 없음")
+    privacy = (ROOT / "_dev" / "policy" / "PrivacyPolicy.html").read_text(encoding="utf-8")
+    p = Page()
+    p.feed(privacy)
+    text = " ".join("".join(p.text).split())
+    if "".join(p.title_text).strip() != "Absolute Ear Privacy Policy" or '<html lang="en">' not in privacy:
+        fail(f"{PRIVACY}: 제목(Absolute Ear Privacy Policy)·lang 오류")
+    for name, url in POLICY_PROVIDERS.items():
+        if name not in text or url not in p.links:
+            fail(f"{PRIVACY}: 받는 곳 {name} 이 없거나 정책 링크({url})가 없음")
+    # 계정 삭제 안내: Google Play 는 앱 없이도 삭제를 요청할 수 있는 웹 안내를 요구한다(#delete-account 를 콘솔에 적는다)
+    if 'id="delete-account"' not in privacy or 'href="#delete-account"' not in privacy:
+        fail(f"{PRIVACY}: 계정 삭제 구역(#delete-account)이나 첫 화면의 바로가기가 없음")
+    for need in ("Account Management", "Delete Account", "Without the app", "not deleted automatically",
+                 "does not cancel a subscription"):
+        if need not in text:
+            fail(f"{PRIVACY}: 계정 삭제 안내에 '{need}' 가 없음")
+    if "mailto:tigerstone1263@gmail.com" not in " ".join(p.links) or "/AbsoluteEar/TermsOfService" not in p.links:
+        fail(f"{PRIVACY}: 문의 메일 링크나 이용약관 링크가 없음")
+    terms = (ROOT / "_dev" / "policy" / "TermsOfService.html").read_text(encoding="utf-8")
+    if "<title>Terms of Service</title>" not in terms:
+        fail(f"{TERMS}: 탭 제목이 Terms of Service 가 아님")
+    for need in TERMS_UGC:
+        if need not in terms:
+            fail(f"{TERMS}: 사용자 콘텐츠 조항에 '{need}' 가 없음")
+
+
+def check_policy_matches_app():
+    """앱 저장소(기존 앱 줄기)가 이 맥에 있으면, pubspec 이 쓰는 수집·전송 SDK 가 개인정보처리방침에 모두 나오는지 본다
+    (예전 방침은 RevenueCat·Amplitude·Clarity·Meta 를 빠뜨렸다)."""
+    if not APP_PUBSPEC.exists():
+        return
+    deps = set(re.findall(r"^  ([a-z0-9_]+):", APP_PUBSPEC.read_text(encoding="utf-8"), re.M))
+    privacy = (ROOT / "_dev" / "policy" / "PrivacyPolicy.html").read_text(encoding="utf-8")
+    for pkg, name in SDK_DISCLOSURE.items():
+        if pkg in deps and name not in privacy:
+            fail(f"{PRIVACY}: 앱이 쓰는 {pkg} 를 밝히지 않음('{name}' 없음)")
+
+
+def check_policy_placeholders():
+    """원본에 남은 소유자 결정 자리([OWNER DECISION: …], <mark>). 평소에는 알리기만 하고 --publish 면 실패한다
+    (main 에 올리면 바로 공개되므로, 머지 전에 --publish 로 한 번 더 돌린다)."""
+    left = []
+    for dst, src in build.POLICY_PAGES.items():
+        if not src.exists():
+            continue
+        html = src.read_text(encoding="utf-8")
+        n = html.count(build.POLICY_PLACEHOLDER)
+        if n or "<mark" in html:
+            left.append(f"{dst} {n}곳" + ("" if n else "(<mark> 남음)"))
+    if not left:
+        return
+    msg = "정책 페이지에 소유자 결정 자리가 남음: " + ", ".join(left)
+    if "--publish" in sys.argv:
+        fail(msg + " — 채운 뒤 게시할 것")
+    else:
+        notes.append(msg + " (게시 전 --publish 로 확인)")
 
 
 def resolve(url_path):
@@ -551,7 +647,8 @@ def resolve(url_path):
 
 def check_internal_refs():
     """만든 페이지 안의 모든 내부 주소(href·src·srcset·data-frame-*)가 실제 파일로 열려야 한다. 404 구제 목록도 같다."""
-    files = list(STUDIO_PAGES.values()) + list(PAGES.values()) + ["get/index.html", "AbsoluteEar/get/index.html", "404.html"]
+    files = list(STUDIO_PAGES.values()) + list(PAGES.values()) + ["get/index.html", "AbsoluteEar/get/index.html", "404.html"] \
+        + list(build.POLICY_PAGES)
     for rel in files:
         html = (ROOT / rel).read_text(encoding="utf-8")
         refs = re.findall(r'(?:href|src|data-frame-[a-z]+)="(/[^"/][^"]*|/)"', html)
@@ -687,7 +784,8 @@ def check_layout():
     try:
         import time; time.sleep(0.8)
         targets = [(f"{lang}", build.lang_path(AE_BASE, lang)) for lang in PAGES] + \
-                  [(f"root/{lang}", build.lang_path("/", lang)) for lang in STUDIO_PAGES]
+                  [(f"root/{lang}", build.lang_path("/", lang)) for lang in STUDIO_PAGES] + \
+                  [(f"policy/{Path(dst).stem}", "/" + dst) for dst in build.POLICY_PAGES]
         for lang, path in targets:
             for w, scale in LAYOUTS:
                 url = f"http://127.0.0.1:{port}/_dev/layout_check.html?w={w}&p={path}&scale={scale}"
@@ -728,11 +826,34 @@ def check_build_requires_all_langs():
             fail("빌드가 실패했는데 일부 언어 html 을 써 버림")
 
 
+def check_build_requires_policy_sources():
+    """정책 원본이 없으면 빌드가 실패하고, 아무 파일도 쓰지 않아야 한다(옛 정책 사본이 그대로 남아 게시되지 않게)."""
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        if not temp_site(tmp):
+            return
+        stale = b"stale policy copy"
+        for dst in build.POLICY_PAGES:
+            (tmp / dst).write_bytes(stale)
+        (tmp / "_dev" / "policy" / "TermsOfService.html").unlink()
+        r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True)
+        if r.returncode == 0:
+            fail("정책 원본이 없어도 빌드가 성공함")
+        if any((tmp / rel).exists() for rel in PAGES.values()) or \
+                any((tmp / dst).read_bytes() != stale for dst in build.POLICY_PAGES):
+            fail("정책 원본이 없어 빌드가 실패했는데 일부 파일을 써 버림")
+
+
 def main():
     check_policy_files()
-    check_policy_copies()
+    check_policy_pages()
+    check_policy_matches_app()
+    check_policy_placeholders()
     check_internal_refs()
     check_build_requires_all_langs()
+    check_build_requires_policy_sources()
     check_lang_js()
     check_node_tests()
     check_get_page()
@@ -757,6 +878,8 @@ def main():
     check_try_frames()
     if "--no-layout" not in sys.argv:
         check_layout()
+    for n in notes:
+        print("참고: " + n)
     if errors:
         print("\n".join(errors))
         sys.exit(1)
