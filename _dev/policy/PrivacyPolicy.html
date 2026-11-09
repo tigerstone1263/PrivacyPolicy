@@ -100,7 +100,7 @@
 <h3>2.6 문의와 신고</h3>
 <ul>
 <li>앱에서 문의나 의견을 보내면 고른 분류, 쓴 제목과 내용, 닉네임, 사용자 ID, 계정의 이메일 주소(있는 경우), 로그인 방법, 앱 버전, 기기의 운영체제와 버전을 받습니다.</li>
-<li>사용자나 곡을 신고하면 고른 사유, 신고 대상 사용자의 ID와 닉네임(곡을 신고하면 곡 ID), 신고한 사람에 대한 위와 같은 정보를 받습니다.</li>
+<li>사용자나 곡을 신고하면 고른 사유, 신고 대상 사용자의 ID와 닉네임(곡을 신고하면 올린 사람의 ID, 곡 제목, 곡 ID), 신고한 사람에 대한 위와 같은 정보를 받습니다.</li>
 </ul>
 
 <h3>2.7 기기와 이용 정보</h3>
@@ -109,7 +109,7 @@
 <li><strong>이용 이벤트:</strong> 어떤 화면과 기능을 쓰는지(예: 훈련 스테이지 시작·종료, 고른 로그인 방법, 구독 화면 닫기)를 Google Analytics for Firebase와 Amplitude로 보냅니다.</li>
 <li><strong>세션 리플레이:</strong> Microsoft Clarity가 앱 화면의 구성과 내용(글자는 Clarity의 가림 설정에 따라 가립니다), 탭·스크롤·화면 이동을 기록합니다. 쓰기 불편한 곳을 찾는 데 씁니다.</li>
 <li><strong>오류 보고:</strong> 앱에 예상하지 못한 오류가 나면 오류의 종류와 앱 코드에서 오류가 난 위치를 Google Analytics for Firebase로 보냅니다. 오류 보고에는 이용자가 만든 내용이 들어가지 않습니다.</li>
-<li><strong>설치 경로(Android):</strong> 설치한 뒤와 계정을 만들 때 Google Play 설치 리퍼러(install referrer)를 읽어 어떤 링크나 캠페인으로 설치했는지 확인합니다. 분석 도구에 기록되고, 누구인지 알 수 없는 집계 수로도 남습니다.</li>
+<li><strong>설치 경로(Android):</strong> 앱을 설치하고 처음 실행할 때와 계정을 만들 때 Google Play 설치 리퍼러(install referrer)를 읽어 어떤 링크나 캠페인으로 설치했는지 확인합니다. 분석 도구에 기록되고, 개인을 알아볼 수 없는 집계 수치로도 남습니다.</li>
 <li><strong>자동으로 보내지는 기술 정보:</strong> 서비스를 맡은 회사들은 IP 주소(국가·지역·도시를 추정하는 데 쓸 수 있습니다), 기기 모델, 운영체제와 버전, 앱 버전, 언어, 시간대, 앱 설치마다 만드는 식별자를 받습니다. Android에서는 광고 ID도 포함됩니다. iOS에서는 앱이 광고 식별자 접근 권한을 요청하지 않습니다.</li>
 <li><strong>알림:</strong> 알림을 보내려고 Firebase Cloud Messaging을 쓰며, 이때 앱 설치마다 토큰이 생깁니다. 연습 알림은 기기에서 예약합니다.</li>
 </ul>
@@ -119,7 +119,7 @@
 
 <h2 id="ko-use">3. 정보를 쓰는 목적</h2>
 <ul>
-<li><strong>앱 제공:</strong> 계정 생성과 로그인, 진행 기록 저장과 복원, 친구·랭킹·대전·음악 차트 운영, 구매와 구독 제공, 허용한 연습 알림과 알림 발송</li>
+<li><strong>앱 제공:</strong> 계정 생성과 로그인, 진행 기록 저장과 복원, 친구·랭킹·대전·음악 차트 운영, 구매와 구독 제공, 이용자가 허용한 연습 알림과 그 밖의 알림 발송</li>
 <li><strong>안전한 운영:</strong> 같은 계정의 두 기기 동시 사용 방지, 신고 검토, <a href="/AbsoluteEar/TermsOfService">이용약관</a>을 어긴 콘텐츠 삭제와 계정 제한, 부정 이용 방지</li>
 <li><strong>문의 응대:</strong> 문의와 신고에 대한 답변</li>
 <li><strong>앱 개선:</strong> 이용 통계, 세션 리플레이, 오류 보고, 설치 경로 집계</li>
@@ -132,8 +132,9 @@
 <li>닉네임, 프로필 사진, 국기, 훈련 통계, 트로피, 연속 기록, 랭킹 항목, 공개한 곡의 수와 그 곡들의 좋아요 수·판매량</li>
 <li>공개한 곡(닉네임과 함께)</li>
 <li>친구 요청을 받은 사용자는 보낸 사람의 프로필과 훈련 요약을 봅니다. 친선전에서는 두 사람이 서로의 닉네임, 프로필 사진, 트로피, 점수를 봅니다.</li>
-<li>사용자를 차단하면 그 사용자의 곡과 친구 요청이 더는 보이지 않고, 랭킹에서는 그 사용자의 닉네임이 가려지며, 두 사람은 서로의 친구 목록에서 빠집니다. 차단해도 차단된 사용자가 볼 수 있는 정보는 달라지지 않습니다.</li>
+<li>사용자를 차단하면 그 사용자의 곡과 친구 요청이 더는 보이지 않고, 랭킹에서는 그 사용자의 닉네임이 가려집니다. 친구였다면 두 사람은 서로의 친구 목록에서 빠집니다. 차단된 사용자는 랭킹과 음악 차트에서 이용자의 정보를 계속 볼 수 있습니다.</li>
 </ul>
+<p>앱 화면에는 위 정보만 나옵니다. 다만 앱이 로그인 전에 닉네임이 겹치는지 확인하기 때문에, 계정 기록(2.2절의 정보와 친구 목록, 받은 친구 요청, 차단한 사용자, 올리거나 산 곡의 목록)은 누구나 데이터베이스에서 직접 읽을 수 있습니다. 이메일 주소, 비밀번호, 로그인 기기 확인용 식별자는 계정 기록에 들어 있지 않습니다.</p>
 
 <h2 id="ko-recipients">5. 정보를 받는 곳(처리 위탁과 국외 이전)</h2>
 <p>이 절에 적은 곳에만 정보를 보냅니다. 아래 회사들은 저희가 맡긴 일을 하려고 정보를 처리합니다(처리 위탁). 표시한 곳은 받은 정보를 자기 목적에도 쓰며, 그때는 그 회사의 개인정보처리방침이 적용됩니다.</p>
@@ -177,13 +178,13 @@
 <li>맡긴 일: 세션 리플레이와 사용성 분석</li>
 <li>받는 정보: 2.7절의 세션 리플레이 정보, 기기 정보, IP 주소(국가를 추정하는 데 씁니다), Clarity가 만드는 식별자. 사용자 ID는 보내지 않습니다.</li>
 <li>처리하는 나라: 미국 등 Microsoft가 시설을 둔 나라</li>
-<li>보유 기간: 화면 재생 데이터 30일, 클릭 데이터와 라벨·즐겨찾기를 단 세션 9개월(Microsoft가 정한 기간)</li>
+<li>보유 기간: 화면 재생 데이터는 기록한 때부터 30일. 즐겨찾기한 세션과 Microsoft가 무작위로 고른 일부 세션의 화면 재생 데이터, 히트맵(클릭 데이터), 라벨은 최대 9개월(Microsoft가 정한 기간)</li>
 <li>연락처·방침: <a href="https://www.microsoft.com/privacy/privacy-support-requests">Microsoft 개인정보 문의</a> · <a href="https://www.microsoft.com/privacy/privacystatement">Microsoft 개인정보처리방침</a> · <a href="https://clarity.microsoft.com/terms">Clarity 이용 약관</a></li>
 </ul></li>
 <li><strong>Meta App Events</strong>(Meta Platforms, Inc., 미국)
 <ul>
 <li>맡긴 일: Meta 플랫폼에서 하는 광고의 효과 측정</li>
-<li>받는 정보: Meta SDK는 앱에 들어 있어 앱을 열면 시작됩니다. 기본 설정에서는 앱 설치, 앱 실행, App Store·Google Play에서 한 구매를 기기 정보, Android 광고 ID와 함께 보냅니다.</li>
+<li>받는 정보: 앱 설치와 실행, App Store·Google Play에서 한 구매, 기기 정보, Android 광고 ID. Meta SDK는 앱을 열면 시작되어 기본 설정대로 이 정보를 보냅니다.</li>
 <li>처리하는 나라: 미국 등 Meta가 시설을 둔 나라</li>
 <li>보유 기간: Meta의 정책에 따름</li>
 <li>자기 목적 이용: Meta는 이 정보를 자기 목적에도 씁니다.</li>
@@ -205,7 +206,7 @@
 </ul>
 
 <h3 id="ko-disclosure">제3자 제공</h3>
-<p>저희는 개인정보를 팔지 않습니다. 다른 사용자에게는 <a href="#ko-others">4절</a>의 정보가 보입니다. 이 방침에 적은 경우 말고는, 법령에 따라 요구받은 경우나 사람의 생명·신체·재산을 지키기 위해 급히 필요한 경우에만 개인정보를 제공합니다.</p>
+<p>저희는 개인정보를 팔지 않습니다. 다른 사용자에게는 <a href="#ko-others">4절</a>의 정보가 보입니다. Google(AdMob)과 Meta는 <a href="#ko-recipients">5절</a>에 적은 정보를 받아 광고 측정, 부정 행위 방지 같은 자기 목적에도 씁니다. 받는 정보와 보유 기간은 5절의 각 항목과 같습니다. 이 방침에 적은 경우 말고는, 법령에 따라 요구받은 경우나 사람의 생명·신체·재산을 지키기 위해 급히 필요한 경우에만 개인정보를 제공합니다.</p>
 
 <h3 id="ko-refuse-transfer">국외 이전을 원하지 않을 때</h3>
 <p>앱에는 회사별로 전송을 끄는 설정이 없어, 국외 이전을 거부하면 앱을 쓸 수 없습니다. 원하지 않으면 계정을 삭제하고(<a href="#ko-delete-account">8절</a>) 앱 이용을 멈출 수 있습니다. 광고 식별자는 <a href="#ko-choices">6절</a>의 방법으로 제한할 수 있습니다.</p>
@@ -237,7 +238,7 @@
 <li><strong>올린 곡:</strong> 삭제를 요청하거나 저희가 이용약관에 따라 지울 때까지. 다른 사용자가 산 곡은 그 사용자의 계정에 남습니다.</li>
 <li><strong>문의와 신고:</strong> 처리를 마친 날부터 3년이 지나면 지웁니다.</li>
 <li><strong>RevenueCat의 구매 기록:</strong> 삭제를 요청할 때까지(<a href="#ko-delete-account">8절</a>). Apple과 Google은 결제 기록을 따로 보관합니다.</li>
-<li><strong>분석, 세션 리플레이, 광고 데이터:</strong> 각 회사에서 저희 계정에 설정한 보존 기간이나 그 회사의 정책에 따른 기간(예: Microsoft Clarity의 화면 재생 데이터는 30일)</li>
+<li><strong>분석, 세션 리플레이, 광고 데이터:</strong> 각 회사에서 저희 계정에 설정한 보존 기간이나 그 회사의 정책에 따른 기간(예: Microsoft Clarity의 화면 재생 데이터는 대부분 30일)</li>
 <li><strong>기기에 있는 정보:</strong> 앱이나 앱 데이터를 지울 때까지</li>
 </ul>
 <h3 id="ko-destruction">파기 절차와 방법</h3>
@@ -249,8 +250,8 @@
 
 <h2 id="ko-delete-account">8. 계정 삭제</h2>
 <div class="box">
-<p><strong>앱에서:</strong> 내 페이지 &gt; 설정(톱니바퀴 아이콘) &gt; 계정 관리 &gt; 계정 삭제. 본인 확인을 위해 Google, Apple 로그인이나 이메일·비밀번호 입력을 요청할 수 있습니다. 앱이 다시 로그인하라고 안내하면, 다시 로그인한 뒤 계정 삭제를 한 번 더 진행해 주세요.</p>
-<p><strong>앱 없이:</strong> <a href="mailto:tigerstone1263@gmail.com?subject=Absolute%20Ear%20%EA%B3%84%EC%A0%95%20%EC%82%AD%EC%A0%9C">tigerstone1263@gmail.com</a>으로 제목을 "Absolute Ear 계정 삭제"로 하고, 닉네임이나 사용자 ID와 로그인 방법을 적어 보내 주세요. 본인 계정인지 확인을 요청할 수 있으며, 요청을 받으면 10일 안에 처리합니다.</p>
+<p><strong>앱에서:</strong> 내 페이지 &gt; 설정(톱니바퀴 아이콘) &gt; 계정 관리 &gt; 계정 삭제. 본인 확인을 위해 앱이 Google, Apple 로그인이나 이메일·비밀번호 입력을 요청할 수 있습니다. 앱이 다시 로그인하라고 안내하면, 다시 로그인한 뒤 계정 삭제를 한 번 더 진행해 주세요.</p>
+<p><strong>앱 없이:</strong> <a href="mailto:tigerstone1263@gmail.com?subject=Absolute%20Ear%20%EA%B3%84%EC%A0%95%20%EC%82%AD%EC%A0%9C">tigerstone1263@gmail.com</a>으로 제목을 "Absolute Ear 계정 삭제"로 하고, 닉네임이나 사용자 ID와 로그인 방법을 적어 보내 주세요. 저희가 본인 계정인지 확인을 요청할 수 있으며, 요청을 받으면 10일 안에 처리합니다.</p>
 </div>
 <p>앱에서 계정을 삭제하면 다음이 바로 지워집니다.</p>
 <ul>
@@ -271,7 +272,7 @@
 
 <h2 id="ko-rights">9. 이용자의 권리와 행사 방법</h2>
 <p>이용자는 자신의 개인정보를 열람하거나 정정·삭제하라고 요구할 수 있고, 처리를 멈추라고 요구하거나 동의를 철회할 수 있습니다. <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>으로 요청해 주세요. 많은 정보는 앱에서 직접 볼 수 있고, 계정은 언제든 삭제할 수 있습니다(<a href="#ko-delete-account">8절</a>).</p>
-<p>본인 확인을 요청할 수 있으며, 요청을 받으면 10일 안에 처리합니다. 법령에 따라 요청을 들어줄 수 없으면 그 이유를 알려 드립니다. 법정대리인이나 이용자가 위임한 사람도 요청할 수 있으며, 이때는 위임받았음을 확인할 수 있는 서류를 요청할 수 있습니다. 사는 곳의 법에 따라 이 밖의 권리가 더 있을 수 있습니다.</p>
+<p>저희가 본인 확인을 요청할 수 있으며, 요청을 받으면 10일 안에 처리합니다. 법령에 따라 요청을 들어줄 수 없으면 그 이유를 알려 드립니다. 법정대리인이나 이용자가 위임한 사람도 요청할 수 있으며, 이때는 위임받았음을 확인할 수 있는 서류를 요청할 수 있습니다. 사는 곳의 법에 따라 이 밖의 권리가 더 있을 수 있습니다.</p>
 <h3 id="ko-remedies">권익침해 구제</h3>
 <p>저희의 답변에 만족하지 못하거나 개인정보 침해에 대해 상담이나 구제가 필요하면 아래 기관에 문의할 수 있습니다.</p>
 <ul>
@@ -285,13 +286,13 @@
 <p>Absolute Ear는 만 13세 미만(한국에서는 만 14세 미만) 아동을 대상으로 하지 않습니다. 이 나이보다 어린 아동의 개인정보를 알면서 모으지 않습니다. 아동이 개인정보를 제공했다고 생각되면 알려 주세요. 알려 주시면 지우겠습니다.</p>
 
 <h2 id="ko-security">11. 안전성 확보 조치</h2>
-<p>정보는 암호화된 연결(TLS)로 보냅니다. 비밀번호는 Firebase Authentication이 해시로 바꿔 저장하며, Firebase는 로그인 정보와 데이터베이스를 저장할 때도 암호화합니다. 데이터베이스 접근은 보안 규칙으로 제한합니다. 예를 들어 다른 사용자는 이용자의 훈련 기록을 바꿀 수 없고, 문의와 신고는 저희만 읽을 수 있습니다. 완전히 안전한 전송·저장 방법은 없으므로 절대적인 보안을 보장할 수는 없습니다.</p>
+<p>정보는 암호화된 연결(TLS)로 보냅니다. 비밀번호는 Firebase Authentication이 해시로 바꿔 저장하며, Firebase는 로그인 정보와 데이터베이스를 저장할 때도 암호화합니다. 데이터베이스의 읽기와 쓰기는 보안 규칙으로 제한합니다. 예를 들어 다른 사용자는 이용자의 훈련 기록을 바꿀 수 없고, 문의와 신고는 저희만 읽을 수 있습니다. 다만 계정 기록은 누구나 읽을 수 있습니다(<a href="#ko-others">4절</a>). 완전히 안전한 전송·저장 방법은 없으므로 절대적인 보안을 보장할 수는 없습니다.</p>
 
 <h2 id="ko-changes">12. 방침 변경</h2>
 <p>이 방침을 바꾸면 새 방침을 시행일과 함께 이 페이지에 올리고, 시행 7일 전까지 앱에서 알립니다. 이용자의 권리에 큰 영향을 주는 변경은 30일 전까지 알립니다. 이전 방침은 이 사이트에서 계속 볼 수 있습니다.</p>
 
-<h2 id="ko-contact">13. 개인정보 보호책임자와 연락처</h2>
-<p>개인정보 보호책임자: TigerStone1263 운영자<br>
+<h2 id="ko-contact">13. 개인정보 보호 담당 부서와 연락처</h2>
+<p>담당 부서: TigerStone1263 개인정보 보호 담당<br>
 이메일: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a></p>
 <p>개인정보에 관한 문의, 권리 행사(<a href="#ko-rights">9절</a>), 불만 처리와 피해 구제 요청은 위 이메일로 보내 주세요.</p>
 </article>
@@ -349,7 +350,7 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <h3>2.4 Songs</h3>
 <ul>
 <li>Songs you write in the app are saved on your device.</li>
-<li>If you upload a song to the song market, we receive the song and its title, composer, genre, price and length, together with your nickname and user ID. Uploaded songs are reviewed before they are published. Published songs can be seen by all users.</li>
+<li>If you submit a song for review to publish it on the Music Chart, we receive the song and its title, composer, genre, price and length, together with your nickname and user ID. Uploaded songs are reviewed before they are published. Published songs can be seen by all users.</li>
 <li>When you buy a song with in-app currency, your account record lists the song (title, composer and the uploader's nickname and user ID) and the song's sales count goes up. If you then rate the song, its like count goes up.</li>
 </ul>
 
@@ -363,7 +364,7 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <h3>2.6 Inquiries and reports</h3>
 <ul>
 <li>When you send an inquiry or feedback from the app, we receive the category, title and text you write, your nickname, user ID, the email address of your account (if any), your sign-in method, the app version and your device's operating system and version.</li>
-<li>When you report a user or a song, we receive the reason you choose, the reported user's ID and nickname (and the song's ID), and the same information about you.</li>
+<li>When you report a user or a song, we receive the reason you choose, the reported user's ID and nickname (for a song: the uploader's ID, the song title and the song ID), and the same information about you.</li>
 </ul>
 
 <h3>2.7 Device and usage information</h3>
@@ -372,7 +373,7 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <li><strong>Usage events:</strong> which screens and features you use, for example starting or finishing a training stage, the sign-in method you chose or closing the subscription page. They are sent to Google Analytics for Firebase and Amplitude.</li>
 <li><strong>Session replays:</strong> Microsoft Clarity records the layout and content of the app's screens, with text masked according to Clarity's masking settings, and your taps, scrolls and screen changes, so that we can find usability problems.</li>
 <li><strong>Error reports:</strong> when the app hits an unexpected error, it sends the type of error and the place in the app's code where it happened to Google Analytics for Firebase. Error reports do not contain your content.</li>
-<li><strong>Install source (Android):</strong> after installation and when you create your account, the app reads the Google Play install referrer to learn which link or campaign led to the install. It is recorded in analytics and as an anonymous count.</li>
+<li><strong>Install source (Android):</strong> when the app first runs after installation and when you create your account, it reads the Google Play install referrer to learn which link or campaign led to the install. It is recorded in analytics and also kept as aggregate counts that do not identify you.</li>
 <li><strong>Technical data sent automatically:</strong> our providers receive your IP address (which they may use to estimate your country, region or city), device model, operating system and version, app version, language, time zone and identifiers they create for the app installation. On Android this includes the advertising ID. On iOS the app does not ask for access to the advertising identifier.</li>
 <li><strong>Notifications:</strong> the app uses Firebase Cloud Messaging to deliver notifications, which gives your installation a token. Practice reminders are scheduled on your device.</li>
 </ul>
@@ -382,7 +383,7 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 
 <h2 id="use">3. How we use information</h2>
 <ul>
-<li><strong>To provide the app:</strong> create your account and sign you in, save and restore your progress, run friends, rankings, matches and the song market, deliver purchases and subscriptions, and send the reminders and notifications you allow.</li>
+<li><strong>To provide the app:</strong> create your account and sign you in, save and restore your progress, run friends, rankings, matches and the Music Chart, deliver purchases and subscriptions, and send the reminders and notifications you allow.</li>
 <li><strong>To keep the service safe:</strong> keep one account from being used on two devices at once, review reports, remove content and restrict accounts that break the <a href="/AbsoluteEar/TermsOfService">Terms of Service</a>, and prevent fraud.</li>
 <li><strong>To answer you:</strong> respond to inquiries and reports.</li>
 <li><strong>To improve the app:</strong> usage statistics, session replays, error reports and counts of install sources.</li>
@@ -395,8 +396,9 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <li>Your nickname, profile picture, flag, training statistics, trophies, streak, ranking entries and the number of songs you have published with their likes and sales.</li>
 <li>The songs you publish, with your nickname.</li>
 <li>A user you send a friend request to sees your profile and training summary. In a friendly match, both players see each other's nickname, profile picture, trophies and score.</li>
-<li>If you block a user, you no longer see their songs or friend requests, their nickname is hidden from you in rankings, and you are removed from each other's friends lists. Blocking does not change what they can see about you.</li>
+<li>If you block a user, you no longer see their songs or friend requests, and their nickname is hidden from you in rankings. If you were friends, you are removed from each other's friends lists. The blocked user can still see your information in rankings and the Music Chart.</li>
 </ul>
+<p>The app shows other users only the information above. However, because the app checks whether a nickname is taken before you sign in, anyone can read your account record (the information in section 2.2, your friends list, the friend requests you received, the users you block and the lists of songs you uploaded or bought) directly from our database. Your email address, password and the device identifier for sign-in are not part of that record.</p>
 
 <h2 id="recipients">5. Who receives information (service providers and transfers abroad)</h2>
 <p>We share information only with the recipients in this section. The providers below process information to do work we have given them. Where noted, they also use it for their own purposes, and their own privacy policies apply to that use.</p>
@@ -440,13 +442,13 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <li>Work: session replays and usability analytics.</li>
 <li>Information: the session replay data in section 2.7, device information, your IP address (used to estimate your country) and an identifier Clarity creates. The app does not send your user ID to Clarity.</li>
 <li>Where: the United States and other countries where Microsoft has facilities.</li>
-<li>Kept: playback data for 30 days; click data and sessions that are labeled or marked as favorites for 9 months (periods set by Microsoft).</li>
+<li>Kept: playback data for 30 days from recording; playback data for sessions marked as favorites and for a random sample of sessions chosen by Microsoft, heatmap (click) data and labels for up to 9 months (periods set by Microsoft).</li>
 <li>Contact and policies: <a href="https://www.microsoft.com/privacy/privacy-support-requests">Microsoft privacy support</a> · <a href="https://www.microsoft.com/privacy/privacystatement">Microsoft Privacy Statement</a> · <a href="https://clarity.microsoft.com/terms">Clarity terms</a></li>
 </ul></li>
 <li><strong>Meta App Events</strong> (Meta Platforms, Inc., United States)
 <ul>
 <li>Work: measuring advertising on Meta's platforms.</li>
-<li>Information: the Meta SDK is part of the app and starts when the app opens. With its default settings it reports app installs, app launches and purchases made through the App Store or Google Play, together with device information and, on Android, the advertising ID.</li>
+<li>Information: app installs, app launches and purchases made through the App Store or Google Play, device information and, on Android, the advertising ID. The Meta SDK starts when the app opens and sends this information with its default settings.</li>
 <li>Where: the United States and other countries where Meta has facilities.</li>
 <li>Kept: according to Meta's policies.</li>
 <li>Own purposes: Meta also uses this information for its own purposes.</li>
@@ -464,11 +466,11 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <p>The app also connects to:</p>
 <ul>
 <li><strong>Apple and Google:</strong> payments, Sign in with Apple and Google Sign-In, and checking the App Store or Google Play for a newer version of the app. <a href="https://www.apple.com/legal/privacy/">Apple Privacy Policy</a> · <a href="https://policies.google.com/privacy">Google Privacy Policy</a></li>
-<li><strong>Google's public time server</strong> (time.google.com): the app asks it for the current time to calculate when in-app chances refill. The request does not include your account information.</li>
+<li><strong>Google's public time server</strong> (time.google.com): the app asks it for the current time to calculate when Chance Notes refill. The request does not include your account information.</li>
 </ul>
 
 <h3 id="disclosure">Disclosure to others</h3>
-<p>We do not sell your personal information. Other users see the information described in <a href="#others">section 4</a>. Apart from what this policy describes, we disclose personal information only when the law requires it or when it is urgently needed to protect someone's life, physical safety or property.</p>
+<p>We do not sell your personal information. Other users see the information described in <a href="#others">section 4</a>. Google (AdMob) and Meta also use the information listed for them in <a href="#recipients">section 5</a> for their own purposes, such as measuring ads and preventing fraud; the information and retention periods are as listed in section 5. Apart from what this policy describes, we disclose personal information only when the law requires it or when it is urgently needed to protect someone's life, physical safety or property.</p>
 
 <h3 id="refuse-transfer">If you do not want your information transferred abroad</h3>
 <p>The app has no setting to stop sending information to individual providers, so you cannot use the app without these transfers. If you do not want them, you can delete your account (<a href="#delete-account">section 8</a>) and stop using the app. You can limit the use of advertising identifiers as described in <a href="#choices">section 6</a>.</p>
@@ -500,7 +502,7 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <li><strong>Songs you upload:</strong> until you ask us to remove them or we remove them under the Terms of Service. Songs that other users bought stay listed in their accounts.</li>
 <li><strong>Inquiries and reports:</strong> deleted 3 years after we finish handling them.</li>
 <li><strong>Purchase records at RevenueCat:</strong> until you ask us to delete them (<a href="#delete-account">section 8</a>). Apple and Google keep their own records of your payments.</li>
-<li><strong>Analytics, session replay and advertising data:</strong> kept by each provider for the retention period set in our account or by its own policy (for example, Microsoft Clarity keeps playback data for 30 days).</li>
+<li><strong>Analytics, session replay and advertising data:</strong> kept by each provider for the retention period set in our account or by its own policy (for example, Microsoft Clarity keeps most playback data for 30 days).</li>
 <li><strong>Information on your device:</strong> until you delete the app or its data.</li>
 </ul>
 <h3 id="destruction">How we destroy information</h3>
@@ -549,13 +551,13 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <p>Absolute Ear is not directed to children under 13 (under 14 in Korea). We do not knowingly collect personal information from children under these ages. If you believe that a child has given us personal information, contact us and we will delete it.</p>
 
 <h2 id="security">11. Security</h2>
-<p>Data is sent over encrypted connections (TLS). Firebase Authentication stores passwords in hashed form, and Firebase also encrypts sign-in data and our database when it stores them. Access to our database is limited by security rules; for example, other users cannot change your training records, and inquiries and reports can be read only by us. No method of transmission or storage is completely secure, so we cannot guarantee absolute security.</p>
+<p>Data is sent over encrypted connections (TLS). Firebase Authentication stores passwords in hashed form, and Firebase also encrypts sign-in data and our database when it stores them. Reading and writing our database are limited by security rules; for example, other users cannot change your training records, and inquiries and reports can be read only by us. Your account record, however, can be read by anyone (<a href="#others">section 4</a>). No method of transmission or storage is completely secure, so we cannot guarantee absolute security.</p>
 
 <h2 id="changes">12. Changes to this policy</h2>
 <p>When we change this policy, we post the new version on this page with its effective date and announce the change in the app at least 7 days before it takes effect, or at least 30 days before for changes that significantly affect your rights. Previous versions remain available on this site.</p>
 
-<h2 id="contact">13. Privacy officer and contact</h2>
-<p>Privacy officer: the operator of TigerStone1263<br>
+<h2 id="contact">13. Privacy office and contact</h2>
+<p>Department: TigerStone1263 Privacy Office<br>
 Email: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a></p>
 <p>Send questions about your personal information, requests to use your rights (<a href="#rights">section 9</a>), complaints and requests for remedies to this email address.</p>
 </article>

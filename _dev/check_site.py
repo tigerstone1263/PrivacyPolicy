@@ -634,6 +634,44 @@ def check_policy_placeholders():
         notes.append(msg + " (게시 전 --publish 로 확인)")
 
 
+def check_policy_dates():
+    """공고일·시행일. 방침 12절은 '시행 7일 전까지 알린다', 약관은 '불리한 변경은 30일 전에 알린다'고 약속한다.
+    늘 보는 것: 방침 한국어판·영어판과 약관의 공고일이 같고, 방침 시행일은 공고 7일 뒤 이후, 약관 시행일은 30일 뒤 이후.
+    --publish 면 공고일이 오늘(머지해 공개하는 날)인지도 본다. 늦게 공개하면 날짜를 함께 고친다(RUNBOOK 7절)."""
+    import datetime as dt
+    policy = (DEV / "policy" / "PrivacyPolicy.html").read_text(encoding="utf-8")
+    terms = (DEV / "policy" / "TermsOfService.html").read_text(encoding="utf-8")
+
+    def iso(label, text):
+        m = re.findall(label + r"\s*(\d{4}-\d{2}-\d{2})", text)
+        return dt.date.fromisoformat(m[0]) if len(m) == 1 else None
+
+    def long_date(label, text):
+        m = re.findall(label + r"\s*([A-Z][a-z]+ \d{1,2}, \d{4})", text)
+        return dt.datetime.strptime(m[0], "%B %d, %Y").date() if len(m) == 1 else None
+
+    found = {
+        "방침 공고일(한)": iso("공고일:", policy), "방침 시행일(한)": iso("시행일:", policy),
+        "방침 공고일(영)": iso("Announced:", policy), "방침 시행일(영)": iso("Effective:", policy),
+        "약관 공고일": long_date("Date of announcement:", terms), "약관 시행일": long_date("Effective date:", terms),
+    }
+    missing = [k for k, v in found.items() if v is None]
+    if missing:
+        fail("정책 날짜를 하나로 읽지 못함: " + ", ".join(missing))
+        return
+    announced = found["방침 공고일(한)"]
+    if found["방침 공고일(영)"] != announced or found["약관 공고일"] != announced:
+        fail(f"공고일이 서로 다름: 방침(한) {announced} / 방침(영) {found['방침 공고일(영)']} / 약관 {found['약관 공고일']}")
+    if found["방침 시행일(영)"] != found["방침 시행일(한)"]:
+        fail(f"방침 시행일이 한국어판과 영어판에서 다름: {found['방침 시행일(한)']} / {found['방침 시행일(영)']}")
+    if found["방침 시행일(한)"] < announced + dt.timedelta(days=7):
+        fail(f"방침 시행일 {found['방침 시행일(한)']} 이 공고일 {announced} 의 7일 뒤보다 이름(방침 12절)")
+    if found["약관 시행일"] < announced + dt.timedelta(days=30):
+        fail(f"약관 시행일 {found['약관 시행일']} 이 공고일 {announced} 의 30일 뒤보다 이름(약관의 30일 전 공지)")
+    if "--publish" in sys.argv and announced != dt.date.today():
+        fail(f"공고일 {announced} 이 오늘({dt.date.today()})이 아님 — 공개하는 날로 공고일·시행일을 함께 고칠 것(RUNBOOK 7절)")
+
+
 def resolve(url_path):
     """GitHub Pages 가 그 주소에 내주는 파일. 끝이 / 면 index.html, 확장자가 없으면 .html 을 붙인다."""
     rel = url_path.split("#")[0].split("?")[0].lstrip("/")
@@ -851,6 +889,7 @@ def main():
     check_policy_pages()
     check_policy_matches_app()
     check_policy_placeholders()
+    check_policy_dates()
     check_internal_refs()
     check_build_requires_all_langs()
     check_build_requires_policy_sources()
