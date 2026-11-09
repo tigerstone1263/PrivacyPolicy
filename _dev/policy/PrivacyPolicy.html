@@ -9,22 +9,297 @@
   body { margin: 0; padding: 24px 18px 56px; background: #fff; color: #191919;
          font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
          font-size: 16px; line-height: 1.6; overflow-wrap: break-word; }
+  [lang="ko"] { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+                word-break: keep-all; }
   main { max-width: 760px; margin: 0 auto; }
   h1 { font-size: 1.6rem; line-height: 1.3; margin: 0 0 8px; }
   h2 { font-size: 1.2rem; line-height: 1.35; margin: 36px 0 8px; padding-top: 16px; border-top: 1px solid #ddd; }
   h3 { font-size: 1rem; margin: 22px 0 4px; }
   ul { padding-left: 1.25em; }
   li { margin: 4px 0; }
+  li > ul { margin: 4px 0 12px; }
   a { color: #191919; }
   .meta { color: #555; margin: 0 0 18px; }
   .box { border: 2px solid #191919; padding: 4px 16px; margin: 18px 0; }
+  .langs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 28px; }
+  .langs a { display: inline-block; padding: 4px 14px; border: 1px solid #191919; border-radius: 999px; text-decoration: none; }
+  article + article { margin-top: 64px; padding-top: 28px; border-top: 4px solid #191919; }
 </style>
 </head>
 <body>
 <main>
+<nav class="langs" aria-label="언어 / Language">
+<a href="#ko" lang="ko">한국어</a>
+<a href="#en" lang="en">English</a>
+</nav>
+
+<article id="ko" lang="ko">
+<h1>Absolute Ear 개인정보처리방침</h1>
+<p class="meta">공고일: 2026-11-09<br>
+시행일: 2026-11-16<br>
+이전 방침: <a href="/AbsoluteEarPolicy.html">2022-08-04 시행(영어)</a></p>
+
+<p>이 방침은 Absolute Ear 앱이 어떤 정보를 왜 모으는지, 그 정보를 누가 받는지, 얼마 동안 보관하는지, 어떻게 지울 수 있는지 설명합니다. Absolute Ear는 TigerStone1263이 제공하며, 이 방침에서 '저희'는 TigerStone1263을 말합니다. 문의: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a></p>
+
+<div class="box">
+<p><strong>계정 삭제</strong></p>
+<p>앱에서: 내 페이지 &gt; 설정(톱니바퀴 아이콘) &gt; 계정 관리 &gt; 계정 삭제. 앱 없이: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>으로 메일을 보내 주세요. 무엇이 지워지고 무엇이 남는지는 <a href="#ko-delete-account">8절</a>에 있습니다.</p>
+</div>
+
+<h2 id="ko-summary">1. 요약</h2>
+<ul>
+<li>게스트로 쓰거나 Google, Apple, 이메일 주소로 로그인할 수 있습니다. 어느 방법이든 계정, 닉네임, 훈련 기록은 기기에만 두지 않고 저희 서버(Google Firebase)에 저장합니다.</li>
+<li>닉네임, 프로필 사진, 국가·지역 국기, 훈련 통계, 랭킹 항목, 공개한 곡은 다른 사용자에게 보입니다.</li>
+<li>로그인과 저장(Google Firebase), 구매(RevenueCat), 앱 이용 분석(Google Analytics for Firebase, Amplitude, Microsoft Clarity), 광고(Google AdMob), 광고 측정(Meta)은 외부 회사에 맡깁니다. 받는 곳은 모두 <a href="#ko-recipients">5절</a>에 적었습니다.</li>
+<li>개인정보를 팔지 않습니다. 앱은 위치, 연락처, 사진, 카메라, 마이크 권한을 요청하지 않습니다.</li>
+</ul>
+
+<h2 id="ko-collect">2. 모으는 정보</h2>
+
+<h3>2.1 계정과 로그인</h3>
+<ul>
+<li><strong>게스트:</strong> 로그인하지 않고 시작하면 Firebase Authentication이 무작위 사용자 ID로 익명 계정을 만듭니다.</li>
+<li><strong>Google:</strong> Google 계정의 이메일 주소. Firebase Authentication은 Google 계정의 이름과 프로필 사진 주소도 저장하지만, 앱은 이 정보를 쓰지 않습니다.</li>
+<li><strong>Apple:</strong> Apple이 전달하는 이메일 주소(Apple의 중계용 주소일 수 있습니다). 앱은 이름을 저장하지 않습니다.</li>
+<li><strong>이메일:</strong> 이메일 주소와 비밀번호. 비밀번호는 Firebase Authentication이 저희도 읽을 수 없는 형태(해시)로 저장합니다. 이메일 주소는 인증 메일과 비밀번호 재설정 메일을 보내는 데 씁니다.</li>
+<li><strong>사용자 ID:</strong> 모든 계정에는 사용자 ID가 있습니다. 친구가 찾을 수 있도록 앱에 표시되며, RevenueCat에서는 고객 ID로 쓰입니다.</li>
+</ul>
+
+<h3>2.2 프로필과 훈련 기록</h3>
+<p>서버의 계정 기록에는 다음이 들어 있습니다.</p>
+<ul>
+<li>닉네임(다른 사람이 쓰고 있지 않은지 확인합니다)과 고른 프로필 사진</li>
+<li>처음 실행할 때 답한 질문: 훈련 목표와 수준, 악보를 읽을 수 있는지, 음악 이론 지식, 하루 연습 시간, 앱을 알게 된 경로</li>
+<li>훈련 계획과 기록: 카테고리별로 깬 스테이지와 점수, 날짜별 경험치, 연속 기록, 트로피, 대전 승리 기록, 주간 리그 티어</li>
+<li>가지고 있는 앱 안의 재화, 아이템, 프로필 사진과 저희가 우편함으로 보낸 메시지·보상</li>
+<li>시작한 날, 마지막 로그인, 기기가 Android인지 iOS인지, 기기의 언어·지역 설정(예: "ko_KR"). 언어·지역 설정은 랭킹에서 닉네임 옆에 국기를 보여 주는 데 씁니다.</li>
+</ul>
+
+<h3>2.3 친구, 랭킹, 대전</h3>
+<ul>
+<li>친구 목록, 보내고 받은 친구 요청, 차단한 사용자. 친구 요청에는 보낸 사람의 프로필과 훈련 요약이 복사되어 들어갑니다.</li>
+<li>훈련 스텝을 깨면 프로필과 훈련 요약(닉네임, 프로필 사진, 국기, 통계, 사용자 ID)이 주간 리그에 복사되고, 점수가 충분히 높으면 명예의 전당에도 복사됩니다.</li>
+<li>친선전에는 두 사람의 사용자 ID, 닉네임, 프로필 사진, 트로피, 점수와 그 경기에서 낸 답이 저장됩니다.</li>
+<li>친구를 찾을 때 입력한 닉네임이나 사용자 ID는 계정을 찾으려고 데이터베이스로 보냅니다. 검색 기록은 남기지 않습니다.</li>
+</ul>
+
+<h3>2.4 곡</h3>
+<ul>
+<li>앱에서 만든 곡은 기기에 저장됩니다.</li>
+<li>곡을 음악 차트에 올리려고 심사에 제출하면 곡과 제목, 작곡가, 장르, 판매가, 길이를 닉네임, 사용자 ID와 함께 받습니다. 올린 곡은 심사를 거쳐 공개되며, 공개된 곡은 모든 사용자가 볼 수 있습니다.</li>
+<li>앱 안의 재화로 곡을 사면 계정 기록에 그 곡(제목, 작곡가, 올린 사람의 닉네임과 사용자 ID)이 남고, 곡의 판매량이 올라갑니다. 산 곡을 평가하면 그 곡의 좋아요 수가 올라갑니다.</li>
+</ul>
+
+<h3>2.5 구매와 구독</h3>
+<ul>
+<li>결제는 Apple(App Store)이나 Google(Google Play)이 처리합니다. 저희는 카드나 결제 정보를 받지 않습니다.</li>
+<li>RevenueCat은 산 것을 앱에서 쓸 수 있게 하고 구매를 복원할 수 있도록 사용자 ID와 구매·구독 기록(상품, 날짜, 스토어의 거래 정보)을 받습니다.</li>
+<li>Google Analytics for Firebase는 앱 안 구매 이벤트(상품과 가격)를 자동으로 기록합니다.</li>
+</ul>
+
+<h3>2.6 문의와 신고</h3>
+<ul>
+<li>앱에서 문의나 의견을 보내면 고른 분류, 쓴 제목과 내용, 닉네임, 사용자 ID, 계정의 이메일 주소(있는 경우), 로그인 방법, 앱 버전, 기기의 운영체제와 버전을 받습니다.</li>
+<li>사용자나 곡을 신고하면 고른 사유, 신고 대상 사용자의 ID와 닉네임(곡을 신고하면 곡 ID), 신고한 사람에 대한 위와 같은 정보를 받습니다.</li>
+</ul>
+
+<h3>2.7 기기와 이용 정보</h3>
+<ul>
+<li><strong>로그인 기기 확인용 식별자:</strong> 기기의 Android ID(Android) 또는 공급업체 식별자 IDFV(iOS)를 계정과 함께 저장합니다. 같은 계정으로 다른 기기에서 로그인하면 먼저 쓰던 기기는 로그아웃됩니다.</li>
+<li><strong>이용 이벤트:</strong> 어떤 화면과 기능을 쓰는지(예: 훈련 스테이지 시작·종료, 고른 로그인 방법, 구독 화면 닫기)를 Google Analytics for Firebase와 Amplitude로 보냅니다.</li>
+<li><strong>세션 리플레이:</strong> Microsoft Clarity가 앱 화면의 구성과 내용(글자는 Clarity의 가림 설정에 따라 가립니다), 탭·스크롤·화면 이동을 기록합니다. 쓰기 불편한 곳을 찾는 데 씁니다.</li>
+<li><strong>오류 보고:</strong> 앱에 예상하지 못한 오류가 나면 오류의 종류와 앱 코드에서 오류가 난 위치를 Google Analytics for Firebase로 보냅니다. 오류 보고에는 이용자가 만든 내용이 들어가지 않습니다.</li>
+<li><strong>설치 경로(Android):</strong> 설치한 뒤와 계정을 만들 때 Google Play 설치 리퍼러(install referrer)를 읽어 어떤 링크나 캠페인으로 설치했는지 확인합니다. 분석 도구에 기록되고, 누구인지 알 수 없는 집계 수로도 남습니다.</li>
+<li><strong>자동으로 보내지는 기술 정보:</strong> 서비스를 맡은 회사들은 IP 주소(국가·지역·도시를 추정하는 데 쓸 수 있습니다), 기기 모델, 운영체제와 버전, 앱 버전, 언어, 시간대, 앱 설치마다 만드는 식별자를 받습니다. Android에서는 광고 ID도 포함됩니다. iOS에서는 앱이 광고 식별자 접근 권한을 요청하지 않습니다.</li>
+<li><strong>알림:</strong> 알림을 보내려고 Firebase Cloud Messaging을 쓰며, 이때 앱 설치마다 토큰이 생깁니다. 연습 알림은 기기에서 예약합니다.</li>
+</ul>
+
+<h3>2.8 기기에만 남는 정보</h3>
+<p>설정(소리, 알림, 언어), 앱에서 만든 곡, 직접 만든 퀴즈와 재생목록, 이용약관 동의 여부는 기기에만 저장됩니다. 홈 화면 위젯은 기기에 저장된 연속 기록을 읽습니다. 연결한 MIDI 건반은 기기 안에서만 씁니다.</p>
+
+<h2 id="ko-use">3. 정보를 쓰는 목적</h2>
+<ul>
+<li><strong>앱 제공:</strong> 계정 생성과 로그인, 진행 기록 저장과 복원, 친구·랭킹·대전·음악 차트 운영, 구매와 구독 제공, 허용한 연습 알림과 알림 발송</li>
+<li><strong>안전한 운영:</strong> 같은 계정의 두 기기 동시 사용 방지, 신고 검토, <a href="/AbsoluteEar/TermsOfService">이용약관</a>을 어긴 콘텐츠 삭제와 계정 제한, 부정 이용 방지</li>
+<li><strong>문의 응대:</strong> 문의와 신고에 대한 답변</li>
+<li><strong>앱 개선:</strong> 이용 통계, 세션 리플레이, 오류 보고, 설치 경로 집계</li>
+<li><strong>광고:</strong> 구독하지 않은 이용자에게 광고 표시와 광고 측정(<a href="#ko-recipients">5절</a>, <a href="#ko-choices">6절</a>)</li>
+</ul>
+<p>이용자의 권리나 의무에 중대한 영향을 주는 결정을 사람의 판단 없이 자동으로 내리는 일은 없습니다.</p>
+
+<h2 id="ko-others">4. 다른 사용자에게 보이는 정보</h2>
+<ul>
+<li>닉네임, 프로필 사진, 국기, 훈련 통계, 트로피, 연속 기록, 랭킹 항목, 공개한 곡의 수와 그 곡들의 좋아요 수·판매량</li>
+<li>공개한 곡(닉네임과 함께)</li>
+<li>친구 요청을 받은 사용자는 보낸 사람의 프로필과 훈련 요약을 봅니다. 친선전에서는 두 사람이 서로의 닉네임, 프로필 사진, 트로피, 점수를 봅니다.</li>
+<li>사용자를 차단하면 그 사용자의 곡과 친구 요청이 더는 보이지 않고, 랭킹에서는 그 사용자의 닉네임이 가려지며, 두 사람은 서로의 친구 목록에서 빠집니다. 차단해도 차단된 사용자가 볼 수 있는 정보는 달라지지 않습니다.</li>
+</ul>
+
+<h2 id="ko-recipients">5. 정보를 받는 곳(처리 위탁과 국외 이전)</h2>
+<p>이 절에 적은 곳에만 정보를 보냅니다. 아래 회사들은 저희가 맡긴 일을 하려고 정보를 처리합니다(처리 위탁). 표시한 곳은 받은 정보를 자기 목적에도 쓰며, 그때는 그 회사의 개인정보처리방침이 적용됩니다.</p>
+<p>아래 회사는 모두 한국 밖의 회사입니다. 정보는 앱을 쓰는 동안 수시로 암호화된 연결(TLS)을 거쳐 각 회사로 전송됩니다(국외 이전). 회사마다 맡긴 일, 받는 정보, 정보를 처리하는 나라, 보유 기간, 연락처는 다음과 같습니다.</p>
+<ul>
+<li><strong>Google Firebase</strong>(Google LLC, 미국)
+<ul>
+<li>맡긴 일: 로그인(Firebase Authentication), 데이터베이스(Cloud Firestore), 알림(Firebase Cloud Messaging), 앱 이용 분석(Google Analytics for Firebase)</li>
+<li>받는 정보: 2절의 계정·프로필·친구·곡·문의·신고 정보, 이용·오류 이벤트, 설치 식별자, Android 광고 ID, IP 주소</li>
+<li>처리하는 나라: 데이터베이스는 한국(Google Cloud 서울 리전, asia-northeast3)에 있습니다. 로그인 정보는 미국에서만 처리됩니다. 알림과 앱 이용 분석은 미국 등 Google이 시설을 둔 나라에서 처리될 수 있습니다.</li>
+<li>보유 기간: <a href="#ko-retention">7절</a>의 기간. 분석 데이터는 Google Analytics에 설정한 보존 기간</li>
+<li>연락처·방침: <a href="https://support.google.com/policies?p=privpol_privts">Google 개인정보 문의</a> · <a href="https://firebase.google.com/support/privacy">Firebase 개인정보 보호</a> · <a href="https://policies.google.com/privacy">Google 개인정보처리방침</a></li>
+</ul></li>
+<li><strong>Google AdMob</strong>(Google LLC, 미국, Google 동의 양식 포함)
+<ul>
+<li>맡긴 일: 구독하지 않은 이용자에게 광고 표시</li>
+<li>받는 정보: 기기 식별자(Android에서는 광고 ID와 앱 세트 ID), IP 주소와 대략적인 위치, 광고를 보거나 누른 기록, 앱 성능 정보</li>
+<li>처리하는 나라: 미국 등 Google이 시설을 둔 나라</li>
+<li>보유 기간: Google의 정책에 따름</li>
+<li>자기 목적 이용: Google은 이 정보를 광고 측정, 부정 행위 방지 같은 자기 목적에도 씁니다.</li>
+<li>연락처·방침: <a href="https://support.google.com/policies?p=privpol_privts">Google 개인정보 문의</a> · <a href="https://policies.google.com/technologies/partner-sites">Google이 서비스를 사용하는 앱의 정보를 사용하는 방법</a></li>
+</ul></li>
+<li><strong>RevenueCat</strong>(RevenueCat, Inc., 미국)
+<ul>
+<li>맡긴 일: 구매와 구독 관리</li>
+<li>받는 정보: 사용자 ID, 구매·구독 기록, 스토어의 거래 정보, 앱 버전, 언어, 통화</li>
+<li>처리하는 나라: 미국</li>
+<li>보유 기간: 삭제를 요청할 때까지(<a href="#ko-delete-account">8절</a>)</li>
+<li>연락처·방침: <a href="mailto:compliance@revenuecat.com">compliance@revenuecat.com</a> · <a href="https://www.revenuecat.com/privacy">RevenueCat 개인정보처리방침</a></li>
+</ul></li>
+<li><strong>Amplitude</strong>(Amplitude, Inc., 미국)
+<ul>
+<li>맡긴 일: 앱 이용 분석</li>
+<li>받는 정보: 이용 이벤트, 기기 모델, 운영체제, 언어, 이동통신사, 기기 식별자(Android 광고 ID, iOS IDFV), IP 주소(Amplitude가 국가·지역·도시를 추정하는 데 씁니다). 사용자 ID는 보내지 않습니다.</li>
+<li>처리하는 나라: 미국</li>
+<li>보유 기간: Amplitude 계정에 설정한 보존 기간 또는 Amplitude의 정책에 따름</li>
+<li>연락처·방침: <a href="mailto:privacy@amplitude.com">privacy@amplitude.com</a> · <a href="https://amplitude.com/privacy">Amplitude 개인정보 고지</a></li>
+</ul></li>
+<li><strong>Microsoft Clarity</strong>(Microsoft Corporation, 미국)
+<ul>
+<li>맡긴 일: 세션 리플레이와 사용성 분석</li>
+<li>받는 정보: 2.7절의 세션 리플레이 정보, 기기 정보, IP 주소(국가를 추정하는 데 씁니다), Clarity가 만드는 식별자. 사용자 ID는 보내지 않습니다.</li>
+<li>처리하는 나라: 미국 등 Microsoft가 시설을 둔 나라</li>
+<li>보유 기간: 화면 재생 데이터 30일, 클릭 데이터와 라벨·즐겨찾기를 단 세션 9개월(Microsoft가 정한 기간)</li>
+<li>연락처·방침: <a href="https://www.microsoft.com/privacy/privacy-support-requests">Microsoft 개인정보 문의</a> · <a href="https://www.microsoft.com/privacy/privacystatement">Microsoft 개인정보처리방침</a> · <a href="https://clarity.microsoft.com/terms">Clarity 이용 약관</a></li>
+</ul></li>
+<li><strong>Meta App Events</strong>(Meta Platforms, Inc., 미국)
+<ul>
+<li>맡긴 일: Meta 플랫폼에서 하는 광고의 효과 측정</li>
+<li>받는 정보: Meta SDK는 앱에 들어 있어 앱을 열면 시작됩니다. 기본 설정에서는 앱 설치, 앱 실행, App Store·Google Play에서 한 구매를 기기 정보, Android 광고 ID와 함께 보냅니다.</li>
+<li>처리하는 나라: 미국 등 Meta가 시설을 둔 나라</li>
+<li>보유 기간: Meta의 정책에 따름</li>
+<li>자기 목적 이용: Meta는 이 정보를 자기 목적에도 씁니다.</li>
+<li>연락처·방침: <a href="https://help.meta.com/support/privacy/">Meta 개인정보 문의</a> · <a href="https://www.facebook.com/privacy/policy/">Meta 개인정보처리방침</a></li>
+</ul></li>
+<li><strong>Shorebird</strong>(Code Town, Inc., 미국)
+<ul>
+<li>맡긴 일: 앱 업데이트 전달</li>
+<li>받는 정보: 업데이트를 확인할 때 앱 버전, 플랫폼, 익명 설치 ID</li>
+<li>처리하는 나라: 미국</li>
+<li>보유 기간: Shorebird의 정책에 따름</li>
+<li>연락처·방침: <a href="mailto:privacy@shorebird.dev">privacy@shorebird.dev</a> · <a href="https://shorebird.dev/privacy">Shorebird 개인정보처리방침</a></li>
+</ul></li>
+</ul>
+<p>앱은 다음 곳과도 통신합니다.</p>
+<ul>
+<li><strong>Apple과 Google:</strong> 결제, Apple로 로그인과 Google 로그인, App Store·Google Play에서 새 버전이 있는지 확인. <a href="https://www.apple.com/legal/privacy/">Apple 개인정보처리방침</a> · <a href="https://policies.google.com/privacy">Google 개인정보처리방침</a></li>
+<li><strong>Google 공개 시간 서버</strong>(time.google.com): 찬스 노트가 다시 차는 시각을 계산하려고 현재 시각을 묻습니다. 이 요청에는 계정 정보가 들어가지 않습니다.</li>
+</ul>
+
+<h3 id="ko-disclosure">제3자 제공</h3>
+<p>저희는 개인정보를 팔지 않습니다. 다른 사용자에게는 <a href="#ko-others">4절</a>의 정보가 보입니다. 이 방침에 적은 경우 말고는, 법령에 따라 요구받은 경우나 사람의 생명·신체·재산을 지키기 위해 급히 필요한 경우에만 개인정보를 제공합니다.</p>
+
+<h3 id="ko-refuse-transfer">국외 이전을 원하지 않을 때</h3>
+<p>앱에는 회사별로 전송을 끄는 설정이 없어, 국외 이전을 거부하면 앱을 쓸 수 없습니다. 원하지 않으면 계정을 삭제하고(<a href="#ko-delete-account">8절</a>) 앱 이용을 멈출 수 있습니다. 광고 식별자는 <a href="#ko-choices">6절</a>의 방법으로 제한할 수 있습니다.</p>
+
+<h2 id="ko-choices">6. 자동 수집 장치와 거부 방법</h2>
+<p>앱에 들어 있는 SDK(5절의 회사들이 만든 프로그램)는 앱을 쓰는 동안 아래 식별자와 2.7절의 기기·이용 정보를 자동으로 모아 각 회사로 보냅니다. 웹사이트의 쿠키와 비슷한 역할입니다. 이 가운데 Google AdMob과 Meta는 모은 정보를 광고 표시와 광고 측정에 씁니다.</p>
+<ul>
+<li><strong>광고·분석 식별자:</strong> 광고 ID와 앱 세트 ID(Android), 공급업체 식별자 IDFV(iOS), Firebase가 앱 설치마다 만드는 식별자, Amplitude·Microsoft Clarity·Meta가 만드는 식별자. 앱 이용 분석과 광고에 쓰며, 보유 기간은 <a href="#ko-retention">7절</a>을 따릅니다.</li>
+<li><strong>로그인 기기 확인용 식별자:</strong> Android ID 또는 IDFV(2.7절). 같은 계정의 두 기기 동시 사용을 막는 데 씁니다. 로그인에 필요해 끌 수 없으며, 계정을 삭제하면 지워집니다.</li>
+<li><strong>알림 토큰:</strong> Firebase Cloud Messaging이 알림을 보내는 데 씁니다.</li>
+</ul>
+<p>거부하거나 줄이는 방법은 다음과 같습니다.</p>
+<ul>
+<li>구독자에게는 배너 광고와 전면 광고가 나오지 않습니다. 보상형 광고는 직접 보기로 했을 때만 재생됩니다.</li>
+<li>맞춤 광고에 동의가 필요한 지역(예: 유럽 경제 지역, 영국)에서는 앱을 시작할 때 Google의 동의 창이 뜹니다. 선택은 언제든 내 페이지 &gt; 설정 &gt; GDPR 설정에서 바꿀 수 있습니다.</li>
+<li>Android에서는 기기 설정에서 광고 ID를 재설정하거나 삭제할 수 있습니다. iOS에서는 앱이 기기의 광고 식별자(IDFA) 접근을 요청하지 않습니다.</li>
+<li>알림은 앱의 알림 설정이나 기기 설정에서 끌 수 있습니다.</li>
+<li>분석 도구(Google Analytics for Firebase, Amplitude, Microsoft Clarity)의 수집만 따로 끄는 설정은 앱에 없습니다. 원하지 않으면 앱을 지워 수집을 멈출 수 있습니다.</li>
+</ul>
+<p>광고 ID를 삭제하거나 맞춤 광고를 거부해도 앱 기능은 그대로 쓸 수 있습니다. 광고는 그대로 나오지만 관심사에 맞춘 광고가 아닐 수 있습니다.</p>
+
+<h2 id="ko-retention">7. 보유 기간과 파기</h2>
+<ul>
+<li><strong>계정 기록, 기기 등록, 로그인 계정:</strong> 계정을 삭제할 때까지. 게스트로 쓰다가 그 기기에서 기존 계정으로 로그인하면 게스트 계정과 그 기록은 지워집니다.</li>
+<li><strong>명예의 전당:</strong> 더 높은 점수에 밀려날 때까지</li>
+<li><strong>주간 리그:</strong> 그 주의 리그가 끝나고 8주가 지나면 지웁니다.</li>
+<li><strong>다른 사용자의 기록에 들어간 친구 요청과 친구 목록:</strong> 상대가 요청을 수락하거나 거절할 때까지, 또는 상대의 앱이 계정이 없어진 것을 확인할 때까지</li>
+<li><strong>친선전 방:</strong> 방을 연 사람이 새 방을 열거나 계정을 삭제할 때까지</li>
+<li><strong>올린 곡:</strong> 삭제를 요청하거나 저희가 이용약관에 따라 지울 때까지. 다른 사용자가 산 곡은 그 사용자의 계정에 남습니다.</li>
+<li><strong>문의와 신고:</strong> 처리를 마친 날부터 3년이 지나면 지웁니다.</li>
+<li><strong>RevenueCat의 구매 기록:</strong> 삭제를 요청할 때까지(<a href="#ko-delete-account">8절</a>). Apple과 Google은 결제 기록을 따로 보관합니다.</li>
+<li><strong>분석, 세션 리플레이, 광고 데이터:</strong> 각 회사에서 저희 계정에 설정한 보존 기간이나 그 회사의 정책에 따른 기간(예: Microsoft Clarity의 화면 재생 데이터는 30일)</li>
+<li><strong>기기에 있는 정보:</strong> 앱이나 앱 데이터를 지울 때까지</li>
+</ul>
+<h3 id="ko-destruction">파기 절차와 방법</h3>
+<ul>
+<li>보유 기간이 끝나거나 처리 목적을 이룬 정보는 지체 없이 지웁니다.</li>
+<li>법령에 따라 더 오래 보관해야 하는 정보는 다른 정보와 나누어 그 목적과 기간에만 보관합니다.</li>
+<li>전자 파일은 복구할 수 없는 방법으로 지우고, 종이에 출력한 기록이 있으면 분쇄하거나 태웁니다.</li>
+</ul>
+
+<h2 id="ko-delete-account">8. 계정 삭제</h2>
+<div class="box">
+<p><strong>앱에서:</strong> 내 페이지 &gt; 설정(톱니바퀴 아이콘) &gt; 계정 관리 &gt; 계정 삭제. 본인 확인을 위해 Google, Apple 로그인이나 이메일·비밀번호 입력을 요청할 수 있습니다. 앱이 다시 로그인하라고 안내하면, 다시 로그인한 뒤 계정 삭제를 한 번 더 진행해 주세요.</p>
+<p><strong>앱 없이:</strong> <a href="mailto:tigerstone1263@gmail.com?subject=Absolute%20Ear%20%EA%B3%84%EC%A0%95%20%EC%82%AD%EC%A0%9C">tigerstone1263@gmail.com</a>으로 제목을 "Absolute Ear 계정 삭제"로 하고, 닉네임이나 사용자 ID와 로그인 방법을 적어 보내 주세요. 본인 계정인지 확인을 요청할 수 있으며, 요청을 받으면 10일 안에 처리합니다.</p>
+</div>
+<p>앱에서 계정을 삭제하면 다음이 바로 지워집니다.</p>
+<ul>
+<li>계정 기록(닉네임, 진행 기록, 친구 목록, 받은 친구 요청, 차단한 사용자, 곡 목록, 우편함)과 기기 등록</li>
+<li>마지막으로 연 친선전 방</li>
+<li>로그인 계정. Apple로 로그인했다면 앱의 Apple ID 접근 권한도 해지하고, Google로 로그인했다면 Google 계정과 앱의 연결을 끊습니다.</li>
+<li>이 기기에 저장된 이용약관 동의 여부와 이 계정에 맞춰 예약된 알림</li>
+</ul>
+<p>다음은 자동으로 지워지지 않습니다. 함께 지우기를 원하면 메일로 알려 주세요.</p>
+<ul>
+<li>명예의 전당 항목과 주간 리그 항목(주간 리그 항목은 <a href="#ko-retention">7절</a>의 기간이 지나면 지워집니다)</li>
+<li>보냈지만 아직 답을 받지 못한 친구 요청, 다른 사용자가 열어 함께한 친선전 방</li>
+<li>올린 곡(다른 사용자가 산 곡은 그 사용자의 계정에 남습니다)</li>
+<li>보낸 문의와 신고(<a href="#ko-retention">7절</a>의 기간이 지나면 지워집니다)</li>
+<li>RevenueCat의 구매 기록</li>
+</ul>
+<p>분석 데이터는 사용자 ID와 연결되어 있지 않으며, 각 회사의 일정에 따라 지워집니다(<a href="#ko-retention">7절</a>). 기기에 있는 정보는 앱을 지우면 함께 지워집니다. 계정을 삭제해도 구독은 해지되지 않습니다. 결제를 멈추려면 App Store나 Google Play에서 직접 구독을 해지해 주세요.</p>
+
+<h2 id="ko-rights">9. 이용자의 권리와 행사 방법</h2>
+<p>이용자는 자신의 개인정보를 열람하거나 정정·삭제하라고 요구할 수 있고, 처리를 멈추라고 요구하거나 동의를 철회할 수 있습니다. <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>으로 요청해 주세요. 많은 정보는 앱에서 직접 볼 수 있고, 계정은 언제든 삭제할 수 있습니다(<a href="#ko-delete-account">8절</a>).</p>
+<p>본인 확인을 요청할 수 있으며, 요청을 받으면 10일 안에 처리합니다. 법령에 따라 요청을 들어줄 수 없으면 그 이유를 알려 드립니다. 법정대리인이나 이용자가 위임한 사람도 요청할 수 있으며, 이때는 위임받았음을 확인할 수 있는 서류를 요청할 수 있습니다. 사는 곳의 법에 따라 이 밖의 권리가 더 있을 수 있습니다.</p>
+<h3 id="ko-remedies">권익침해 구제</h3>
+<p>저희의 답변에 만족하지 못하거나 개인정보 침해에 대해 상담이나 구제가 필요하면 아래 기관에 문의할 수 있습니다.</p>
+<ul>
+<li>개인정보침해 신고센터(한국인터넷진흥원): <a href="https://privacy.kisa.or.kr">privacy.kisa.or.kr</a>, 국번 없이 118</li>
+<li>개인정보 분쟁조정위원회: <a href="https://www.kopico.go.kr">www.kopico.go.kr</a>, 1833-6972</li>
+<li>대검찰청: <a href="https://www.spo.go.kr">www.spo.go.kr</a>, 국번 없이 1301</li>
+<li>경찰청: <a href="https://ecrm.police.go.kr">ecrm.police.go.kr</a>, 국번 없이 182</li>
+</ul>
+
+<h2 id="ko-children">10. 아동</h2>
+<p>Absolute Ear는 만 13세 미만(한국에서는 만 14세 미만) 아동을 대상으로 하지 않습니다. 이 나이보다 어린 아동의 개인정보를 알면서 모으지 않습니다. 아동이 개인정보를 제공했다고 생각되면 알려 주세요. 알려 주시면 지우겠습니다.</p>
+
+<h2 id="ko-security">11. 안전성 확보 조치</h2>
+<p>정보는 암호화된 연결(TLS)로 보냅니다. 비밀번호는 Firebase Authentication이 해시로 바꿔 저장하며, Firebase는 로그인 정보와 데이터베이스를 저장할 때도 암호화합니다. 데이터베이스 접근은 보안 규칙으로 제한합니다. 예를 들어 다른 사용자는 이용자의 훈련 기록을 바꿀 수 없고, 문의와 신고는 저희만 읽을 수 있습니다. 완전히 안전한 전송·저장 방법은 없으므로 절대적인 보안을 보장할 수는 없습니다.</p>
+
+<h2 id="ko-changes">12. 방침 변경</h2>
+<p>이 방침을 바꾸면 새 방침을 시행일과 함께 이 페이지에 올리고, 시행 7일 전까지 앱에서 알립니다. 이용자의 권리에 큰 영향을 주는 변경은 30일 전까지 알립니다. 이전 방침은 이 사이트에서 계속 볼 수 있습니다.</p>
+
+<h2 id="ko-contact">13. 개인정보 보호책임자와 연락처</h2>
+<p>개인정보 보호책임자: TigerStone1263 운영자<br>
+이메일: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a></p>
+<p>개인정보에 관한 문의, 권리 행사(<a href="#ko-rights">9절</a>), 불만 처리와 피해 구제 요청은 위 이메일로 보내 주세요.</p>
+</article>
+
+<article id="en" lang="en">
 <h1>Absolute Ear Privacy Policy</h1>
-<p class="meta">Announced: <mark>[OWNER DECISION: announcement date]</mark><br>
-Effective: <mark>[OWNER DECISION: effective date]</mark><br>
+<p class="meta">Announced: 2026-11-09<br>
+Effective: 2026-11-16<br>
 Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 
 <p>This policy explains what information the Absolute Ear app collects, why, who receives it, how long it is kept and how you can delete it. Absolute Ear is provided by TigerStone1263 ("we", "us"). Questions: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>.</p>
@@ -111,7 +386,7 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <li><strong>To keep the service safe:</strong> keep one account from being used on two devices at once, review reports, remove content and restrict accounts that break the <a href="/AbsoluteEar/TermsOfService">Terms of Service</a>, and prevent fraud.</li>
 <li><strong>To answer you:</strong> respond to inquiries and reports.</li>
 <li><strong>To improve the app:</strong> usage statistics, session replays, error reports and counts of install sources.</li>
-<li><strong>For advertising:</strong> show ads to users without a subscription and measure ads (sections 5 and 6).</li>
+<li><strong>For advertising:</strong> show ads to users without a subscription and measure ads (<a href="#recipients">section 5</a> and <a href="#choices">section 6</a>).</li>
 </ul>
 <p>We do not make automated decisions that have legal or similarly significant effects on you.</p>
 
@@ -123,81 +398,167 @@ Previous version: <a href="/AbsoluteEarPolicy.html">effective 2022-08-04</a></p>
 <li>If you block a user, you no longer see their songs or friend requests, their nickname is hidden from you in rankings, and you are removed from each other's friends lists. Blocking does not change what they can see about you.</li>
 </ul>
 
-<h2 id="recipients">5. Service providers and other recipients</h2>
-<p>We share information only as described here. The providers below process data for us; where noted, they also use it for their own purposes under their own privacy policies. Data is sent to them over encrypted connections while you use the app, and they may store and process it on servers in the United States and other countries.</p>
+<h2 id="recipients">5. Who receives information (service providers and transfers abroad)</h2>
+<p>We share information only with the recipients in this section. The providers below process information to do work we have given them. Where noted, they also use it for their own purposes, and their own privacy policies apply to that use.</p>
+<p>All of these providers are companies outside Korea. Information is sent to them over encrypted connections (TLS) whenever you use the app. For each provider, the list shows the work we have given it, the information it receives, the countries where the information is processed, how long it is kept and how to contact the provider.</p>
 <ul>
-<li><strong>Google Firebase</strong> (Google LLC): sign-in (Firebase Authentication), our database (Cloud Firestore), notifications (Firebase Cloud Messaging) and app analytics (Google Analytics for Firebase). Receives the account, profile, social, song, inquiry and report data in section 2, usage and error events, installation identifiers, on Android the advertising ID, and your IP address. <a href="https://firebase.google.com/support/privacy">Firebase privacy</a> · <a href="https://policies.google.com/privacy">Google Privacy Policy</a></li>
-<li><strong>Google AdMob</strong> (Google LLC), including Google's consent form: ads for users without a subscription. Receives device identifiers (on Android, the advertising ID and app set ID), your IP address and approximate location, ad interactions and app performance information. Google also uses this information for its own purposes, such as measuring ads and preventing fraud. <a href="https://policies.google.com/technologies/partner-sites">How Google uses information from apps that use its services</a></li>
-<li><strong>RevenueCat</strong> (RevenueCat, Inc.): purchase and subscription management. Receives your user ID, purchase and subscription history, store transaction information, app version, language and currency. <a href="https://www.revenuecat.com/privacy">RevenueCat Privacy Policy</a></li>
-<li><strong>Amplitude</strong> (Amplitude, Inc.): app analytics. Receives usage events, device model, operating system, language and mobile carrier, device identifiers (on Android, the advertising ID; on iOS, the identifier for vendor) and your IP address, which Amplitude uses to estimate country, region and city. The app does not send your user ID to Amplitude. <a href="https://amplitude.com/privacy">Amplitude Privacy Notice</a></li>
-<li><strong>Microsoft Clarity</strong> (Microsoft Corporation): session replays and usability analytics. Receives the session replay data in section 2.7, device information, your IP address (used to estimate your country) and an identifier Clarity creates. The app does not send your user ID to Clarity. <a href="https://www.microsoft.com/privacy/privacystatement">Microsoft Privacy Statement</a> · <a href="https://clarity.microsoft.com/terms">Clarity terms</a></li>
-<li><strong>Meta App Events</strong> (Meta Platforms, Inc.): measuring advertising on Meta's platforms. The Meta SDK is part of the app and starts when the app opens. With its default settings it reports app installs, app launches and purchases made through the App Store or Google Play, together with device information and, on Android, the advertising ID. Meta also uses this information for its own purposes. <a href="https://www.facebook.com/privacy/policy/">Meta Privacy Policy</a></li>
-<li><strong>Apple and Google</strong>: payments, Sign in with Apple and Google Sign-In, and checking the App Store or Google Play for a newer version of the app. <a href="https://www.apple.com/legal/privacy/">Apple Privacy Policy</a> · <a href="https://policies.google.com/privacy">Google Privacy Policy</a></li>
-<li><strong>Shorebird</strong> (Code Town, Inc.): delivering app updates. When the app checks for an update, it sends the app version, platform and an anonymous installation ID. <a href="https://shorebird.dev/privacy">Shorebird Privacy Policy</a></li>
+<li><strong>Google Firebase</strong> (Google LLC, United States)
+<ul>
+<li>Work: sign-in (Firebase Authentication), our database (Cloud Firestore), notifications (Firebase Cloud Messaging) and app analytics (Google Analytics for Firebase).</li>
+<li>Information: the account, profile, social, song, inquiry and report data in section 2, usage and error events, installation identifiers, on Android the advertising ID, and your IP address.</li>
+<li>Where: our database is in Korea (Google Cloud's Seoul region, asia-northeast3). Sign-in data is processed only in the United States. Notifications and app analytics may be processed in the United States and other countries where Google has facilities.</li>
+<li>Kept: for the periods in <a href="#retention">section 7</a>; analytics data for the retention period set in our Google Analytics settings.</li>
+<li>Contact and policies: <a href="https://support.google.com/policies?p=privpol_privts">Google privacy help</a> · <a href="https://firebase.google.com/support/privacy">Firebase privacy</a> · <a href="https://policies.google.com/privacy">Google Privacy Policy</a></li>
+</ul></li>
+<li><strong>Google AdMob</strong> (Google LLC, United States), including Google's consent form
+<ul>
+<li>Work: ads for users without a subscription.</li>
+<li>Information: device identifiers (on Android, the advertising ID and app set ID), your IP address and approximate location, the ads you see and tap, and app performance information.</li>
+<li>Where: the United States and other countries where Google has facilities.</li>
+<li>Kept: according to Google's policies.</li>
+<li>Own purposes: Google also uses this information for its own purposes, such as measuring ads and preventing fraud.</li>
+<li>Contact and policies: <a href="https://support.google.com/policies?p=privpol_privts">Google privacy help</a> · <a href="https://policies.google.com/technologies/partner-sites">How Google uses information from apps that use its services</a></li>
+</ul></li>
+<li><strong>RevenueCat</strong> (RevenueCat, Inc., United States)
+<ul>
+<li>Work: purchase and subscription management.</li>
+<li>Information: your user ID, purchase and subscription history, store transaction information, app version, language and currency.</li>
+<li>Where: the United States.</li>
+<li>Kept: until you ask us to delete it (<a href="#delete-account">section 8</a>).</li>
+<li>Contact and policy: <a href="mailto:compliance@revenuecat.com">compliance@revenuecat.com</a> · <a href="https://www.revenuecat.com/privacy">RevenueCat Privacy Policy</a></li>
+</ul></li>
+<li><strong>Amplitude</strong> (Amplitude, Inc., United States)
+<ul>
+<li>Work: app analytics.</li>
+<li>Information: usage events, device model, operating system, language and mobile carrier, device identifiers (on Android, the advertising ID; on iOS, the identifier for vendor) and your IP address, which Amplitude uses to estimate country, region and city. The app does not send your user ID to Amplitude.</li>
+<li>Where: the United States.</li>
+<li>Kept: for the retention period set in our Amplitude account, or according to Amplitude's policies.</li>
+<li>Contact and policy: <a href="mailto:privacy@amplitude.com">privacy@amplitude.com</a> · <a href="https://amplitude.com/privacy">Amplitude Privacy Notice</a></li>
+</ul></li>
+<li><strong>Microsoft Clarity</strong> (Microsoft Corporation, United States)
+<ul>
+<li>Work: session replays and usability analytics.</li>
+<li>Information: the session replay data in section 2.7, device information, your IP address (used to estimate your country) and an identifier Clarity creates. The app does not send your user ID to Clarity.</li>
+<li>Where: the United States and other countries where Microsoft has facilities.</li>
+<li>Kept: playback data for 30 days; click data and sessions that are labeled or marked as favorites for 9 months (periods set by Microsoft).</li>
+<li>Contact and policies: <a href="https://www.microsoft.com/privacy/privacy-support-requests">Microsoft privacy support</a> · <a href="https://www.microsoft.com/privacy/privacystatement">Microsoft Privacy Statement</a> · <a href="https://clarity.microsoft.com/terms">Clarity terms</a></li>
+</ul></li>
+<li><strong>Meta App Events</strong> (Meta Platforms, Inc., United States)
+<ul>
+<li>Work: measuring advertising on Meta's platforms.</li>
+<li>Information: the Meta SDK is part of the app and starts when the app opens. With its default settings it reports app installs, app launches and purchases made through the App Store or Google Play, together with device information and, on Android, the advertising ID.</li>
+<li>Where: the United States and other countries where Meta has facilities.</li>
+<li>Kept: according to Meta's policies.</li>
+<li>Own purposes: Meta also uses this information for its own purposes.</li>
+<li>Contact and policy: <a href="https://help.meta.com/support/privacy/">Meta privacy help</a> · <a href="https://www.facebook.com/privacy/policy/">Meta Privacy Policy</a></li>
+</ul></li>
+<li><strong>Shorebird</strong> (Code Town, Inc., United States)
+<ul>
+<li>Work: delivering app updates.</li>
+<li>Information: when the app checks for an update, the app version, platform and an anonymous installation ID.</li>
+<li>Where: the United States.</li>
+<li>Kept: according to Shorebird's policies.</li>
+<li>Contact and policy: <a href="mailto:privacy@shorebird.dev">privacy@shorebird.dev</a> · <a href="https://shorebird.dev/privacy">Shorebird Privacy Policy</a></li>
+</ul></li>
+</ul>
+<p>The app also connects to:</p>
+<ul>
+<li><strong>Apple and Google:</strong> payments, Sign in with Apple and Google Sign-In, and checking the App Store or Google Play for a newer version of the app. <a href="https://www.apple.com/legal/privacy/">Apple Privacy Policy</a> · <a href="https://policies.google.com/privacy">Google Privacy Policy</a></li>
 <li><strong>Google's public time server</strong> (time.google.com): the app asks it for the current time to calculate when in-app chances refill. The request does not include your account information.</li>
 </ul>
-<p>Other users see the information described in <a href="#others">section 4</a>. We may also disclose information when the law requires it, or to protect the rights and safety of our users or others.</p>
 
-<h2 id="choices">6. Advertising and analytics choices</h2>
+<h3 id="disclosure">Disclosure to others</h3>
+<p>We do not sell your personal information. Other users see the information described in <a href="#others">section 4</a>. Apart from what this policy describes, we disclose personal information only when the law requires it or when it is urgently needed to protect someone's life, physical safety or property.</p>
+
+<h3 id="refuse-transfer">If you do not want your information transferred abroad</h3>
+<p>The app has no setting to stop sending information to individual providers, so you cannot use the app without these transfers. If you do not want them, you can delete your account (<a href="#delete-account">section 8</a>) and stop using the app. You can limit the use of advertising identifiers as described in <a href="#choices">section 6</a>.</p>
+
+<h2 id="choices">6. Automatic collection and your choices</h2>
+<p>The SDKs built into the app (software from the companies in section 5) automatically collect the identifiers below and the device and usage information in section 2.7 while you use the app, and send them to those companies. They work much like cookies on a website. Google AdMob and Meta use the information they collect to show and measure ads.</p>
+<ul>
+<li><strong>Advertising and analytics identifiers:</strong> the advertising ID and app set ID (Android), the identifier for vendor (iOS), identifiers Firebase creates for each app installation, and identifiers created by Amplitude, Microsoft Clarity and Meta. They are used for app analytics and advertising and are kept as described in <a href="#retention">section 7</a>.</li>
+<li><strong>Device identifier for sign-in:</strong> the Android ID or identifier for vendor (section 2.7), used to keep one account from being used on two devices at once. Sign-in needs it, so it cannot be turned off; it is deleted when you delete your account.</li>
+<li><strong>Notification token:</strong> used by Firebase Cloud Messaging to deliver notifications.</li>
+</ul>
+<p>How to refuse or limit collection:</p>
 <ul>
 <li>Users with a subscription do not see banner or full-screen ads. Rewarded ads play only when you choose to watch one.</li>
 <li>Where the law requires consent for personalized ads (for example in the European Economic Area and the United Kingdom), Google's consent form appears when the app starts. You can change your choice at any time in My Page &gt; Settings &gt; GDPR Settings.</li>
-<li>On Android, you can reset or delete your advertising ID in your device settings. On iOS, the app does not ask for access to your device's advertising identifier.</li>
+<li>On Android, you can reset or delete your advertising ID in your device settings. On iOS, the app does not ask for access to your device's advertising identifier (IDFA).</li>
 <li>You can turn off notifications in the app's notification settings or in your device settings.</li>
+<li>The app has no setting to turn off only the analytics tools (Google Analytics for Firebase, Amplitude and Microsoft Clarity). If you do not want them, you can stop the collection by deleting the app.</li>
 </ul>
+<p>If you delete your advertising ID or refuse personalized ads, you can still use every feature of the app. Ads still appear, but they may not be based on your interests.</p>
 
-<h2 id="retention">7. How long we keep information</h2>
+<h2 id="retention">7. How long we keep information and how we destroy it</h2>
 <ul>
 <li><strong>Account record, device registration and sign-in account:</strong> until you delete your account. If you were a guest and then sign in to an existing account on that device, the guest account and its record are deleted.</li>
 <li><strong>Hall of fame:</strong> your entry stays until higher scores replace it.</li>
-<li><strong>Weekly leagues:</strong> <mark>[OWNER DECISION: how long weekly league entries are kept, for example "deleted 8 weeks after the league week ends"]</mark></li>
+<li><strong>Weekly leagues:</strong> deleted 8 weeks after the league week ends.</li>
 <li><strong>Friend requests and friends lists in other users' records:</strong> until the other user accepts or declines your request, or until their app finds that your account no longer exists.</li>
 <li><strong>Friendly-match rooms:</strong> until the player who opened the room opens a new one or deletes their account.</li>
 <li><strong>Songs you upload:</strong> until you ask us to remove them or we remove them under the Terms of Service. Songs that other users bought stay listed in their accounts.</li>
-<li><strong>Inquiries and reports:</strong> <mark>[OWNER DECISION: how long inquiries and reports are kept, for example "3 years after the inquiry or report is closed"]</mark></li>
+<li><strong>Inquiries and reports:</strong> deleted 3 years after we finish handling them.</li>
 <li><strong>Purchase records at RevenueCat:</strong> until you ask us to delete them (<a href="#delete-account">section 8</a>). Apple and Google keep their own records of your payments.</li>
-<li><strong>Analytics, session replay and advertising data:</strong> kept by each provider for the retention period set in our account or by its own policy (for example, Microsoft Clarity keeps session recordings for 30 days).</li>
+<li><strong>Analytics, session replay and advertising data:</strong> kept by each provider for the retention period set in our account or by its own policy (for example, Microsoft Clarity keeps playback data for 30 days).</li>
 <li><strong>Information on your device:</strong> until you delete the app or its data.</li>
 </ul>
-<p>If a law requires us to keep certain information longer, we keep it only for that purpose and period. When a retention period ends, we delete the information so that it cannot be restored.</p>
+<h3 id="destruction">How we destroy information</h3>
+<ul>
+<li>When a retention period ends or the purpose of processing has been achieved, we delete the information without delay.</li>
+<li>If a law requires us to keep certain information longer, we keep it separately from other information, only for that purpose and period.</li>
+<li>Electronic files are deleted so that they cannot be restored. Printed records, if any, are shredded or burned.</li>
+</ul>
 
 <h2 id="delete-account">8. Deleting your account</h2>
 <div class="box">
 <p><strong>In the app:</strong> My Page &gt; Settings (gear icon) &gt; Account Management &gt; Delete Account. You may be asked to confirm with Google, Apple or your email and password. If the app asks you to sign in again, sign in and delete your account once more to finish.</p>
 <p><strong>Without the app:</strong> email <a href="mailto:tigerstone1263@gmail.com?subject=Absolute%20Ear%20account%20deletion">tigerstone1263@gmail.com</a> with the subject "Absolute Ear account deletion", your nickname or user ID and your sign-in method. We may ask you to confirm that the account is yours. We act on your request within 10 days.</p>
+<p lang="ko">한국어 안내: <a href="#ko-delete-account">계정 삭제</a></p>
 </div>
 <p>Deleting your account in the app immediately deletes:</p>
 <ul>
 <li>your account record (nickname, progress, friends list, friend requests you received, blocked users, song lists and mailbox) and your device registration;</li>
 <li>the last friendly-match room you opened;</li>
-<li>your sign-in account. For Sign in with Apple we also revoke the app's access to your Apple ID, and for Google we disconnect the app from your Google account.</li>
+<li>your sign-in account. For Sign in with Apple we also revoke the app's access to your Apple ID, and for Google we disconnect the app from your Google account;</li>
+<li>on this device, the record that you agreed to the Terms of Service and the notifications scheduled for your account.</li>
 </ul>
 <p>The following are not deleted automatically. Email us if you want them deleted as well:</p>
 <ul>
-<li>your hall-of-fame and weekly league entries;</li>
+<li>your hall-of-fame and weekly league entries (weekly league entries are deleted after the period in <a href="#retention">section 7</a>);</li>
 <li>friend requests you sent that have not been answered, and friendly-match rooms that other users opened with you;</li>
 <li>songs you uploaded (songs that other users bought stay listed in their accounts);</li>
-<li>inquiries and reports you sent;</li>
+<li>inquiries and reports you sent (deleted after the period in <a href="#retention">section 7</a>);</li>
 <li>your purchase records at RevenueCat.</li>
 </ul>
 <p>Analytics data is not linked to your user ID and is deleted on each provider's schedule (<a href="#retention">section 7</a>). Information on your device is deleted when you delete the app. Deleting your account does not cancel a subscription: cancel it in the App Store or Google Play to stop billing.</p>
 
-<h2 id="rights">9. Your rights</h2>
-<p>You can ask us to give you access to your personal information, correct or delete it, stop processing it, or withdraw your consent, by emailing <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>. You can see much of your information in the app and delete your account at any time (<a href="#delete-account">section 8</a>). We may ask you to confirm your identity, and we act on your request within 10 days. Depending on where you live, local law may give you further rights.</p>
-<p>If you are in Korea and are not satisfied with our response, you can contact the Personal Information Infringement Report Center (<a href="https://privacy.kisa.or.kr">privacy.kisa.or.kr</a>, call 118) or the Personal Information Dispute Mediation Committee (<a href="https://www.kopico.go.kr">www.kopico.go.kr</a>, call 1833-6972).</p>
+<h2 id="rights">9. Your rights and how to use them</h2>
+<p>You can ask us to give you access to your personal information, correct or delete it, stop processing it, or withdraw your consent, by emailing <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>. You can see much of your information in the app and delete your account at any time (<a href="#delete-account">section 8</a>).</p>
+<p>We may ask you to confirm your identity, and we act on your request within 10 days. If the law does not allow us to do what you ask, we tell you why. A legal representative or someone you have authorized can also make a request for you; in that case we may ask for a document that shows the authorization. Depending on where you live, local law may give you further rights.</p>
+<h3 id="remedies">Help from Korean authorities</h3>
+<p>If you are not satisfied with our response, or need advice or a remedy for a privacy violation, you can contact these Korean organizations:</p>
+<ul>
+<li>Personal Information Infringement Report Center (Korea Internet &amp; Security Agency): <a href="https://privacy.kisa.or.kr">privacy.kisa.or.kr</a>, call 118</li>
+<li>Personal Information Dispute Mediation Committee: <a href="https://www.kopico.go.kr">www.kopico.go.kr</a>, call 1833-6972</li>
+<li>Supreme Prosecutors' Office: <a href="https://www.spo.go.kr">www.spo.go.kr</a>, call 1301</li>
+<li>Korean National Police Agency: <a href="https://ecrm.police.go.kr">ecrm.police.go.kr</a>, call 182</li>
+</ul>
 
 <h2 id="children">10. Children</h2>
 <p>Absolute Ear is not directed to children under 13 (under 14 in Korea). We do not knowingly collect personal information from children under these ages. If you believe that a child has given us personal information, contact us and we will delete it.</p>
 
 <h2 id="security">11. Security</h2>
-<p>Data is sent over encrypted connections (TLS). Access to our database is limited by security rules; for example, other users cannot change your training records, and inquiries and reports can be read only by us. No method of transmission or storage is completely secure, so we cannot guarantee absolute security.</p>
+<p>Data is sent over encrypted connections (TLS). Firebase Authentication stores passwords in hashed form, and Firebase also encrypts sign-in data and our database when it stores them. Access to our database is limited by security rules; for example, other users cannot change your training records, and inquiries and reports can be read only by us. No method of transmission or storage is completely secure, so we cannot guarantee absolute security.</p>
 
 <h2 id="changes">12. Changes to this policy</h2>
 <p>When we change this policy, we post the new version on this page with its effective date and announce the change in the app at least 7 days before it takes effect, or at least 30 days before for changes that significantly affect your rights. Previous versions remain available on this site.</p>
 
-<h2 id="contact">13. Contact</h2>
-<p>TigerStone1263<br>
-Privacy contact: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a></p>
+<h2 id="contact">13. Privacy officer and contact</h2>
+<p>Privacy officer: the operator of TigerStone1263<br>
+Email: <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a></p>
+<p>Send questions about your personal information, requests to use your rights (<a href="#rights">section 9</a>), complaints and requests for remedies to this email address.</p>
+</article>
 </main>
 </body>
 </html>
