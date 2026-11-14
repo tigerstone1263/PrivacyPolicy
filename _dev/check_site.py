@@ -559,6 +559,8 @@ PA_SDK_DISCLOSURE = {**SDK_DISCLOSURE, "record": "Microphone (sight-singing)", "
 PROVIDER_PACKAGE = {"Google Firebase": "firebase_core", "Google AdMob": "google_mobile_ads", "RevenueCat": "purchases_flutter",
                     "Amplitude": "amplitude_flutter", "Microsoft Clarity": "clarity_flutter",
                     "Meta App Events": "facebook_app_events", "Shorebird": "shorebird_code_push"}
+# 받는 곳 항목 밖(요약·제3자 제공·자동 수집 절)에서 그 회사를 가리키는 말. SDK 를 뺐으면 이 말도 없어야 한다
+PROVIDER_WORD = {"Meta App Events": r"\bMeta\b|facebook"}
 # 앱마다: 방침·약관 주소, 방침 제목, 약관 주소(방침이 링크해야 한다), 앱 pubspec, pubspec 패키지 → 방침에 나와야 하는 말
 POLICY_APPS = [
     {"name": "Absolute Ear", "privacy": PRIVACY, "terms": TERMS, "terms_url": "/AbsoluteEar/TermsOfService",
@@ -620,6 +622,9 @@ def check_policy_content(app):
         deps = set(re.findall(r"^  ([a-z0-9_]+):", app["pubspec"].read_text(encoding="utf-8"), re.M))
     for name, url in POLICY_PROVIDERS.items():
         if deps is not None and PROVIDER_PACKAGE[name] not in deps:
+            # 앱이 뺀 SDK 를 방침이 아직 말하면 틀린 방침이다(이름·정책 링크, Meta 는 회사 이름만 나와도)
+            if name in text or url in p.links or re.search(PROVIDER_WORD.get(name, r"(?!)"), text):
+                fail(f"{PRIVACY}: 앱 pubspec 에 {PROVIDER_PACKAGE[name]} 가 없는데 방침이 {name} 을 말함")
             continue
         if name not in text or url not in p.links:
             fail(f"{PRIVACY}: 받는 곳 {name} 이 없거나 정책 링크({url})가 없음")
