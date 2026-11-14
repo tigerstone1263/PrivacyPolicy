@@ -8,16 +8,16 @@
 <link rel="icon" type="image/png" href="/favicon.png">
 <script>
 (function () {
-  var KNOWN = ["/", "/en/", "/zh/", "/AbsoluteEar/", "/AbsoluteEar/en/", "/AbsoluteEar/zh/", "/AbsoluteEar/get/", "/get/", "/AbsoluteEar/PrivacyPolicy", "/AbsoluteEar/TermsOfService", "/AbsoluteEarPolicy.html", "/termsOfService.html", "/privacyPolicy.html", "/PitchRunner.html"];
+  var KNOWN = ["/", "/en/", "/zh/", "/AbsoluteEar/", "/AbsoluteEar/en/", "/AbsoluteEar/zh/", "/AbsoluteEar/get/", "/get/", "/AbsoluteEar/PrivacyPolicy", "/AbsoluteEar/TermsOfService", "/PitchAcademy/PrivacyPolicy", "/PitchAcademy/TermsOfService", "/AbsoluteEarPolicy.html", "/termsOfService.html", "/privacyPolicy.html", "/PitchRunner.html"];
   function key(p) { return p.toLowerCase().replace(/\/index\.html$/, '/').replace(/\.html$/, '').replace(/\/+$/, ''); }
   var here, to = null;
   try { here = key(decodeURI(location.pathname)); } catch (e) { here = key(location.pathname); }
   for (var i = 0; i < KNOWN.length && !to; i++) if (key(KNOWN[i]) === here) to = KNOWN[i];
-  if (!to) {  // 앱 폴더 안의 모르는 주소는 그 앱 첫 화면으로
+  if (!to) {  // 앱 폴더 안의 모르는 주소는 그 앱 첫 화면으로(첫 화면이 있는 앱만 — 정책 쪽만 있는 앱은 보낼 곳이 없다)
     var seg = here.split('/')[1] || '';
     for (var j = 0; j < KNOWN.length && !to; j++) {
       var top = KNOWN[j].split('/')[1] || '';
-      if (top && top.indexOf('.') < 0 && top.toLowerCase() === seg) to = '/' + top + '/';
+      if (top && KNOWN[j] === '/' + top + '/' && top.toLowerCase() === seg) to = KNOWN[j];
     }
   }
   if (to && to !== location.pathname) location.replace(to + location.search + location.hash);

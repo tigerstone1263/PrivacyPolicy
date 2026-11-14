@@ -27,6 +27,13 @@ const cases = [
   ['/absoluteearpolicy.html', '/AbsoluteEarPolicy.html'],
   ['/termsofservice', '/termsOfService.html'],
   ['/absoluteear/no-such-page', '/AbsoluteEar/'],  // 앱 폴더 안의 모르는 주소 → 그 앱 첫 화면
+  ['/pitchacademy/privacypolicy', '/PitchAcademy/PrivacyPolicy'],
+  ['/PitchAcademy/PrivacyPolicy.html', '/PitchAcademy/PrivacyPolicy'],
+  ['/pitchacademy/termsofservice/', '/PitchAcademy/TermsOfService'],
+  ['/PitchAcademy/TermsOfService', null],
+  ['/pitchacademy', null],                          // 첫 화면이 없는 앱 폴더는 보낼 곳이 없다(없는 주소로 보내지 않는다)
+  ['/pitchacademy/no-such-page', null],
+  ['/en/no-such-page', '/en/'],                     // 언어 폴더는 전처럼 그 언어 첫 화면으로
   ['/no-such-page', null],
   ['/AbsoluteEar/PrivacyPolicy', null],             // 이미 정식 주소면 다시 보내지 않는다(무한 이동 방지)
   ['/%E0%A4%A', null],                              // 깨진 인코딩에도 죽지 않는다
