@@ -719,8 +719,22 @@ def check_policy_dates():
         fail(f"방침 시행일 {found['방침 시행일(한)']} 이 공고일 {announced} 의 7일 뒤보다 이름(방침 12절)")
     if found["약관 시행일"] < announced + dt.timedelta(days=30):
         fail(f"약관 시행일 {found['약관 시행일']} 이 공고일 {announced} 의 30일 뒤보다 이름(약관의 30일 전 공지)")
-    if "--publish" in sys.argv and announced != dt.date.today():
+    # 공개된 판(origin/main)과 같은 방침·약관은 이미 그 공고일로 공개된 것이라 오늘이 아니어도 된다.
+    # 예전에는 방침을 한 번 공개하고 나면 다음 날부터 다른 것을 게시할 때마다 이 검사가 막았다
+    if ("--publish" in sys.argv and announced != dt.date.today()
+            and policy_changed_since_published("_dev/policy/PrivacyPolicy.html", "_dev/policy/TermsOfService.html")):
         fail(f"공고일 {announced} 이 오늘({dt.date.today()})이 아님 — 공개하는 날로 공고일·시행일을 함께 고칠 것(RUNBOOK 7절)")
+
+
+def policy_changed_since_published(*paths):
+    """[paths](저장소 기준 경로)가 공개된 판(origin/main)과 다른가. 공개된 판을 알 수 없으면(git·원격 없음) 다르다고 본다
+    (모를 때는 날짜 검사를 건너뛰지 않는다)."""
+    import subprocess
+    try:
+        r = subprocess.run(["git", "diff", "--quiet", "origin/main", "--", *paths], cwd=ROOT, capture_output=True)
+    except OSError:
+        return True
+    return r.returncode != 0
 
 
 def check_new_app_policy_dates():
@@ -767,6 +781,10 @@ def check_new_app_policy_dates():
     for k in ("방침 시행일(한)", "약관 시행일"):
         if found[k] < announced:
             fail(f"Pitch Academy {k} {found[k]} 이 공고일 {announced} 보다 이름")
+    # 처음 공개하거나 고쳐서 다시 공개하는 날에는 공고일이 그날이어야 한다(Absolute Ear 와 같은 규칙)
+    if ("--publish" in sys.argv and announced != dt.date.today()
+            and policy_changed_since_published("_dev/policy/PitchAcademy")):
+        fail(f"Pitch Academy 공고일 {announced} 이 오늘({dt.date.today()})이 아님 — 공개하는 날로 공고일·시행일을 함께 고칠 것")
 
 
 def resolve(url_path):
