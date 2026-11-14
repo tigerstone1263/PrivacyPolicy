@@ -89,6 +89,9 @@ GROUPS = [STUDIO, APP]
 POLICY_PAGES = {
     "AbsoluteEar/PrivacyPolicy.html": DEV / "policy" / "PrivacyPolicy.html",
     "AbsoluteEar/TermsOfService.html": DEV / "policy" / "TermsOfService.html",
+    # Pitch Academy 는 아직 소개 페이지 없이 정책 두 쪽만 둔다(스토어 등록에 적는 주소)
+    "PitchAcademy/PrivacyPolicy.html": DEV / "policy" / "PitchAcademy" / "PrivacyPolicy.html",
+    "PitchAcademy/TermsOfService.html": DEV / "policy" / "PitchAcademy" / "TermsOfService.html",
 }
 # 원본에 남은 소유자 결정 자리. 게시 전에 모두 채운다(check_site.py --publish 가 막는다)
 POLICY_PLACEHOLDER = "[OWNER DECISION"
@@ -96,6 +99,7 @@ POLICY_PLACEHOLDER = "[OWNER DECISION"
 GET_COPY = ("AbsoluteEar/get/index.html", "get/index.html")
 # 404 구제 대상이 되는, 페이지 묶음 밖의 정식 주소
 EXTRA_PATHS = ["/AbsoluteEar/get/", "/get/", "/AbsoluteEar/PrivacyPolicy", "/AbsoluteEar/TermsOfService",
+               "/PitchAcademy/PrivacyPolicy", "/PitchAcademy/TermsOfService",
                "/AbsoluteEarPolicy.html", "/termsOfService.html", "/privacyPolicy.html", "/PitchRunner.html"]
 
 
@@ -176,11 +180,11 @@ NOT_FOUND = """<!DOCTYPE html>
   var here, to = null;
   try { here = key(decodeURI(location.pathname)); } catch (e) { here = key(location.pathname); }
   for (var i = 0; i < KNOWN.length && !to; i++) if (key(KNOWN[i]) === here) to = KNOWN[i];
-  if (!to) {  // 앱 폴더 안의 모르는 주소는 그 앱 첫 화면으로
+  if (!to) {  // 앱 폴더 안의 모르는 주소는 그 앱 첫 화면으로(첫 화면이 있는 앱만 — 정책 쪽만 있는 앱은 보낼 곳이 없다)
     var seg = here.split('/')[1] || '';
     for (var j = 0; j < KNOWN.length && !to; j++) {
       var top = KNOWN[j].split('/')[1] || '';
-      if (top && top.indexOf('.') < 0 && top.toLowerCase() === seg) to = '/' + top + '/';
+      if (top && KNOWN[j] === '/' + top + '/' && top.toLowerCase() === seg) to = KNOWN[j];
     }
   }
   if (to && to !== location.pathname) location.replace(to + location.search + location.hash);

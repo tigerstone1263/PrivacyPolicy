@@ -548,10 +548,34 @@ SDK_DISCLOSURE = {
     "shorebird_code_push": "Shorebird",
     "play_install_referrer": "install referrer",
 }
-# 지난 정책의 틀린 문장("기기에만 두고 수집하지 않는다")·템플릿 표기, 다른 앱 이름
+# Pitch Academy: 소개 페이지 없이 정책 두 쪽만 둔다. 근거가 되는 앱 저장소는 ~/abp/pitch_academy
+PA_PRIVACY = "PitchAcademy/PrivacyPolicy.html"
+PA_TERMS = "PitchAcademy/TermsOfService.html"
+PA_PUBSPEC = Path.home() / "abp" / "pitch_academy" / "pubspec.yaml"
+# Pitch Academy 는 시창(마이크)과 블루투스 MIDI 가 있다. 방침이 그 권한을 어떻게 쓰는지 밝혀야 한다
+PA_SDK_DISCLOSURE = {**SDK_DISCLOSURE, "record": "Microphone (sight-singing)", "flutter_midi_command": "Bluetooth MIDI",
+                     "home_widget": "home-screen widget"}
+# 받는 곳 이름 → 그 SDK 패키지. 앱 pubspec 에서 빠진 SDK 는 방침에 없어도 된다(예: Meta SDK 를 빼기로 한 경우)
+PROVIDER_PACKAGE = {"Google Firebase": "firebase_core", "Google AdMob": "google_mobile_ads", "RevenueCat": "purchases_flutter",
+                    "Amplitude": "amplitude_flutter", "Microsoft Clarity": "clarity_flutter",
+                    "Meta App Events": "facebook_app_events", "Shorebird": "shorebird_code_push"}
+# 받는 곳 항목 밖(요약·제3자 제공·자동 수집 절)에서 그 회사를 가리키는 말. SDK 를 뺐으면 이 말도 없어야 한다
+PROVIDER_WORD = {"Meta App Events": r"\bMeta\b|facebook"}
+# 앱마다: 방침·약관 주소, 방침 제목, 약관 주소(방침이 링크해야 한다), 앱 pubspec, pubspec 패키지 → 방침에 나와야 하는 말
+POLICY_APPS = [
+    {"name": "Absolute Ear", "privacy": PRIVACY, "terms": TERMS, "terms_url": "/AbsoluteEar/TermsOfService",
+     "pubspec": APP_PUBSPEC, "sdk": SDK_DISCLOSURE},
+    {"name": "Pitch Academy", "privacy": PA_PRIVACY, "terms": PA_TERMS, "terms_url": "/PitchAcademy/TermsOfService",
+     "pubspec": PA_PUBSPEC, "sdk": PA_SDK_DISCLOSURE},
+]
+# 지난 정책의 틀린 문장("기기에만 두고 수집하지 않는다")·템플릿 표기, 다른 앱 이름.
+# Pitch Academy 쪽에는 Absolute Ear 방침에서 옮겨 오면 틀리는 말(마이크를 쓰지 않는다, 친선전)도 막는다
 POLICY_FORBIDDEN = {
-    PRIVACY: ["not collected by me", "privacypolicytemplate", "Real Absolute Pitch"],
-    TERMS: ["Real Absolute Pitch"],
+    PRIVACY: ["not collected by me", "privacypolicytemplate", "Real Absolute Pitch", "Pitch Academy", "피치 아카데미"],
+    TERMS: ["Real Absolute Pitch", "Pitch Academy"],
+    PA_PRIVACY: ["not collected by me", "privacypolicytemplate", "Real Absolute Pitch", "Absolute Ear", "AbsoluteEar",
+                 "camera or microphone", "카메라, 마이크 권한을 요청하지", "friendly match", "친선전"],
+    PA_TERMS: ["Real Absolute Pitch", "Absolute Ear", "AbsoluteEar"],
 }
 # 이용약관의 사용자 콘텐츠 조항(스토어 UGC 정책: 금지 콘텐츠·무관용·신고·차단·조치). 앱 화면 이름은 "Report"·"Block"
 TERMS_UGC = ['id="user-content"', "User Content and Conduct", "Prohibited content", "Prohibited conduct",
@@ -576,13 +600,32 @@ def check_policy_pages():
         for anchor in re.findall(r'href="#([^"]+)"', html):
             if anchor not in ids:
                 fail(f"{dst} 의 쪽 안 링크 #{anchor} 가 가리키는 곳이 없음")
-    privacy = (ROOT / "_dev" / "policy" / "PrivacyPolicy.html").read_text(encoding="utf-8")
+    for app in POLICY_APPS:
+        check_policy_content(app)
+
+
+def check_policy_content(app):
+    """한 앱의 방침·약관 원본이 갖춰야 하는 것: 제목, 받는 곳과 정책 링크, 계정 삭제 안내, 약관 링크, 사용자 콘텐츠 조항."""
+    PRIVACY, TERMS = app["privacy"], app["terms"]  # 아래 메시지가 그 앱의 주소를 말하게
+    privacy_src, terms_src = build.POLICY_PAGES[PRIVACY], build.POLICY_PAGES[TERMS]
+    if not privacy_src.exists() or not terms_src.exists():
+        return  # 원본 없음은 check_policy_pages 가 이미 알렸다
+    privacy = privacy_src.read_text(encoding="utf-8")
     p = Page()
     p.feed(privacy)
     text = " ".join("".join(p.text).split())
-    if "".join(p.title_text).strip() != "Absolute Ear Privacy Policy" or '<html lang="en">' not in privacy:
-        fail(f"{PRIVACY}: 제목(Absolute Ear Privacy Policy)·lang 오류")
+    title = f"{app['name']} Privacy Policy"
+    if "".join(p.title_text).strip() != title or '<html lang="en">' not in privacy:
+        fail(f"{PRIVACY}: 제목({title})·lang 오류")
+    deps = None
+    if app["pubspec"].exists():
+        deps = set(re.findall(r"^  ([a-z0-9_]+):", app["pubspec"].read_text(encoding="utf-8"), re.M))
     for name, url in POLICY_PROVIDERS.items():
+        if deps is not None and PROVIDER_PACKAGE[name] not in deps:
+            # 앱이 뺀 SDK 를 방침이 아직 말하면 틀린 방침이다(이름·정책 링크, Meta 는 회사 이름만 나와도)
+            if name in text or url in p.links or re.search(PROVIDER_WORD.get(name, r"(?!)"), text):
+                fail(f"{PRIVACY}: 앱 pubspec 에 {PROVIDER_PACKAGE[name]} 가 없는데 방침이 {name} 을 말함")
+            continue
         if name not in text or url not in p.links:
             fail(f"{PRIVACY}: 받는 곳 {name} 이 없거나 정책 링크({url})가 없음")
     # 계정 삭제 안내: Google Play 는 앱 없이도 삭제를 요청할 수 있는 웹 안내를 요구한다(#delete-account 를 콘솔에 적는다)
@@ -592,26 +635,33 @@ def check_policy_pages():
                  "does not cancel a subscription"):
         if need not in text:
             fail(f"{PRIVACY}: 계정 삭제 안내에 '{need}' 가 없음")
-    if "mailto:tigerstone1263@gmail.com" not in " ".join(p.links) or "/AbsoluteEar/TermsOfService" not in p.links:
-        fail(f"{PRIVACY}: 문의 메일 링크나 이용약관 링크가 없음")
-    terms = (ROOT / "_dev" / "policy" / "TermsOfService.html").read_text(encoding="utf-8")
+    if "mailto:tigerstone1263@gmail.com" not in " ".join(p.links) or app["terms_url"] not in p.links:
+        fail(f"{PRIVACY}: 문의 메일 링크나 이용약관 링크({app['terms_url']})가 없음")
+    for lang_id in ('<article id="ko" lang="ko">', '<article id="en" lang="en">'):
+        if lang_id not in privacy:
+            fail(f"{PRIVACY}: 한국어판·영어판 구역({lang_id})이 없음")
+    terms = terms_src.read_text(encoding="utf-8")
     if "<title>Terms of Service</title>" not in terms:
         fail(f"{TERMS}: 탭 제목이 Terms of Service 가 아님")
     for need in TERMS_UGC:
         if need not in terms:
             fail(f"{TERMS}: 사용자 콘텐츠 조항에 '{need}' 가 없음")
+    if f"anything you post in {app['name']} " not in terms:
+        fail(f"{TERMS}: 사용자 콘텐츠 조항이 이 앱({app['name']})을 가리키지 않음")
 
 
 def check_policy_matches_app():
     """앱 저장소(기존 앱 줄기)가 이 맥에 있으면, pubspec 이 쓰는 수집·전송 SDK 가 개인정보처리방침에 모두 나오는지 본다
     (예전 방침은 RevenueCat·Amplitude·Clarity·Meta 를 빠뜨렸다)."""
-    if not APP_PUBSPEC.exists():
-        return
-    deps = set(re.findall(r"^  ([a-z0-9_]+):", APP_PUBSPEC.read_text(encoding="utf-8"), re.M))
-    privacy = (ROOT / "_dev" / "policy" / "PrivacyPolicy.html").read_text(encoding="utf-8")
-    for pkg, name in SDK_DISCLOSURE.items():
-        if pkg in deps and name not in privacy:
-            fail(f"{PRIVACY}: 앱이 쓰는 {pkg} 를 밝히지 않음('{name}' 없음)")
+    for app in POLICY_APPS:
+        src = build.POLICY_PAGES[app["privacy"]]
+        if not app["pubspec"].exists() or not src.exists():
+            continue
+        deps = set(re.findall(r"^  ([a-z0-9_]+):", app["pubspec"].read_text(encoding="utf-8"), re.M))
+        privacy = src.read_text(encoding="utf-8")
+        for pkg, name in app["sdk"].items():
+            if pkg in deps and name not in privacy:
+                fail(f"{app['privacy']}: 앱이 쓰는 {pkg} 를 밝히지 않음('{name}' 없음)")
 
 
 def check_policy_placeholders():
@@ -639,6 +689,7 @@ def check_policy_dates():
     늘 보는 것: 방침 한국어판·영어판과 약관의 공고일이 같고, 방침 시행일은 공고 7일 뒤 이후, 약관 시행일은 30일 뒤 이후.
     --publish 면 공고일이 오늘(머지해 공개하는 날)인지도 본다. 늦게 공개하면 날짜를 함께 고친다(RUNBOOK 7절)."""
     import datetime as dt
+    check_new_app_policy_dates()
     policy = (DEV / "policy" / "PrivacyPolicy.html").read_text(encoding="utf-8")
     terms = (DEV / "policy" / "TermsOfService.html").read_text(encoding="utf-8")
 
@@ -668,8 +719,72 @@ def check_policy_dates():
         fail(f"방침 시행일 {found['방침 시행일(한)']} 이 공고일 {announced} 의 7일 뒤보다 이름(방침 12절)")
     if found["약관 시행일"] < announced + dt.timedelta(days=30):
         fail(f"약관 시행일 {found['약관 시행일']} 이 공고일 {announced} 의 30일 뒤보다 이름(약관의 30일 전 공지)")
-    if "--publish" in sys.argv and announced != dt.date.today():
+    # 공개된 판(origin/main)과 같은 방침·약관은 이미 그 공고일로 공개된 것이라 오늘이 아니어도 된다.
+    # 예전에는 방침을 한 번 공개하고 나면 다음 날부터 다른 것을 게시할 때마다 이 검사가 막았다
+    if ("--publish" in sys.argv and announced != dt.date.today()
+            and policy_changed_since_published("_dev/policy/PrivacyPolicy.html", "_dev/policy/TermsOfService.html")):
         fail(f"공고일 {announced} 이 오늘({dt.date.today()})이 아님 — 공개하는 날로 공고일·시행일을 함께 고칠 것(RUNBOOK 7절)")
+
+
+def policy_changed_since_published(*paths):
+    """[paths](저장소 기준 경로)가 공개된 판(origin/main)과 다른가. 공개된 판을 알 수 없으면(git·원격 없음) 다르다고 본다
+    (모를 때는 날짜 검사를 건너뛰지 않는다)."""
+    import subprocess
+    try:
+        r = subprocess.run(["git", "diff", "--quiet", "origin/main", "--", *paths], cwd=ROOT, capture_output=True)
+    except OSError:
+        return True
+    return r.returncode != 0
+
+
+def check_new_app_policy_dates():
+    """Pitch Academy 는 새 앱이라 첫 방침·약관이다(이전 판이 없어 '7일·30일 전 공지'는 걸리지 않는다).
+    날짜 자리가 아직 소유자 결정으로 남아 있으면 넘어간다(check_policy_placeholders 가 알리고 --publish 에서 막는다).
+    채워졌으면: 방침 한국어판·영어판과 약관의 공고일이 같고, 시행일이 한국어판·영어판에서 같으며 공고일보다 이르지 않다."""
+    import datetime as dt
+    policy_src, terms_src = build.POLICY_PAGES[PA_PRIVACY], build.POLICY_PAGES[PA_TERMS]
+    if not policy_src.exists() or not terms_src.exists():
+        return
+    policy, terms = policy_src.read_text(encoding="utf-8"), terms_src.read_text(encoding="utf-8")
+    lines = [ln for ln in (policy + terms).splitlines()
+             if re.match(r"\s*(<p[^>]*>)?(공고일:|시행일:|Announced:|Effective:|Date of announcement:|Effective date:)", ln)]
+    if len(lines) != 6:
+        fail(f"{PA_PRIVACY}·{PA_TERMS}: 공고일·시행일 줄이 6개가 아님({len(lines)}개)")
+        return
+    if any(build.POLICY_PLACEHOLDER in ln for ln in lines):
+        return
+
+    def one(pattern, text, fmt):
+        m = re.findall(pattern, text)
+        try:
+            return dt.datetime.strptime(m[0], fmt).date() if len(m) == 1 else None
+        except ValueError:
+            return None
+
+    found = {
+        "방침 공고일(한)": one(r"공고일:\s*(\d{4}-\d{2}-\d{2})", policy, "%Y-%m-%d"),
+        "방침 시행일(한)": one(r"시행일:\s*(\d{4}-\d{2}-\d{2})", policy, "%Y-%m-%d"),
+        "방침 공고일(영)": one(r"Announced:\s*(\d{4}-\d{2}-\d{2})", policy, "%Y-%m-%d"),
+        "방침 시행일(영)": one(r"Effective:\s*(\d{4}-\d{2}-\d{2})", policy, "%Y-%m-%d"),
+        "약관 공고일": one(r"Date of announcement:\s*([A-Z][a-z]+ \d{1,2}, \d{4})", terms, "%B %d, %Y"),
+        "약관 시행일": one(r"Effective date:\s*([A-Z][a-z]+ \d{1,2}, \d{4})", terms, "%B %d, %Y"),
+    }
+    missing = [k for k, v in found.items() if v is None]
+    if missing:
+        fail(f"{PA_PRIVACY}·{PA_TERMS}: 정책 날짜를 하나로 읽지 못함: " + ", ".join(missing))
+        return
+    announced = found["방침 공고일(한)"]
+    if found["방침 공고일(영)"] != announced or found["약관 공고일"] != announced:
+        fail(f"Pitch Academy 공고일이 서로 다름: 방침(한) {announced} / 방침(영) {found['방침 공고일(영)']} / 약관 {found['약관 공고일']}")
+    if found["방침 시행일(영)"] != found["방침 시행일(한)"]:
+        fail(f"Pitch Academy 방침 시행일이 한국어판과 영어판에서 다름: {found['방침 시행일(한)']} / {found['방침 시행일(영)']}")
+    for k in ("방침 시행일(한)", "약관 시행일"):
+        if found[k] < announced:
+            fail(f"Pitch Academy {k} {found[k]} 이 공고일 {announced} 보다 이름")
+    # 처음 공개하거나 고쳐서 다시 공개하는 날에는 공고일이 그날이어야 한다(Absolute Ear 와 같은 규칙)
+    if ("--publish" in sys.argv and announced != dt.date.today()
+            and policy_changed_since_published("_dev/policy/PitchAcademy")):
+        fail(f"Pitch Academy 공고일 {announced} 이 오늘({dt.date.today()})이 아님 — 공개하는 날로 공고일·시행일을 함께 고칠 것")
 
 
 def resolve(url_path):
@@ -823,7 +938,7 @@ def check_layout():
         import time; time.sleep(0.8)
         targets = [(f"{lang}", build.lang_path(AE_BASE, lang)) for lang in PAGES] + \
                   [(f"root/{lang}", build.lang_path("/", lang)) for lang in STUDIO_PAGES] + \
-                  [(f"policy/{Path(dst).stem}", "/" + dst) for dst in build.POLICY_PAGES]
+                  [(f"policy/{Path(dst).with_suffix('').as_posix()}", "/" + dst) for dst in build.POLICY_PAGES]
         for lang, path in targets:
             for w, scale in LAYOUTS:
                 url = f"http://127.0.0.1:{port}/_dev/layout_check.html?w={w}&p={path}&scale={scale}"
