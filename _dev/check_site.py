@@ -238,6 +238,9 @@ def check_meta(app, lang, p):
         href = links.get(rel)
         if not href or not (ROOT / href.lstrip("/")).exists():
             fail(f"{tag} {rel} 없음")
+        elif not href.startswith(app["assets"] + "/img/"):
+            # 루트 /favicon.png 는 스튜디오(TigerStone 호랑이)다 — 앱 페이지는 자기 앱 아이콘을 쓴다
+            fail(f"{tag} {rel} 가 이 앱의 아이콘이 아님: {href}")
     if not "".join(p.title_text).strip():
         fail(f"{tag} title 없음")
 
@@ -965,6 +968,27 @@ def check_build_rejects_missing_key():
             fail("문구 키가 빠져도 빌드가 성공함")
 
 
+def check_icons():
+    """루트 파비콘·홈 화면 아이콘은 스튜디오 것(TigerStone 호랑이)이고, 앱 아이콘과 같으면 안 된다.
+    (사이트가 AE 하나였을 때 만든 AE 아이콘이 루트에 남아 모든 페이지 탭에 AE 가 떴다 — 2026-11-22 사용자 지적)"""
+    from PIL import Image
+    for name, size in (("favicon.png", 64), ("apple-touch-icon.png", 180)):
+        root = ROOT / name
+        if not root.exists() or Image.open(root).size != (size, size):
+            fail(f"루트 {name} 가 없거나 {size}px 가 아님")
+            continue
+        for app in APPS:
+            f = ROOT / app["assets"].lstrip("/") / "img" / name
+            if not f.exists() or Image.open(f).size != (size, size):
+                fail(f"{app['name']} {name} 가 없거나 {size}px 가 아님")
+            elif f.read_bytes() == root.read_bytes():
+                fail(f"루트 {name} 가 {app['title']} 아이콘과 같음 (루트는 스튜디오 아이콘)")
+    for rel in STUDIO_PAGES.values():
+        html = (ROOT / rel).read_text(encoding="utf-8")
+        if 'rel="icon" type="image/png" href="/favicon.png"' not in html or 'rel="apple-touch-icon" href="/apple-touch-icon.png"' not in html:
+            fail(f"[root] {rel} 가 스튜디오 파비콘을 쓰지 않음")
+
+
 def check_get_page():
     f = ROOT / "AbsoluteEar" / "get" / "index.html"
     if not f.exists():
@@ -979,6 +1003,9 @@ def check_get_page():
             fail(f"get/index.html 에 {need} 없음")
     if re.search(r'<script[^>]+src=', html):
         fail("get/index.html 에 외부 스크립트")
+    # 설치 안내의 앱 그림·탭 아이콘은 Absolute Ear 아이콘(루트 /apple-touch-icon.png 는 스튜디오 호랑이)
+    if 'src="/AbsoluteEar/assets/img/apple-touch-icon.png"' not in html or 'href="/AbsoluteEar/assets/img/favicon.png"' not in html:
+        fail("get/index.html 의 앱 그림·파비콘이 Absolute Ear 아이콘이 아님")
     qr = ROOT / "AbsoluteEar" / "assets" / "img" / "qr-get.svg"
     if not qr.exists() or "<svg" not in qr.read_text(encoding="utf-8"):
         fail("AbsoluteEar/assets/img/qr-get.svg 없음")
@@ -1090,6 +1117,7 @@ def main():
     check_lang_js()
     check_node_tests()
     check_get_page()
+    check_icons()
     check_string_keys()
     check_zh_spacing()
     check_build_rejects_missing_key()
