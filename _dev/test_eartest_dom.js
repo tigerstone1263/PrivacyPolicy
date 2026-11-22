@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
-const src = fs.readFileSync(path.join(__dirname, '..', 'AbsoluteEar', 'assets', 'js', 'eartest.js'), 'utf8');
+const src = fs.readFileSync(path.join(__dirname, '..', 'assets', 'js', 'eartest.js'), 'utf8');
 let bad = 0;
 const ok = (c, m) => { if (!c) { bad++; console.log('eartest-dom: ' + m); } };
 
@@ -141,5 +141,45 @@ const endLatest = (audio) => { const o = lastOsc(audio); o.onended && o.onended(
   const { dom } = setup({ navigator: nav, document: Object.assign(doc, { activeElement: null }) });
   dom.parts['.try-play'].click();
   ok(played === 1, '구형 iOS 에서 무음 <audio> 로 미디어 채널을 열지 않음');
+}
+
+// 6) 마스코트 없는 앱(Absolute Ear): 무대가 건반이다 — 울리는 두 음의 건반이 그때 켜지고, 답하면 두 음이 남고, 다음 문제에서 지워진다
+{
+  const dom = makeDom(); const audio = makeAudio(); const timers = makeTimers();
+  delete dom.parts['.try-stage img'];
+  dom.sec.dataset = Object.assign({}, dom.sec.dataset, { frameIdle: undefined, frameListen: undefined, frameYes: undefined, frameNo: undefined });
+  const keyEls = {};
+  for (let m = 55; m <= 74; m++) keyEls[m] = { m, classList: classList() };
+  const keys = {
+    querySelector: (sel) => { const g = /data-m="(\d+)"/.exec(sel); return g ? keyEls[+g[1]] || null : null; },
+    querySelectorAll: (sel) => (sel === '.key' ? Object.values(keyEls) : []),
+  };
+  dom.parts['.try-keys'] = keys;
+  const env = { AudioContext: audio.Ctx, setTimeout: timers.setTimeout, clearTimeout: timers.clearTimeout, random: rand,
+    navigator: { userAgent: 'Mozilla/5.0 (Macintosh)', maxTouchPoints: 0 }, document: dom.doc };
+  const app = T.mount(dom.sec, env);
+  ok(app, '건반 무대에서 mount 실패(그림 무대가 없어도 동작해야 함)');
+  const q = app.round()[0];
+  const on = () => Object.values(keyEls).filter(k => k.classList.contains('on')).map(k => k.m).sort((a, b) => a - b);
+  const held = () => Object.values(keyEls).filter(k => k.classList.contains('held')).map(k => k.m).sort((a, b) => a - b);
+  dom.parts['.try-play'].click();
+  ok(on().length === 0, '소리가 나기 전에 건반이 켜짐');
+  timers.flush();                              // 켜기·끄기 예약이 모두 지나감
+  ok(on().length === 0, '소리가 끝났는데 건반이 켜진 채 남음');
+  endLatest(audio);
+  dom.opts.find(b => b.getAttribute('data-iv') === q.answer).click();
+  ok(JSON.stringify(held()) === JSON.stringify([q.root, q.top].sort((a, b) => a - b)), '답한 뒤 문제의 두 건반이 남지 않음: ' + held());
+  dom.parts['.try-next'].click();
+  ok(held().length === 0, '다음 문제에서 이전 건반이 지워지지 않음');
+  // 켜기 예약이 실제로 그 음을 켜는지: 켜기만 먼저 실행
+  const calls = [];
+  const env2 = Object.assign({}, env, { setTimeout: (fn, ms) => { calls.push({ fn, ms }); return calls.length; } });
+  const dom2 = makeDom(); delete dom2.parts['.try-stage img']; dom2.parts['.try-keys'] = keys;
+  Object.values(keyEls).forEach(k => k.classList.remove('on', 'held'));
+  const app2 = T.mount(dom2.sec, env2);
+  const q2 = app2.round()[0];
+  dom2.parts['.try-play'].click();
+  calls.filter(c => c.ms === 50 || c.ms === 850).forEach(c => c.fn());
+  ok(JSON.stringify(on()) === JSON.stringify([q2.root, q2.top].sort((a, b) => a - b)), '울리는 두 음의 건반이 켜지지 않음: ' + on());
 }
 process.exit(bad ? 1 : 0);

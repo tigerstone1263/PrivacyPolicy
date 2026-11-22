@@ -31,8 +31,9 @@ const cases = [
   ['/PitchAcademy/PrivacyPolicy.html', '/PitchAcademy/PrivacyPolicy'],
   ['/pitchacademy/termsofservice/', '/PitchAcademy/TermsOfService'],
   ['/PitchAcademy/TermsOfService', null],
-  ['/pitchacademy', null],                          // 첫 화면이 없는 앱 폴더는 보낼 곳이 없다(없는 주소로 보내지 않는다)
-  ['/pitchacademy/no-such-page', null],
+  ['/pitchacademy', '/PitchAcademy/'],              // 첫 화면이 생긴 앱 폴더(2026-11-22)
+  ['/pitchacademy/no-such-page', '/PitchAcademy/'],
+  ['/pitchacademy/en', '/PitchAcademy/en/'],
   ['/en/no-such-page', '/en/'],                     // 언어 폴더는 전처럼 그 언어 첫 화면으로
   ['/no-such-page', null],
   ['/AbsoluteEar/PrivacyPolicy', null],             // 이미 정식 주소면 다시 보내지 않는다(무한 이동 방지)

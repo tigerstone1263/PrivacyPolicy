@@ -88,6 +88,7 @@
       </div>
 
       <div class="scenes-wrap">
+        <p class="scene-app">{{stage_app}}</p>
         <p class="scene-count" aria-hidden="true"><span class="scene-count-now"></span><span class="scene-bar"><span></span></span><span>03</span></p>
         <ol class="scenes">
           <li class="scene scene-1"><p class="scene-num">01</p><h2>{{scene1_t}}</h2><p>{{scene1_d}}</p></li>
@@ -99,26 +100,42 @@
   </section>
 
   <section id="apps" class="apps">
-    <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>TigerStone1263</span><span>Absolute Ear</span><span>TigerStone1263</span><span>Absolute Ear</span><span>TigerStone1263</span><span>Absolute Ear</span></div></div>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>TigerStone1263</span><span>Pitch Academy</span><span>TigerStone1263</span><span>Absolute Ear</span><span>TigerStone1263</span><span>Pitch Academy</span><span>TigerStone1263</span><span>Absolute Ear</span></div></div>
     <div class="wrap">
       <h2 class="apps-title reveal">{{apps_title}}</h2>
-      <article class="app-card reveal">
-        <div class="app-head">
-          <img class="app-icon" src="/AbsoluteEar/assets/img/app-icon.png" alt="" width="72" height="72">
-          <div>
-            <h3>Absolute Ear</h3>
-            <p class="app-line">{{app_line}}</p>
+      <div class="app-list">
+        <article class="app-card app-card--pa reveal">
+          <div class="app-head">
+            <img class="app-icon" src="/PitchAcademy/assets/img/app-icon.png" alt="" width="72" height="72">
+            <div>
+              <h3>Pitch Academy</h3>
+              <p class="app-line">{{pa_line}}</p>
+            </div>
           </div>
-        </div>
-        <p class="app-desc">{{app_desc}}</p>
-        <div class="app-actions">
-          <a class="app-more" href="/AbsoluteEar/{{@app_lang_path}}">{{app_more}} <span aria-hidden="true">→</span></a>
-          <div class="store-btns">{{@badges_studio}}</div>
-        </div>
-        <div class="sori sori-card" data-sori="card" aria-hidden="true">
-          <img class="sori-still" src="{{@a}}/img/sori-still.webp" alt="" width="400" height="424" loading="lazy">
-        </div>
-      </article>
+          <p class="app-desc">{{pa_desc}}</p>
+          <div class="app-actions">
+            <a class="app-more" href="/PitchAcademy/{{@app_lang_path}}">{{pa_more}} <span aria-hidden="true">→</span></a>
+            <div class="store-btns">{{@badges_PitchAcademy}}</div>
+          </div>
+          <div class="sori sori-card" data-sori="card" aria-hidden="true">
+            <img class="sori-still" src="{{@a}}/img/sori-still.webp" alt="" width="400" height="424" loading="lazy">
+          </div>
+        </article>
+        <article class="app-card app-card--ae reveal">
+          <div class="app-head">
+            <img class="app-icon" src="/AbsoluteEar/assets/img/app-icon.png" alt="" width="72" height="72">
+            <div>
+              <h3>Absolute Ear</h3>
+              <p class="app-line">{{ae_line}}</p>
+            </div>
+          </div>
+          <p class="app-desc">{{ae_desc}}</p>
+          <div class="app-actions">
+            <a class="app-more" href="/AbsoluteEar/{{@app_lang_path}}">{{ae_more}} <span aria-hidden="true">→</span></a>
+            <div class="store-btns">{{@badges_AbsoluteEar}}</div>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 </main>

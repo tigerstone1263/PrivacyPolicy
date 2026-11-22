@@ -13,23 +13,47 @@ sys.path.insert(0, str(DEV))
 import build  # noqa: E402  주소 규칙(GROUPS·POLICY_PAGES·known_paths)을 빌드와 같은 곳에서 읽는다
 
 SITE = "https://tigerstone1263.com"
-AE_BASE = "/AbsoluteEar/"
-A = "/AbsoluteEar/assets"            # AE 전용 에셋 주소
-AE_ASSETS = ROOT / "AbsoluteEar" / "assets"
-CSS = AE_ASSETS / "css" / "site.css"
-PAGES = {"ko": "AbsoluteEar/index.html", "en": "AbsoluteEar/en/index.html", "zh": "AbsoluteEar/zh/index.html"}
+CSS = ROOT / "assets" / "css" / "app.css"          # 앱 페이지 공용 CSS
 STUDIO_PAGES = {"ko": "index.html", "en": "en/index.html", "zh": "zh/index.html"}
 STUDIO_CSS = ROOT / "assets" / "css" / "studio.css"
+APPS = build.APPS
+AE = build.APP["AbsoluteEar"]
+PA = build.APP["PitchAcademy"]
 
-APP_STORE = "apps.apple.com/app/id6739764701"
-PLAY = "id=com.tigerstone.AbsoluteEar"
+
+def pages(app):
+    return {l: build.out_file(app["base"], l) for l in build.LANGS}
+
+
+def all_app_pages():
+    return [rel for app in APPS for rel in pages(app).values()]
+
+
+def store_ids(app):
+    return f"apps.apple.com/app/id{app['app_store_id']}", f"id={app['play_id']}"
+
+
 FORBIDDEN_TEXT = ["나리", "₩", "$", "원/월"]
-# 앱 동작보다 과장되거나 앱 화면 용어와 다른 표현
-FORBIDDEN_BY_LANG = {
-    "ko": ["바로 열기", "하트 없이 열어요", "계정을 연동", "원하는 곡을 반복", "진도를 나눠", "박자를 듣고 맞히는", "코드 진행", "걱정 없이 광고 없이"],
-    "en": ["Unlock the next chapter", "Music mode", "Made for", "pieces you choose", "share progress", "hear and match the beat"],
-    "zh": ["直接解锁下一章", "反复听播放列表", "想听的曲子", "分享进度", "对节奏"],
+# 앱 동작보다 과장되거나 앱 화면 용어와 다른 표현 (앱마다)
+FORBIDDEN_BY_APP = {
+    "PitchAcademy": {
+        "ko": ["바로 열기", "하트 없이 열어요", "계정을 연동", "원하는 곡을 반복", "진도를 나눠", "박자를 듣고 맞히는", "코드 진행", "걱정 없이 광고 없이",
+               "Absolute Ear", "인피니트 노트", "아이와 학부모", "두 갈래로"],
+        "en": ["Unlock the next chapter", "Music mode", "Made for", "pieces you choose", "share progress", "hear and match the beat",
+               "Absolute Ear", "Infinite Note", "Kids"],
+        "zh": ["直接解锁下一章", "反复听播放列表", "想听的曲子", "分享进度", "对节奏", "Absolute Ear", "无限音符", "孩子"],
+    },
+    # Absolute Ear(3.0.1)에는 소리·진단·주간 리그·마이크 시창이 없다 — 분리 전(3.x) 문구가 남으면 안 된다
+    "AbsoluteEar": {
+        "ko": ["여우", "진단", "리그", "마이크", "Pitch Academy", "피치 아카데미", "코드 진행", "인피니트 노트", "하트"],
+        "en": ["fox", "Sori", "placement", "league", "microphone", "Pitch Academy", "Infinite Note", "heart"],
+        "zh": ["狐狸", "小狸", "小音", "诊断", "联赛", "联盟", "麦克风", "Pitch Academy", "音准学院", "无限音符", "爱心"],
+    },
 }
+# FAQ 에 있어야 하는 구독 이름(무료 표현만 남으면 오해)
+# Pitch Academy 는 구독 상품 이름이 따로 없다(화면에는 '구독'만) — '인피니트 노트'를 쓰면 안 된다
+# Absolute Ear 3.0.1 화면에 보이는 구독 이름은 'Premium'('인피니트 노트'는 화면에 없다)
+SUBSCRIPTION = {"AbsoluteEar": r"Premium", "PitchAcademy": r"(구독하면|subscribe for|订阅后)"}
 
 errors = []
 notes = []  # 실패는 아니지만 알릴 것(통과해도 출력한다)
@@ -91,259 +115,293 @@ def check_policy_files():
             fail(f"정책 파일이 바뀜: {name}")
 
 
-def check_page(lang, rel):
+def check_page(app, lang, rel):
+    tag = f"[{app['name']}/{lang}]"
     path = ROOT / rel
     if not path.exists():
-        fail(f"[{lang}] {rel} 없음")
+        fail(f"{tag} {rel} 없음")
         return None
     p = parse(path)
     links = p.links
-    # App Store 는 pt(provider token)가 있을 때만 구역 태그를 단다 (build.APP_STORE_PT)
-    tagged = [(PLAY, "Google Play")] + ([(APP_STORE, "App Store")] if any("pt=" in h for h in links) else [])
-    for store, label in tagged:
-        for zone in ("hero", "footer-cta"):
-            if not any(store in h and zone in h for h in links):
-                fail(f"[{lang}] {label} 링크에 {zone} 태그 없음")
-    if sum(APP_STORE in h for h in links) < 2:
-        fail(f"[{lang}] App Store 링크가 히어로·마지막 구역에 모두 있어야 함")
+    app_store, play = store_ids(app)
+    if app["released"]:
+        # App Store 는 pt(provider token)가 있을 때만 구역 태그를 단다 (build.APP_STORE_PT)
+        tagged = [(play, "Google Play")] + ([(app_store, "App Store")] if any("pt=" in h for h in links) else [])
+        for store, label in tagged:
+            for zone in ("hero", "footer-cta"):
+                if not any(store in h and zone in h for h in links):
+                    fail(f"{tag} {label} 링크에 {zone} 태그 없음")
+        if sum(app_store in h for h in links) < 2:
+            fail(f"{tag} App Store 링크가 히어로·마지막 구역에 모두 있어야 함")
+    elif any("apps.apple.com" in h or "play.google.com" in h for h in links):
+        # 아직 스토어에 없는 앱 — 열리지 않는 스토어 주소로 보내지 않는다
+        fail(f"{tag} 출시 전 앱인데 스토어 링크가 있음")
     for h in links:
-        if APP_STORE in h and "ct=" in h and "pt=" not in h:
-            fail(f"[{lang}] App Store ct 는 pt 없이 집계되지 않음: {h}")
-        if PLAY in h and "utm_campaign%3D" not in h:
-            fail(f"[{lang}] Play 링크에 utm_campaign 없음: {h}")
-    for h in links:
+        if "apps.apple.com" in h and "ct=" in h and "pt=" not in h:
+            fail(f"{tag} App Store ct 는 pt 없이 집계되지 않음: {h}")
+        if "play.google.com" in h and "utm_campaign%3D" not in h:
+            fail(f"{tag} Play 링크에 utm_campaign 없음: {h}")
         if h.startswith("javascript:"):
-            fail(f"[{lang}] JS 링크 사용: {h}")
-    for need in ("/AbsoluteEar/PrivacyPolicy", "/AbsoluteEar/TermsOfService", "mailto:tigerstone1263@gmail.com"):
+            fail(f"{tag} JS 링크 사용: {h}")
+        for other in APPS:
+            if other is not app and (other["app_store_id"] in h or other["play_id"] in h):
+                fail(f"{tag} 다른 앱({other['title']})의 스토어 링크: {h}")
+    for need in (f"{app['base']}PrivacyPolicy", f"{app['base']}TermsOfService", "mailto:tigerstone1263@gmail.com"):
         if need not in links:
-            fail(f"[{lang}] 링크 없음: {need}")
+            fail(f"{tag} 링크 없음: {need}")
     if any("privacyPolicy.html" in h for h in links):
-        fail(f"[{lang}] 다른 앱 정책(privacyPolicy.html) 링크됨")
+        fail(f"{tag} 다른 앱 정책(privacyPolicy.html) 링크됨")
     text = "".join(p.text)
-    for w in FORBIDDEN_TEXT + FORBIDDEN_BY_LANG[lang]:
+    for w in FORBIDDEN_TEXT + FORBIDDEN_BY_APP[app["name"]][lang]:
         if w in text:
-            fail(f"[{lang}] 금지 문자열 포함: {w}")
+            fail(f"{tag} 금지 문자열 포함: {w}")
     for src in p.scripts:
         if src and src.startswith(("http:", "https:", "//")):
-            fail(f"[{lang}] 외부 스크립트: {src}")
+            fail(f"{tag} 외부 스크립트: {src}")
     if "Google Play" not in text or "Google LLC" not in text or "Apple Inc." not in text:
-        fail(f"[{lang}] 스토어 상표 고지 없음")
+        fail(f"{tag} 스토어 상표 고지 없음")
     navs = [a for t, a in p.attrs_all if t == "nav"]
     if any(not a.get("aria-label") for a in navs):
-        fail(f"[{lang}] aria-label 없는 nav")
+        fail(f"{tag} aria-label 없는 nav")
     for t, a in p.attrs_all:
         if t == "a" and a.get("data-lang") and not a.get("lang"):
-            fail(f"[{lang}] 언어 링크에 lang 속성 없음: {a.get('href')}")
-    check_sections(lang, path.read_text(encoding="utf-8"))
-    check_mascot(lang, path.read_text(encoding="utf-8"))
+            fail(f"{tag} 언어 링크에 lang 속성 없음: {a.get('href')}")
+    check_sections(app, lang, path.read_text(encoding="utf-8"))
+    check_mascot(app, lang, path.read_text(encoding="utf-8"))
     return p
 
 
 SECTIONS = ["hero", "try", "features", "audience", "faq", "cta", "footer"]
 
 
-def check_sections(lang, html):
+def check_sections(app, lang, html):
     """요금 비교 구역은 두지 않는다 (설치 전환 목적 — 사용자 결정). 구독 안내는 FAQ 에서만."""
-    import re
+    tag = f"[{app['name']}/{lang}]"
     ids = [i for i in re.findall(r'<(?:section|footer)[^>]*\bid="([\w-]+)"', html)]
     ids = [i for i in ids if i in SECTIONS or i == "plans"]
     if ids != SECTIONS:
-        fail(f"[{lang}] 구역 순서/개수 불일치: {ids}")
+        fail(f"{tag} 구역 순서/개수 불일치: {ids}")
     faq = re.search(r'id="faq".*?</section>', html, re.S)
     n = len(re.findall(r"<details", faq.group(0))) if faq else 0
     if not 5 <= n <= 7:
-        fail(f"[{lang}] FAQ {n}개 (5~7개여야 함)")
-    if faq and not re.search(r"(인피니트 노트|Infinite Note|无限音符)", faq.group(0)):
-        fail(f"[{lang}] FAQ 에 구독 안내가 없음 (무료 표현만 남으면 오해)")
+        fail(f"{tag} FAQ {n}개 (5~7개여야 함)")
+    if faq and not re.search(SUBSCRIPTION[app["name"]], faq.group(0)):
+        fail(f"{tag} FAQ 에 구독 안내가 없음 (무료 표현만 남으면 오해)")
 
 
 HTML_LANG = {"ko": "ko", "en": "en", "zh": "zh-Hans"}
-HREFLANG = {"ko": SITE + AE_BASE, "en": SITE + AE_BASE + "en/",
-            "zh-Hans": SITE + AE_BASE + "zh/", "x-default": SITE + AE_BASE}
 
 
-def check_lang_meta(lang, p):
+def hreflang(app):
+    b = app["base"]
+    return {"ko": SITE + b, "en": SITE + b + "en/", "zh-Hans": SITE + b + "zh/", "x-default": SITE + b}
+
+
+def check_lang_meta(app, lang, p):
+    tag = f"[{app['name']}/{lang}]"
     html_tag = next((a for t, a in p.attrs_all if t == "html"), {})
     if html_tag.get("lang") != HTML_LANG[lang]:
-        fail(f"[{lang}] <html lang> = {html_tag.get('lang')}")
+        fail(f"{tag} <html lang> = {html_tag.get('lang')}")
     alts = {a.get("hreflang"): a.get("href") for t, a in p.attrs_all
             if t == "link" and a.get("rel") == "alternate"}
-    if alts != HREFLANG:
-        fail(f"[{lang}] hreflang 불일치: {alts}")
+    if alts != hreflang(app):
+        fail(f"{tag} hreflang 불일치: {alts}")
     if not any(t == "script" and a.get("src") == "/assets/js/lang.js" for t, a in p.attrs_all):
-        fail(f"[{lang}] lang.js 없음")
-    if html_tag.get("data-base") != AE_BASE:
-        fail(f"[{lang}] <html data-base> = {html_tag.get('data-base')} (lang.js 가 묶음 주소를 읽는 곳)")
+        fail(f"{tag} lang.js 없음")
+    if html_tag.get("data-base") != app["base"]:
+        fail(f"{tag} <html data-base> = {html_tag.get('data-base')} (lang.js 가 묶음 주소를 읽는 곳)")
 
 
-def check_meta(lang, p):
+def check_meta(app, lang, p):
+    tag = f"[{app['name']}/{lang}]"
     metas = {(a.get("property") or a.get("name")): a.get("content") for t, a in p.attrs_all if t == "meta"}
-    for k in ("description", "og:title", "og:description", "og:image", "og:url", "twitter:card", "apple-itunes-app"):
+    for k in ("description", "og:title", "og:description", "og:image", "og:url", "twitter:card"):
         if not metas.get(k):
-            fail(f"[{lang}] meta {k} 없음")
+            fail(f"{tag} meta {k} 없음")
     if metas.get("twitter:card") != "summary_large_image":
-        fail(f"[{lang}] twitter:card 값 오류")
-    if "app-id=6739764701" not in (metas.get("apple-itunes-app") or ""):
-        fail(f"[{lang}] apple-itunes-app app-id 오류")
-    img = (metas.get("og:image") or "").replace("https://tigerstone1263.com", "")
+        fail(f"{tag} twitter:card 값 오류")
+    if metas.get("og:site_name") != app["title"]:
+        fail(f"{tag} og:site_name = {metas.get('og:site_name')}")
+    # App Store 배너는 스토어에 있는 앱만(없는 앱 id 를 걸면 사파리가 엉뚱한 배너를 띄우거나 아무것도 안 뜬다)
+    want = f"app-id={app['app_store_id']}" if app["released"] else None
+    if (metas.get("apple-itunes-app") or None) != want:
+        fail(f"{tag} apple-itunes-app = {metas.get('apple-itunes-app')} (기대 {want})")
+    img = (metas.get("og:image") or "").replace(SITE, "")
     if img and not (ROOT / img.lstrip("/")).exists():
-        fail(f"[{lang}] og:image 파일 없음: {img}")
+        fail(f"{tag} og:image 파일 없음: {img}")
+    if img and not img.startswith(app["assets"] + "/"):
+        fail(f"{tag} og:image 가 이 앱의 이미지가 아님: {img}")
     links = {a.get("rel"): a.get("href") for t, a in p.attrs_all if t == "link"}
-    if links.get("canonical") != HREFLANG[HTML_LANG[lang]]:
-        fail(f"[{lang}] canonical 오류: {links.get('canonical')}")
+    if links.get("canonical") != hreflang(app)[HTML_LANG[lang]]:
+        fail(f"{tag} canonical 오류: {links.get('canonical')}")
     for rel in ("icon", "apple-touch-icon"):
         href = links.get(rel)
         if not href or not (ROOT / href.lstrip("/")).exists():
-            fail(f"[{lang}] {rel} 없음")
+            fail(f"{tag} {rel} 없음")
     if not "".join(p.title_text).strip():
-        fail(f"[{lang}] title 없음")
+        fail(f"{tag} title 없음")
 
 
 SHOTS = ["phone-hero", "feat-ear", "feat-staff", "feat-create", "game-map"]
 
 
-def check_shot_resolution():
+def check_shot_resolution(app):
     """폰 화면은 최대 300 CSS px 로 보이므로 2~3배 화면에서 선명하려면 폭 720px 이상, 파일은 250KB 이하."""
     from PIL import Image
-    for lang in PAGES:
+    shots = app["assets"] + "/img/shots"
+    for lang, rel in pages(app).items():
         for n in SHOTS:
-            f = AE_ASSETS / "img" / "shots" / lang / f"{n}.webp"
+            f = ROOT / shots.lstrip("/") / lang / f"{n}.webp"
             if not f.exists():
-                fail(f"shots/{lang}/{n}.webp 없음")
+                fail(f"{shots}/{lang}/{n}.webp 없음")
                 continue
             w = Image.open(f).size[0]
             if w < 720:
-                fail(f"shots/{lang}/{n}.webp 폭 {w}px (720 이상이어야 선명)")
+                fail(f"{shots}/{lang}/{n}.webp 폭 {w}px (720 이상이어야 선명)")
             if f.stat().st_size > 250_000:
-                fail(f"shots/{lang}/{n}.webp {f.stat().st_size // 1000}KB (250KB 이하)")
-        # 언어 페이지는 자기 언어의 앱 화면만 쓴다
-        html = (ROOT / PAGES[lang]).read_text(encoding="utf-8")
-        for other in PAGES:
-            if other != lang and f"{A}/img/shots/{other}/" in html:
-                fail(f"[{lang}] 다른 언어({other}) 앱 화면을 쓴다")
-        if f"{A}/img/shots/{lang}/" not in html:
-            fail(f"[{lang}] 자기 언어 앱 화면이 없다")
+                fail(f"{shots}/{lang}/{n}.webp {f.stat().st_size // 1000}KB (250KB 이하)")
+        # 언어 페이지는 자기 앱·자기 언어의 앱 화면만 쓴다
+        html = (ROOT / rel).read_text(encoding="utf-8")
+        for m in re.findall(r'(/[\w/]+/img/shots/)(\w+)/', html):
+            if m[0] != shots + "/" or m[1] != lang:
+                fail(f"[{app['name']}/{lang}] 다른 앱이나 다른 언어({m[0]}{m[1]}) 앱 화면을 쓴다")
+        if f"{shots}/{lang}/" not in html:
+            fail(f"[{app['name']}/{lang}] 자기 언어 앱 화면이 없다")
 
 
-APP_SORI = Path.home() / "abp" / "absolute_ear" / "assets" / "images" / "mascot" / "sori.webp"
+APP_SORI = Path.home() / "abp" / "pitch_academy" / "assets" / "images" / "mascot" / "sori.webp"
 
 
-def check_lang_banner(lang, p):
-    """루트(한국어) 페이지에만 숨겨진 안내 띠가 있고, 띠의 링크는 고른 언어를 기억하는 data-lang 링크여야 한다."""
+def check_lang_banner(app, lang, p):
+    """묶음의 한국어 페이지에만 숨겨진 안내 띠가 있고, 띠의 링크는 고른 언어를 기억하는 data-lang 링크여야 한다."""
+    tag = f"[{app['name']}/{lang}]"
     banner = [a for t, a in p.attrs_all if t == "div" and a.get("id") == "lang-banner"]
     if lang != "ko":
         if banner:
-            fail(f"[{lang}] 안내 띠는 루트 페이지에만 있어야 함")
+            fail(f"{tag} 안내 띠는 한국어 페이지에만 있어야 함")
         return
     if len(banner) != 1 or "hidden" not in banner[0]:
-        fail("[ko] 숨겨진 #lang-banner 없음")
+        fail(f"{tag} 숨겨진 #lang-banner 없음")
     for target in ("en", "zh"):
-        if not any(t == "a" and a.get("data-lang") == target and a.get("href") == f"{AE_BASE}{target}/" and a.get("class") == "lang-banner-link"
+        if not any(t == "a" and a.get("data-lang") == target and a.get("href") == f"{app['base']}{target}/" and a.get("class") == "lang-banner-link"
                    for t, a in p.attrs_all):
-            fail(f"[ko] 안내 띠에 {target} 링크 없음")
+            fail(f"{tag} 안내 띠에 {target} 링크 없음")
 
 
-CHIP_CLASSES = ["c-interval", "c-scale", "c-chord", "c-melody", "c-prog", "c-rhythm"]
-
-
-def check_design(lang, p, html):
-    """디자인 골격: 상단 내비, 카테고리 색 칩, 등장 애니메이션 스크립트, 구역 머리말."""
-    import re
+def check_design(app, lang, p, html):
+    """디자인 골격: 상단 내비, 등장 애니메이션 스크립트, 구역 머리말, 청음 맛보기, 스토어 버튼(또는 출시 예정)."""
+    tag = f"[{app['name']}/{lang}]"
+    a_ = app["assets"]
     if not any(t == "nav" and "topnav" in (a.get("class") or "") and a.get("aria-label") for t, a in p.attrs_all):
-        fail(f"[{lang}] aria-label 있는 상단 내비(.topnav) 없음")
+        fail(f"{tag} aria-label 있는 상단 내비(.topnav) 없음")
     if not any(t == "a" and a.get("href") == "#cta" and "nav-cta" in (a.get("class") or "") for t, a in p.attrs_all):
-        fail(f"[{lang}] 내비 다운로드 버튼(#cta) 없음")
+        fail(f"{tag} 내비 다운로드 버튼(#cta) 없음")
     # 소리 소개 구역은 뺐다(2026-10-31 사용자 결정) — 동작 영상·#sori 링크가 남으면 안 된다
     if any(t == "video" for t, a in p.attrs_all) or any(t == "a" and a.get("href") == "#sori" for t, a in p.attrs_all):
-        fail(f"[{lang}] 소리 소개 구역의 영상이나 #sori 링크가 남아 있음")
+        fail(f"{tag} 소리 소개 구역의 영상이나 #sori 링크가 남아 있음")
     # 청음 맛보기: 앱과 같은 세 음정 보기, 결과 안내는 스크린리더에 읽힘
     ivs = [a.get("data-iv") for t, a in p.attrs_all if t == "button" and a.get("data-iv")]
     if ivs != ["maj3", "p4", "p5"]:
-        fail(f"[{lang}] 청음 맛보기 보기 버튼 불일치: {ivs}")
+        fail(f"{tag} 청음 맛보기 보기 버튼 불일치: {ivs}")
     if not any(a.get("aria-live") == "polite" and "try-feedback" in (a.get("class") or "") for t, a in p.attrs_all):
-        fail(f"[{lang}] 청음 맛보기 결과에 aria-live 없음")
+        fail(f"{tag} 청음 맛보기 결과에 aria-live 없음")
     sec_try = re.search(r'<section id="try".*?</section>', html, re.S)
     if sec_try:
         bare = re.sub(r'<span[^>]*aria-hidden="true"[^>]*>.*?</span>', '', sec_try.group(0), flags=re.S)
         for g in ("▶", "↻", "→"):
             if g in bare:
-                fail(f"[{lang}] 청음 맛보기에 스크린리더가 읽는 기호 {g} (aria-hidden 으로 감싸야 함)")
+                fail(f"{tag} 청음 맛보기에 스크린리더가 읽는 기호 {g} (aria-hidden 으로 감싸야 함)")
         if 'class="try-fallback"' not in sec_try.group(0):
-            fail(f"[{lang}] 체험을 못 할 때의 안내(try-fallback) 없음")
+            fail(f"{tag} 체험을 못 할 때의 안내(try-fallback) 없음")
         if 'role="status"' not in sec_try.group(0):
-            fail(f"[{lang}] 결과 문장에 role=status 없음")
-    if not any(t == "script" and a.get("src") == f"{A}/js/eartest.js" and "defer" in a for t, a in p.attrs_all):
-        fail(f"[{lang}] eartest.js(defer) 없음")
-    # 데스크톱 QR → /AbsoluteEar/get/ (기기에 맞는 스토어로 이동)
-    if not any(t == "img" and a.get("src") == f"{A}/img/qr-get.svg" for t, a in p.attrs_all):
-        fail(f"[{lang}] 설치 QR 없음")
+            fail(f"{tag} 결과 문장에 role=status 없음")
+        # 무대: 마스코트 앱은 상태별 그림 4장, 아니면 문제 음역(G3~D5)을 모두 덮는 건반
+        frames = re.findall(r'data-frame-(\w+)="([^"]+)"', sec_try.group(0))
+        if app["mascot"]:
+            if sorted(k for k, _ in frames) != sorted(build.TRY_POSES) or any(not v.startswith(a_ + "/img/poses/") for _, v in frames):
+                fail(f"{tag} 청음 맛보기 소리 그림(data-frame-*) 불일치: {frames}")
+        else:
+            keys = {int(m) for m in re.findall(r'class="key key--[wb]" data-m="(\d+)"', sec_try.group(0))}
+            if frames or keys != set(range(55, 75)):
+                fail(f"{tag} 청음 맛보기 건반이 G3~D5(55~74)를 덮지 않음: {sorted(keys)}")
+    if not any(t == "script" and a.get("src") == "/assets/js/eartest.js" and "defer" in a for t, a in p.attrs_all):
+        fail(f"{tag} eartest.js(defer) 없음")
+    # 데스크톱 QR → /<앱>/get/ (기기에 맞는 스토어로 이동). 스토어에 있는 앱만
+    has_qr = any(t == "img" and a.get("src") == f"{a_}/img/qr-get.svg" for t, a in p.attrs_all)
+    if has_qr != bool(app["qr"] and app["released"]):
+        fail(f"{tag} 설치 QR 이 {'없음' if not has_qr else '출시 전 앱에 있음'}")
     if not any(t == "script" and a.get("src") == "/assets/js/reveal.js" and "defer" in a for t, a in p.attrs_all):
-        fail(f"[{lang}] reveal.js(defer) 없음")
+        fail(f"{tag} reveal.js(defer) 없음")
     # 첫 화면 폰 두 장은 표시 크기(≤270px)에 맞는 작은 이미지를 srcset 으로, 앞 폰은 우선 로드
     for t, a in p.attrs_all:
         if t == "img" and "phone" in (a.get("class") or "").split():
             if "480w" not in (a.get("srcset") or "") or not a.get("sizes"):
-                fail(f"[{lang}] 히어로 폰 이미지에 srcset/sizes 없음: {a.get('src')}")
+                fail(f"{tag} 히어로 폰 이미지에 srcset/sizes 없음: {a.get('src')}")
             if "phone-front" in a.get("class") and a.get("fetchpriority") != "high":
-                fail(f"[{lang}] 앞 폰(LCP)에 fetchpriority=high 없음")
+                fail(f"{tag} 앞 폰(LCP)에 fetchpriority=high 없음")
     for zone in ("hero", "cta"):
         m = re.search(rf'<section id="{zone}".*?</section>', html, re.S)
-        n = len(re.findall(r'<a class="store-btn', m.group(0))) if m else 0
-        if n != 2:
-            fail(f"[{lang}] {zone} 구역 스토어 버튼 {n}개 (2개여야 함)")
+        z = m.group(0) if m else ""
+        btns = re.findall(r'<a class="store-btn[^"]*".*?</a>', z, re.S)
+        soon = len(re.findall(r'<span class="store-soon">', z))
+        if app["released"]:
+            if len(btns) != 2 or soon:
+                fail(f"{tag} {zone} 구역 스토어 버튼 {len(btns)}개 (2개여야 함)")
+            elif not all("btn-roll__chip" in b and "btn-roll__inner" in b for b in btns):
+                fail(f"{tag} {zone} 스토어 버튼이 굴러가는 알약 버튼이 아님")
+        elif btns or soon != 1:
+            fail(f"{tag} {zone} 구역: 출시 전 앱은 '출시 예정' 하나만 (버튼 {len(btns)}, 표시 {soon})")
     if re.search(r"radial-gradient|linear-gradient|backdrop-filter", CSS.read_text(encoding="utf-8")):
-        fail(f"[{lang}] 그라데이션·블러 장식 사용 (흑백·평면 톤 유지)")
+        fail(f"{tag} 그라데이션·블러 장식 사용 (흑백·평면 톤 유지)")
     cards = re.findall(r'<article class="fcard', html)
     if len(cards) != 4:
-        fail(f"[{lang}] 기능 카드 {len(cards)}개 (4개여야 함)")
+        fail(f"{tag} 기능 카드 {len(cards)}개 (4개여야 함)")
     # MotionSites 업그레이드 뼈대: 시그니처 워드마크, 굴러가는 알약 버튼, 쌓이는 기능 카드, 등장 모션, 질감
     hero = re.search(r'<section id="hero".*?</section>', html, re.S)
     hero_html = hero.group(0) if hero else ""
     # 워드마크는 장식 — 실제 글자로 두면 접근성 대비 검사에 걸리므로 CSS 의사 요소(data-text)로 그린다
-    if not re.search(r'<div class="hero-wordmark" aria-hidden="true" data-text="Absolute Ear"></div>', hero_html):
-        fail(f"[{lang}] 첫 화면 시그니처 워드마크 없음(장식은 data-text 의사 요소로)")
+    if f'<div class="hero-wordmark" aria-hidden="true" data-text="{app["title"]}" style="--word-vw:{app["wordmark_vw"]}"></div>' not in hero_html:
+        fail(f"{tag} 첫 화면 시그니처 워드마크 없음(장식은 data-text 의사 요소로)")
     css = CSS.read_text(encoding="utf-8")
     m = re.search(r"@keyframes riseIn \{([^}]*\})", css)
     if not m or "opacity" in m.group(1):
         fail("첫 화면 폰(LCP) 등장 애니메이션이 투명도를 바꿈 — LCP 가 늦어진다")
     if len(re.findall(r'class="in-blur[ "]', hero_html)) < 2:
-        fail(f"[{lang}] 제목 줄별 blur-rise 등장 없음")
-    for zone in ("hero", "cta"):
-        m = re.search(rf'<section id="{zone}".*?</section>', html, re.S)
-        btns = re.findall(r'<a class="store-btn[^"]*".*?</a>', m.group(0) if m else "", re.S)
-        if not btns or not all("btn-roll__chip" in b and "btn-roll__inner" in b for b in btns):
-            fail(f"[{lang}] {zone} 스토어 버튼이 굴러가는 알약 버튼이 아님")
+        fail(f"{tag} 제목 줄별 blur-rise 등장 없음")
     slots = re.findall(r'<div class="stack-slot" style="--i:\d">\s*<article class="fcard', html)
     if len(slots) != 4:
-        fail(f"[{lang}] 쌓이는 기능 카드 슬롯 {len(slots)}개 (4개여야 함)")
+        fail(f"{tag} 쌓이는 기능 카드 슬롯 {len(slots)}개 (4개여야 함)")
     # 스크롤 연출: 무대(hero-stage)와 자막, cine.js(defer). 긴 활주로 높이는 JS 가 cine-on 을 달 때만 (JS 없으면 정적 첫 화면)
     if '<div class="hero-stage">' not in hero_html or 'class="hero-caption"' not in hero_html:
-        fail(f"[{lang}] 첫 화면 연출 무대·자막 없음")
-    if not any(t == "script" and a.get("src") == f"{A}/js/cine.js" and "defer" in a for t, a in p.attrs_all):
-        fail(f"[{lang}] cine.js(defer) 없음")
+        fail(f"{tag} 첫 화면 연출 무대·자막 없음")
+    if not any(t == "script" and a.get("src") == "/assets/js/cine.js" and "defer" in a for t, a in p.attrs_all):
+        fail(f"{tag} cine.js(defer) 없음")
     css_all = re.sub(r"/\*.*?\*/", "", CSS.read_text(encoding="utf-8"), flags=re.S)
     for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css_all):
         if "--runway" in body and "height" in body and ".cine-on" not in sel:
             fail(f"연출 활주로 높이가 cine-on 없이 걸림: {sel.strip()}")
     if '<div class="page-grain" aria-hidden="true"></div>' not in html:
-        fail(f"[{lang}] 종이 질감 레이어 없음")
+        fail(f"{tag} 종이 질감 레이어 없음")
     for sec in ("try", "audience", "features", "faq"):
         m = re.search(rf'<section id="{sec}".*?</h2>', html, re.S)
         if not m or 'class="eyebrow"' not in m.group(0):
-            fail(f"[{lang}] {sec} 구역 제목 위에 eyebrow 없음")
+            fail(f"{tag} {sec} 구역 제목 위에 eyebrow 없음")
 
 
 def check_try_frames():
     """청음 맛보기의 소리 프레임 4장은 모두 같은 배경(음정 카테고리 #b6c6d8)이어야 한다 — 상태마다 색이 바뀌면 안 됨."""
     from PIL import Image
-    for name in ("idle", "listen", "yes", "no"):
-        im = Image.open(AE_ASSETS / "img" / "poses" / f"try-{name}.webp").convert("RGB")
-        w, h = im.size
-        for x, y in ((3, 3), (w - 4, 3), (3, h - 4), (w - 4, h - 4)):
-            px = im.getpixel((x, y))
-            if max(abs(a - b) for a, b in zip(px, (0xB6, 0xC6, 0xD8))) > 6:
-                fail(f"try-{name}.webp 배경이 음정 카테고리 색이 아님: {px}")
-                break
+    for app in APPS:
+        if not app["mascot"]:
+            continue
+        for name in build.TRY_POSES:
+            im = Image.open(ROOT / app["assets"].lstrip("/") / "img" / "poses" / f"try-{name}.webp").convert("RGB")
+            w, h = im.size
+            for x, y in ((3, 3), (w - 4, 3), (3, h - 4), (w - 4, h - 4)):
+                px = im.getpixel((x, y))
+                if max(abs(a - b) for a, b in zip(px, (0xB6, 0xC6, 0xD8))) > 6:
+                    fail(f"{app['name']} try-{name}.webp 배경이 음정 카테고리 색이 아님: {px}")
+                    break
 
 
 def check_zh_store_order():
@@ -357,7 +415,6 @@ def check_zh_store_order():
 
 def check_reveal_needs_js():
     """등장 애니메이션은 <html class="js"> 일 때만 숨긴다 — JS 가 없으면 내용이 처음부터 보여야 한다."""
-    import re
     css = CSS.read_text(encoding="utf-8")
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
     for sel, body in re.findall(r"([^{}]+)\{([^{}]*)\}", css):
@@ -365,19 +422,22 @@ def check_reveal_needs_js():
             fail(f"JS 없이도 숨겨지는 reveal 규칙: {sel.strip()}")
 
 
-def check_mascot(lang, html):
-    """마스코트 그림은 앱 원본 소리여야 한다 (생성 그림은 생김새가 달라 사용자 반려)."""
-    import re
+def check_mascot(app, lang, html):
+    """마스코트 그림은 앱 원본 소리여야 한다 (생성 그림은 생김새가 달라 사용자 반려). 소리는 Pitch Academy 에만 있다."""
     srcs = re.findall(r'<img class="(?:hero|cta)-sori" src="([^"]+)"', html)
-    if len(srcs) != 2 or any(s != f"{A}/img/sori.webp" for s in srcs):
-        fail(f"[{lang}] 히어로·CTA 마스코트가 sori.webp 가 아님: {srcs}")
+    if app["mascot"]:
+        if len(srcs) != 2 or any(s != f"{app['assets']}/img/sori.webp" for s in srcs):
+            fail(f"[{app['name']}/{lang}] 히어로·CTA 마스코트가 sori.webp 가 아님: {srcs}")
+    elif srcs or re.search(r'sori[\w-]*\.(?:webp|png|webm|mov)|class="[^"]*\bsori|data-sori|/img/poses/', html):
+        fail(f"[{app['name']}/{lang}] 소리가 없는 앱인데 페이지에 소리가 있음")
 
 
 def check_mascot_matches_app():
     from PIL import Image, ImageChops, ImageStat
     if not APP_SORI.exists():
+        notes.append(f"앱 원본 소리 그림이 없어 비교를 건너뜀: {APP_SORI}")
         return
-    site = Image.open(AE_ASSETS / "img" / "sori.webp").convert("RGBA")
+    site = Image.open(ROOT / PA["assets"].lstrip("/") / "img" / "sori.webp").convert("RGBA")
     app = Image.open(APP_SORI).convert("RGBA")
     app = app.crop(app.getbbox())
     a, b = site.resize((64, 64)), app.resize((64, 64))
@@ -438,15 +498,24 @@ def check_studio(lang, rel):
         fail(f"{tag} og:image 가 루트 전용 이미지가 아님: {img}")
     if not "".join(p.title_text).strip():
         fail(f"{tag} title 없음")
-    # 앱으로 가는 길: 같은 언어의 AE 페이지, 스토어 버튼 2개(utm studio)
-    if build.lang_path(AE_BASE, lang) not in p.links:
-        fail(f"{tag} 같은 언어 AE 페이지 링크 없음")
-    m = re.search(r'<section id="apps".*?</section>', html, re.S)
-    btns = re.findall(r'<a class="store-btn[^"]*".*?</a>', m.group(0) if m else "", re.S)
-    if len(btns) != 2 or not all("btn-roll__chip" in b for b in btns):
-        fail(f"{tag} 앱 카드 스토어 버튼 {len(btns)}개 (굴러가는 알약 2개여야 함)")
-    if not any(PLAY in h and "utm_campaign%3Dstudio" in h for h in p.links) or not any(APP_STORE in h for h in p.links):
-        fail(f"{tag} 스토어 링크(Play utm studio·App Store) 없음")
+    # 앱으로 가는 길: 앱마다 카드 하나 — 같은 언어의 앱 페이지, 스토어 버튼 2개(utm studio) 또는 출시 예정
+    cards = re.findall(r'<article class="app-card[^"]*".*?</article>', html, re.S)
+    if len(cards) != len(APPS):
+        fail(f"{tag} 앱 카드 {len(cards)}개 ({len(APPS)}개여야 함)")
+    for app in APPS:
+        card = next((c for c in cards if f'href="{build.lang_path(app["base"], lang)}"' in c), "")
+        if not card:
+            fail(f"{tag} 같은 언어 {app['title']} 페이지로 가는 카드 없음")
+            continue
+        app_store, play = store_ids(app)
+        btns = re.findall(r'<a class="store-btn[^"]*".*?</a>', card, re.S)
+        if app["released"]:
+            if len(btns) != 2 or not all("btn-roll__chip" in b for b in btns):
+                fail(f"{tag} {app['title']} 카드 스토어 버튼 {len(btns)}개 (굴러가는 알약 2개여야 함)")
+            if not (play in card and "utm_campaign%3Dstudio" in card and app_store in card):
+                fail(f"{tag} {app['title']} 카드 스토어 링크(Play utm studio·App Store) 없음")
+        elif btns or '<span class="store-soon">' not in card:
+            fail(f"{tag} {app['title']} 카드: 출시 전 앱은 '출시 예정'만")
     if "mailto:tigerstone1263@gmail.com" not in p.links:
         fail(f"{tag} 문의 메일 링크 없음")
     text = "".join(p.text)
@@ -480,6 +549,15 @@ def check_studio(lang, rel):
     for spot in ("stage", "card"):
         if f'data-sori="{spot}"' not in html:
             fail(f"{tag} 소리 자리({spot}) 없음")
+    # 소리 카드 자리는 Pitch Academy 카드 안에만(소리는 Pitch Academy 마스코트)
+    pa_card = next((c for c in cards if 'href="' + build.lang_path(PA["base"], lang) + '"' in c), "")
+    if 'data-sori="card"' not in pa_card:
+        fail(f"{tag} 소리 카드 자리가 Pitch Academy 카드 밖에 있음")
+    # 스크롤 무대의 앱 화면은 Pitch Academy 것이고, 무대에 그 앱 이름이 적혀 있어야 한다
+    if re.search(r'/img/shots/', html) and not all(m == PA["assets"] for m in re.findall(r'(/[\w/]+?)/img/shots/', html)):
+        fail(f"{tag} 스크롤 무대에 Pitch Academy 가 아닌 앱 화면")
+    if not re.search(r'<p class="scene-app">[^<\s][^<]*</p>', html):
+        fail(f"{tag} 스크롤 무대에 앱 이름 표시(scene-app) 없음")
     if html.count('class="sori-still"') != 2:
         fail(f"{tag} 소리 정지 그림(동작 줄이기·재생 실패 대비) 없음")
     if '<script src="/assets/js/studio.js" defer></script>' not in html:
@@ -800,7 +878,7 @@ def resolve(url_path):
 
 def check_internal_refs():
     """만든 페이지 안의 모든 내부 주소(href·src·srcset·data-frame-*)가 실제 파일로 열려야 한다. 404 구제 목록도 같다."""
-    files = list(STUDIO_PAGES.values()) + list(PAGES.values()) + ["get/index.html", "AbsoluteEar/get/index.html", "404.html"] \
+    files = list(STUDIO_PAGES.values()) + all_app_pages() + ["get/index.html", "AbsoluteEar/get/index.html", "404.html"] \
         + list(build.POLICY_PAGES)
     for rel in files:
         html = (ROOT / rel).read_text(encoding="utf-8")
@@ -822,21 +900,21 @@ def check_internal_refs():
 
 
 def check_zh_spacing():
-    d = {**json.loads((DEV / "strings" / "zh.json").read_text(encoding="utf-8")),
-         **{"studio." + k: v for k, v in json.loads((DEV / "studio" / "strings" / "zh.json").read_text(encoding="utf-8")).items()}}
+    d = {f"{g['name']}.{k}": v for g in build.GROUPS
+         for k, v in json.loads((g["strings"] / "zh.json").read_text(encoding="utf-8")).items()}
     for k, v in d.items():
         if re.search(r"[\u4e00-\u9fff，、。](</span>)? (<span[^>]*>)?[\u4e00-\u9fff]", v):
             fail(f"[zh] {k}: 한자 사이에 공백")
 
 
 def check_string_keys():
-    for folder in (DEV / "strings", DEV / "studio" / "strings"):
-        check_string_keys_in(folder)
+    for g in build.GROUPS:
+        check_string_keys_in(g["strings"])
 
 
 def check_string_keys_in(folder):
     keys = {}
-    for lang in PAGES:
+    for lang in build.LANGS:
         f = folder / f"{lang}.json"
         if f.exists():
             keys[lang] = set(json.loads(f.read_text(encoding="utf-8")))
@@ -855,14 +933,15 @@ def temp_site(tmp):
     import subprocess
     shutil.copytree(DEV, tmp / "_dev")
     shutil.copytree(ROOT / "assets", tmp / "assets")
-    shutil.copytree(ROOT / "AbsoluteEar", tmp / "AbsoluteEar")
+    for app in APPS:
+        shutil.copytree(ROOT / app["name"], tmp / app["name"])
     for name in json.loads((DEV / "policy_hashes.json").read_text()):
         shutil.copy(ROOT / name, tmp / name)
     r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True, text=True)
     if r.returncode != 0:
         fail("임시 폴더 빌드가 그대로도 실패함: " + (r.stderr.strip().splitlines() or ["?"])[-1])
         return False
-    for f in [tmp / rel for rel in PAGES.values()]:
+    for f in [tmp / rel for rel in all_app_pages()]:
         f.unlink()
     return True
 
@@ -874,7 +953,7 @@ def check_build_rejects_missing_key():
         tmp = Path(tmp)
         if not temp_site(tmp):
             return
-        f = tmp / "_dev" / "strings" / "en.json"
+        f = tmp / "_dev" / "apps" / "AbsoluteEar" / "strings" / "en.json"
         if not f.exists():
             fail("빌드 키 누락 검사: en.json 없음")
             return
@@ -900,7 +979,7 @@ def check_get_page():
             fail(f"get/index.html 에 {need} 없음")
     if re.search(r'<script[^>]+src=', html):
         fail("get/index.html 에 외부 스크립트")
-    qr = AE_ASSETS / "img" / "qr-get.svg"
+    qr = ROOT / "AbsoluteEar" / "assets" / "img" / "qr-get.svg"
     if not qr.exists() or "<svg" not in qr.read_text(encoding="utf-8"):
         fail("AbsoluteEar/assets/img/qr-get.svg 없음")
 
@@ -936,7 +1015,7 @@ def check_layout():
                               cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         import time; time.sleep(0.8)
-        targets = [(f"{lang}", build.lang_path(AE_BASE, lang)) for lang in PAGES] + \
+        targets = [(f"{app['name']}/{lang}", build.lang_path(app["base"], lang)) for app in APPS for lang in build.LANGS] + \
                   [(f"root/{lang}", build.lang_path("/", lang)) for lang in STUDIO_PAGES] + \
                   [(f"policy/{Path(dst).with_suffix('').as_posix()}", "/" + dst) for dst in build.POLICY_PAGES]
         for lang, path in targets:
@@ -971,11 +1050,11 @@ def check_build_requires_all_langs():
         tmp = Path(tmp)
         if not temp_site(tmp):
             return
-        (tmp / "_dev" / "strings" / "zh.json").unlink()
+        (tmp / "_dev" / "apps" / "AbsoluteEar" / "strings" / "zh.json").unlink()
         r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True)
         if r.returncode == 0:
             fail("언어 JSON 이 없어도 빌드가 성공함")
-        if any((tmp / rel).exists() for rel in PAGES.values()):
+        if any((tmp / rel).exists() for rel in all_app_pages()):
             fail("빌드가 실패했는데 일부 언어 html 을 써 버림")
 
 
@@ -994,7 +1073,7 @@ def check_build_requires_policy_sources():
         r = subprocess.run([sys.executable, str(tmp / "_dev" / "build.py")], capture_output=True)
         if r.returncode == 0:
             fail("정책 원본이 없어도 빌드가 성공함")
-        if any((tmp / rel).exists() for rel in PAGES.values()) or \
+        if any((tmp / rel).exists() for rel in all_app_pages()) or \
                 any((tmp / dst).read_bytes() != stale for dst in build.POLICY_PAGES):
             fail("정책 원본이 없어 빌드가 실패했는데 일부 파일을 써 버림")
 
@@ -1017,15 +1096,16 @@ def main():
     for lang, rel in STUDIO_PAGES.items():
         check_studio(lang, rel)
     check_studio_assets()
-    for lang, rel in PAGES.items():
-        p = check_page(lang, rel)
-        if p:
-            check_lang_meta(lang, p)
-            check_meta(lang, p)
-            check_lang_banner(lang, p)
-            check_design(lang, p, (ROOT / rel).read_text(encoding="utf-8"))
+    for app in APPS:
+        for lang, rel in pages(app).items():
+            p = check_page(app, lang, rel)
+            if p:
+                check_lang_meta(app, lang, p)
+                check_meta(app, lang, p)
+                check_lang_banner(app, lang, p)
+                check_design(app, lang, p, (ROOT / rel).read_text(encoding="utf-8"))
+        check_shot_resolution(app)
     check_sitemap()
-    check_shot_resolution()
     check_mascot_matches_app()
     check_reveal_needs_js()
     check_zh_store_order()

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>html,body{margin:0;background:#fff}iframe{border:0;display:block}</style></head>
 <body><script>
-// 로컬 스크린샷용: ?w=360&h=2000&p=/en/&scale=1.15 → 그 폭의 iframe 으로 페이지를 띄운다
+// 로컬 스크린샷용: ?w=360&h=2000&p=/en/&scale=1.15&y=2400 → 그 폭의 iframe 으로 페이지를 띄운다
 const q = new URLSearchParams(location.search);
 const f = document.createElement('iframe');
 f.width = q.get('w') || 360; f.height = q.get('h') || 900;
@@ -11,6 +11,7 @@ f.onload = () => {
   // 무한 애니메이션이 있으면 헤드리스 가상 시간이 끝나지 않는다 — 촬영 중에는 끈다
   const st = d.createElement('style'); st.textContent = '*{animation:none!important;transition:none!important}.reveal{opacity:1!important;transform:none!important}'; d.head.appendChild(st);
   if (q.get('scale')) d.documentElement.style.fontSize = (100 * q.get('scale')) + '%';
+  if (q.get('y')) setTimeout(() => f.contentWindow.scrollTo(0, +q.get('y')), 300);  // 스크롤 연출 중간 장면 확인용
 };
 document.body.appendChild(f);
 </script></body></html>

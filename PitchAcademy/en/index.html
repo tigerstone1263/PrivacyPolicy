@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-base="/PitchAcademy/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pitch Academy — Ear training from intervals to sight-singing</title>
+<meta name="description" content="Ear training, reading music, rhythm and sight-singing — all in one app. Build absolute and relative pitch like a game.">
+<link rel="canonical" href="https://tigerstone1263.com/PitchAcademy/en/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pitch Academy">
+<meta property="og:title" content="Pitch Academy — Ear training from intervals to sight-singing">
+<meta property="og:description" content="Ear training, reading music, rhythm and sight-singing — all in one app. Build absolute and relative pitch like a game.">
+<meta property="og:url" content="https://tigerstone1263.com/PitchAcademy/en/">
+<meta property="og:image" content="https://tigerstone1263.com/PitchAcademy/assets/img/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="theme-color" content="#2c3048">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" hreflang="ko" href="https://tigerstone1263.com/PitchAcademy/">
+<link rel="alternate" hreflang="en" href="https://tigerstone1263.com/PitchAcademy/en/">
+<link rel="alternate" hreflang="zh-Hans" href="https://tigerstone1263.com/PitchAcademy/zh/">
+<link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/PitchAcademy/">
+<script id="os-detect">
+// <html> 에 js(스크롤 등장 등 JS 전용 스타일)와 기기 클래스(os-ios / os-android)를 단다 — 스토어 버튼 순서·강조에 쓴다
+(function (h) {
+  h.classList.add('js');
+  var ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) h.classList.add('os-ios');
+  else if (/Android/.test(ua)) h.classList.add('os-android');
+})(document.documentElement);
+</script>
+<script src="/assets/js/lang.js"></script>
+<script src="/assets/js/reveal.js" defer></script>
+<script src="/assets/js/cine.js" defer></script>
+<script src="/assets/js/eartest.js" defer></script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
+<link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<div class="page-grain" aria-hidden="true"></div>
+
+
+<header class="top in-down">
+  <nav class="topnav" aria-label="Main">
+    <div class="wrap topnav-inner">
+      <a class="brand" href="#hero"><img src="/PitchAcademy/assets/img/app-icon.png" alt="" width="30" height="30">Pitch Academy</a>
+      <div class="topnav-right">
+        <a class="nav-link" href="#features">Explore</a>
+        <a class="nav-link" href="#faq">FAQ</a>
+        <span class="nav-langs">
+          <a href="/PitchAcademy/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" >KO</a>
+          <a href="/PitchAcademy/en/" hreflang="en" lang="en" data-lang="en" aria-current="true">EN</a>
+          <a href="/PitchAcademy/zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" >中文</a>
+        </span>
+        <a class="nav-cta" href="#cta">Coming soon</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section id="hero" class="hero">
+   <div class="hero-stage">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow in-fade" style="--d:120ms">Pitch Academy</p>
+        <h1><span class="in-blur h1-line" style="--d:250ms"><span class="nw">Ear training</span> <span class="nw">to sight-singing,</span></span><span class="in-blur h1-line" style="--d:420ms"><span class="nw">all in</span> <span class="nw">one app</span></span></h1>
+        <p class="hero-sub in-fade" style="--d:700ms">From absolute and relative pitch to reading music, rhythm and sight-singing — train a little every day, stage by stage, with Sori the fox.</p>
+        <div class="store-btns in-fade" style="--d:880ms"><span class="store-soon">Coming soon</span></div>
+        <p class="store-note in-fade" style="--d:1000ms">Coming soon to Android & iOS</p>
+      </div>
+      <div class="hero-visual in-rise" style="--d:350ms">
+        <img class="phone phone-back" src="/PitchAcademy/assets/img/shots/en/feat-ear-480.webp" srcset="/PitchAcademy/assets/img/shots/en/feat-ear-480.webp 480w, /PitchAcademy/assets/img/shots/en/feat-ear.webp 720w" sizes="(min-width: 1100px) 220px, (min-width: 768px) 190px, 40vw" alt="" width="720" height="1564" fetchpriority="low">
+        <img class="phone phone-front" src="/PitchAcademy/assets/img/shots/en/phone-hero-480.webp" srcset="/PitchAcademy/assets/img/shots/en/phone-hero-480.webp 480w, /PitchAcademy/assets/img/shots/en/phone-hero.webp 720w" sizes="(min-width: 1100px) 270px, (min-width: 768px) 236px, 50vw" alt="Pitch Academy home screen" width="720" height="1564" fetchpriority="high">
+        <img class="hero-sori" src="/PitchAcademy/assets/img/sori.webp" alt="" width="440" height="431">
+      </div>
+    </div>
+    <p class="hero-caption">One stage a day.<br>Hear the difference.</p>
+    <div class="hero-wordmark" aria-hidden="true" data-text="Pitch Academy" style="--word-vw:16.4"></div>
+   </div>
+  </section>
+
+  <section id="try" class="try" data-q="Question {n} of 3" data-correct="Correct!" data-wrong="Not quite — it was a {a}." data-result="You got {k} of 3." data-perfect="3 out of 3 — perfect!" data-keep="Everyone mixes these up at first — the app builds it up step by step." data-play="Play" data-replay="Play again" data-zero="No correct answers yet." data-frame-idle="/PitchAcademy/assets/img/poses/try-idle.webp" data-frame-listen="/PitchAcademy/assets/img/poses/try-listen.webp" data-frame-yes="/PitchAcademy/assets/img/poses/try-yes.webp" data-frame-no="/PitchAcademy/assets/img/poses/try-no.webp">
+    <div class="wrap try-inner">
+      <div class="section-head reveal">
+        <p class="eyebrow">Try it now</p>
+        <h2>Want to test your ear?</h2>
+        <p class="lead">Listen to two notes and pick the interval. It's a three-question taste of the app's interval training.</p>
+        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>This plays sound — check your volume and silent mode.</p>
+      </div>
+      <div class="try-card reveal">
+        <div class="try-stage"><img src="/PitchAcademy/assets/img/poses/try-idle.webp" alt="" width="600" height="450" loading="lazy"></div>
+        <div class="try-live">
+          <p class="try-progress"></p>
+          <button type="button" class="try-play"><span class="ico" aria-hidden="true">▶</span> <span class="lbl">Play</span></button>
+          <div class="try-options">
+            <button type="button" data-iv="maj3" disabled>Major 3rd</button>
+            <button type="button" data-iv="p4" disabled>Perfect 4th</button>
+            <button type="button" data-iv="p5" disabled>Perfect 5th</button>
+          </div>
+          <p class="try-feedback" aria-live="polite"></p>
+          <button type="button" class="try-next" hidden>Next <span aria-hidden="true">→</span></button>
+          <div class="try-done" hidden>
+            <p class="try-done-text" tabindex="-1" role="status"></p>
+            <p class="try-more">In the app, questions like these continue stage by stage.</p>
+            <div class="store-btns"><span class="store-soon">Coming soon</span></div>
+            <button type="button" class="try-retry"><span aria-hidden="true">↻</span> Try again</button>
+          </div>
+        </div>
+        <p class="try-fallback">The demo needs a browser with JavaScript and audio playback.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="band">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Pitch Academy</p>
+        <h2>From listening to singing, in one app</h2>
+      </div>
+      <div class="fcards stack">
+      <div class="stack-slot" style="--i:0">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">01 · Ear training</p>
+            <h3>Choose absolute or relative pitch and train it</h3>
+            <p class="fcard-desc">A 1-minute ear test finds where you should start</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/en/feat-ear.webp" alt="Ear training question screen" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:1">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">02 · Reading & rhythm</p>
+            <h3>Reading music, from the basics</h3>
+            <p class="fcard-desc">From reading the staff to tapping along in rhythm</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/en/feat-staff.webp" alt="Reading music screen" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:2">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">03 · Singing & transcribing</p>
+            <h3>Sing, loop, and transcribe whole songs</h3>
+            <p class="fcard-desc">Sight-singing with a mic pitch check, plus repeat-listening albums</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/en/feat-create.webp" alt="Sight-singing practice screen" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:3">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">04 · Sori the fox</p>
+            <h3>Like a game, a little every day</h3>
+            <p class="fcard-desc">A learning path, hearts and a Weekly League keep you going</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/en/game-map.webp" alt="Learning path screen" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="audience" class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Audience</p>
+      <h2>Who it's for</h2>
+    </div>
+    <div class="aud reveal">
+      <article><p class="aud-num">01</p><h3>Music students & exam takers</h3><p>Build up intervals, chords, melodies and chord progressions — the core of ear-training exams — stage by stage.</p></article>
+      <article><p class="aud-num">02</p><h3>Hobby players & singers</h3><p>Lock in your pitch with sight-singing practice and loop the progressions you love.</p></article>
+      <article><p class="aud-num">03</p><h3>Complete beginners</h3><p>No music background needed — start with a 1-minute ear test and keep going with short stages alongside Sori the fox.</p></article>
+    </div>
+  </section>
+
+  <section id="faq" class="band">
+    <div class="wrap faq">
+      <div class="faq-head section-head reveal">
+        <p class="eyebrow">Questions</p>
+        <h2>FAQ</h2>
+        <p class="lead">Still curious? Drop us an email anytime.</p>
+        <a class="faq-mail" href="mailto:tigerstone1263@gmail.com">Email us ↗</a>
+      </div>
+      <div class="faq-list reveal">
+        <details><summary>Is it free?</summary><p>Yes. Every training mode is free to start. When you run out of hearts, watch an ad or wait a bit for them to refill — or subscribe for unlimited hearts and no ads.</p></details>
+        <details><summary>Can I start with no music background?</summary><p>Yes. A 1-minute ear test sets your starting point, and reading music starts from a basics course.</p></details>
+        <details><summary>What is the difference between absolute and relative pitch training?</summary><p>Absolute pitch training means naming a note you hear without any reference. Relative pitch training means recognizing notes by their relationship (interval) to a reference note. Pick the one you want to build when you start, and switch any time in Settings — your learning path and progress stay the same.</p></details>
+        <details><summary>Will I lose my progress if I switch phones?</summary><p>Link an account in the app and you can sign in on your new device to pick up where you left off.</p></details>
+        <details><summary>How do I cancel my subscription?</summary><p>Cancel any time from subscription management in the App Store or Google Play. You can also get there from the Shop screen in the app.</p></details>
+        <details><summary>How do I contact you?</summary><p>Email us at <a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" class="wrap">
+    <div class="cta-card reveal">
+      <img class="cta-sori" src="/PitchAcademy/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy">
+      <h2><span class="nw">Ear training</span> <span class="nw">to sight-singing,</span><br><span class="nw">all in</span> <span class="nw">one app</span></h2>
+      <div class="store-btns"><span class="store-soon">Coming soon</span></div>
+      <p class="store-note">Coming soon to Android & iOS</p>
+      
+    </div>
+  </section>
+</main>
+
+<footer id="footer" class="footer">
+  <div class="wrap footer-inner">
+    <nav class="footer-links" aria-label="Site information">
+      <a href="/PitchAcademy/PrivacyPolicy">Privacy Policy</a>
+      <a href="/PitchAcademy/TermsOfService">Terms of Service</a>
+      <a href="mailto:tigerstone1263@gmail.com">Contact</a>
+    </nav>
+    <nav class="lang-switch" aria-label="Language">
+      <a href="/PitchAcademy/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" >한국어</a>
+      <a href="/PitchAcademy/en/" hreflang="en" lang="en" data-lang="en" aria-current="true">English</a>
+      <a href="/PitchAcademy/zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" >中文</a>
+    </nav>
+    <p class="trademark">Apple, the Apple logo and App Store are trademarks of Apple Inc., registered in the U.S. and other countries. Google Play and the Google Play logo are trademarks of Google LLC.</p>
+    <p class="copyright">© TigerStone1263</p>
+  </div>
+</footer>
+
+</body>
+</html>

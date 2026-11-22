@@ -1,4 +1,5 @@
 // 청음 맛보기: 두 음을 차례로 듣고 음정(장3도·완전4도·완전5도)을 고른다. 앱의 음정 문제를 짧게 체험하는 용도.
+// 무대는 앱마다 다르다: 마스코트 그림(data-frame-* 로 상태마다 바꿈) 또는 건반(.try-keys — 울리는 음의 건반이 켜진다).
 // 문제 생성·채점은 순수 함수, 화면 연결은 mount(sec, env) — 둘 다 _dev/test_eartest*.js 가 node 로 확인한다.
 (function (root) {
   var INTERVALS = [{ key: 'maj3', semi: 4 }, { key: 'p4', semi: 5 }, { key: 'p5', semi: 7 }];
@@ -30,6 +31,7 @@
     sec.classList.add('try-ready');
 
     var stage = sec.querySelector('.try-stage img');
+    var keys = sec.querySelector('.try-keys');
     var progress = sec.querySelector('.try-progress');
     var playBtn = sec.querySelector('.try-play');
     var playIco = sec.querySelector('.try-play .ico');
@@ -50,7 +52,18 @@
     var audio = null, unlocked = false, voice = null, token = 0, finishTimer = null;
     var round, idx, score, answered;
 
-    function frame(name) { stage.src = d['frame' + name]; }
+    function frame(name) { if (stage && d['frame' + name]) stage.src = d['frame' + name]; }
+    function key(m) { return keys ? keys.querySelector('[data-m="' + m + '"]') : null; }
+    function clearKeys() {
+      if (keys) Array.prototype.forEach.call(keys.querySelectorAll('.key'), function (k) { k.classList.remove('on', 'held'); });
+    }
+    // 소리와 같은 때에 건반을 켜고 끈다(재생 시각 기준 ms). 다른 재생이 시작됐으면 켜지 않는다
+    function flash(m, at, dur, my) {
+      var k = key(m);
+      if (!k) return;
+      env.setTimeout(function () { if (my === token) k.classList.add('on'); }, at);
+      env.setTimeout(function () { k.classList.remove('on'); }, at + dur);
+    }
     function fill(tpl, k, v) { return tpl.replace('{' + k + '}', v); }
     function label(replay) { playIco.textContent = replay ? '↻' : '▶'; playLbl.textContent = replay ? d.replay : d.play; }
 
@@ -104,6 +117,7 @@
       voice = { out: out };
       tone(out, midiToHz(q.root), t, 1.1);
       var last = tone(out, midiToHz(q.top), t + 0.8, 1.3);
+      if (keys) { flash(q.root, 50, 1100, my); flash(q.top, 850, 1100, my); }  // 두 음이 겹쳐 울리는 동안은 두 건반이 함께 켜진다
       if (!answered) { frame('Listen'); options.forEach(function (b) { b.disabled = true; }); }
       label(true);
       // 이 재생의 마지막 음이 실제로 끝났을 때만 잠금을 푼다 (다음 문제로 넘어갔다면 무시)
@@ -125,6 +139,7 @@
       answerBtn.classList.add('is-right');
       options.forEach(function (b) { b.disabled = true; });
       frame(right ? 'Yes' : 'No');
+      [q.root, q.top].forEach(function (m) { var k = key(m); if (k) k.classList.add('held'); });
       feedback.textContent = right ? d.correct : fill(d.wrong, 'a', answerBtn.textContent.trim());
       if (idx < round.length - 1) { nextBtn.hidden = false; nextBtn.focus(); }
       else finishTimer = env.setTimeout(finish, 900);
@@ -140,6 +155,7 @@
       options.forEach(function (b) { b.classList.remove('is-right', 'is-wrong'); b.disabled = true; });
       label(false);
       frame('Idle');
+      clearKeys();
     }
 
     // 점수에 맞춘 한마디: 만점·0점은 따로 쓰고, 1문제 이하면 다독이는 말로 앱 안내를 바꾼다

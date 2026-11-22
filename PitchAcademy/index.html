@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko" data-base="/PitchAcademy/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>피치 아카데미 — 청음부터 시창까지, 음감 훈련 앱</title>
+<meta name="description" content="청음부터 악보·리듬·시창까지, 음감 훈련을 앱 하나로. 절대음감·상대음감을 게임처럼 키워 보세요.">
+<link rel="canonical" href="https://tigerstone1263.com/PitchAcademy/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pitch Academy">
+<meta property="og:title" content="피치 아카데미 — 청음부터 시창까지, 음감 훈련 앱">
+<meta property="og:description" content="청음부터 악보·리듬·시창까지, 음감 훈련을 앱 하나로. 절대음감·상대음감을 게임처럼 키워 보세요.">
+<meta property="og:url" content="https://tigerstone1263.com/PitchAcademy/">
+<meta property="og:image" content="https://tigerstone1263.com/PitchAcademy/assets/img/og-ko.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="theme-color" content="#2c3048">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="alternate" hreflang="ko" href="https://tigerstone1263.com/PitchAcademy/">
+<link rel="alternate" hreflang="en" href="https://tigerstone1263.com/PitchAcademy/en/">
+<link rel="alternate" hreflang="zh-Hans" href="https://tigerstone1263.com/PitchAcademy/zh/">
+<link rel="alternate" hreflang="x-default" href="https://tigerstone1263.com/PitchAcademy/">
+<script id="os-detect">
+// <html> 에 js(스크롤 등장 등 JS 전용 스타일)와 기기 클래스(os-ios / os-android)를 단다 — 스토어 버튼 순서·강조에 쓴다
+(function (h) {
+  h.classList.add('js');
+  var ua = navigator.userAgent || '';
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) h.classList.add('os-ios');
+  else if (/Android/.test(ua)) h.classList.add('os-android');
+})(document.documentElement);
+</script>
+<script src="/assets/js/lang.js"></script>
+<script src="/assets/js/reveal.js" defer></script>
+<script src="/assets/js/cine.js" defer></script>
+<script src="/assets/js/eartest.js" defer></script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
+<link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<div class="page-grain" aria-hidden="true"></div>
+<div id="lang-banner" class="lang-banner" hidden>
+  <p data-for="en" lang="en">This page is also available in English. <a class="lang-banner-link" href="/PitchAcademy/en/" lang="en" data-lang="en">View in English →</a></p>
+  <p data-for="zh" lang="zh-Hans">本页面也有中文版。<a class="lang-banner-link" href="/PitchAcademy/zh/" lang="zh-Hans" data-lang="zh">查看中文版 →</a></p>
+  <button type="button" class="lang-banner-close" aria-label="닫기 / Close">×</button>
+</div>
+
+<header class="top in-down">
+  <nav class="topnav" aria-label="주 메뉴">
+    <div class="wrap topnav-inner">
+      <a class="brand" href="#hero"><img src="/PitchAcademy/assets/img/app-icon.png" alt="" width="30" height="30">Pitch Academy</a>
+      <div class="topnav-right">
+        <a class="nav-link" href="#features">둘러보기</a>
+        <a class="nav-link" href="#faq">자주 묻는 질문</a>
+        <span class="nav-langs">
+          <a href="/PitchAcademy/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" aria-current="true">KO</a>
+          <a href="/PitchAcademy/en/" hreflang="en" lang="en" data-lang="en" >EN</a>
+          <a href="/PitchAcademy/zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" >中文</a>
+        </span>
+        <a class="nav-cta" href="#cta">출시 예정</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section id="hero" class="hero">
+   <div class="hero-stage">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow in-fade" style="--d:120ms">피치 아카데미</p>
+        <h1><span class="in-blur h1-line" style="--d:250ms"><span class="nw">청음부터</span> <span class="nw">시창까지,</span></span><span class="in-blur h1-line" style="--d:420ms"><span class="nw">음감 훈련을</span> <span class="nw">앱 하나로</span></span></h1>
+        <p class="hero-sub in-fade" style="--d:700ms">절대음감·상대음감부터 악보 읽기, 리듬, 시창까지. 여우 소리와 함께 스테이지 게임처럼 매일 조금씩 훈련해요.</p>
+        <div class="store-btns in-fade" style="--d:880ms"><span class="store-soon">출시 예정</span></div>
+        <p class="store-note in-fade" style="--d:1000ms">곧 Android · iOS에서 만나요</p>
+      </div>
+      <div class="hero-visual in-rise" style="--d:350ms">
+        <img class="phone phone-back" src="/PitchAcademy/assets/img/shots/ko/feat-ear-480.webp" srcset="/PitchAcademy/assets/img/shots/ko/feat-ear-480.webp 480w, /PitchAcademy/assets/img/shots/ko/feat-ear.webp 720w" sizes="(min-width: 1100px) 220px, (min-width: 768px) 190px, 40vw" alt="" width="720" height="1564" fetchpriority="low">
+        <img class="phone phone-front" src="/PitchAcademy/assets/img/shots/ko/phone-hero-480.webp" srcset="/PitchAcademy/assets/img/shots/ko/phone-hero-480.webp 480w, /PitchAcademy/assets/img/shots/ko/phone-hero.webp 720w" sizes="(min-width: 1100px) 270px, (min-width: 768px) 236px, 50vw" alt="피치 아카데미 앱 홈 화면" width="720" height="1564" fetchpriority="high">
+        <img class="hero-sori" src="/PitchAcademy/assets/img/sori.webp" alt="" width="440" height="431">
+      </div>
+    </div>
+    <p class="hero-caption">하루 한 스테이지씩,<br>귀가 자라요</p>
+    <div class="hero-wordmark" aria-hidden="true" data-text="Pitch Academy" style="--word-vw:16.4"></div>
+   </div>
+  </section>
+
+  <section id="try" class="try" data-q="문제 {n} / 3" data-correct="정답이에요!" data-wrong="아쉬워요. 정답은 {a}였어요." data-result="3문제 중 {k}문제를 맞혔어요." data-perfect="3문제를 모두 맞혔어요. 완벽해요!" data-keep="처음엔 누구나 헷갈려요. 앱에서 천천히 익혀 봐요." data-play="듣기" data-replay="다시 듣기" data-zero="아직 맞힌 문제가 없어요." data-frame-idle="/PitchAcademy/assets/img/poses/try-idle.webp" data-frame-listen="/PitchAcademy/assets/img/poses/try-listen.webp" data-frame-yes="/PitchAcademy/assets/img/poses/try-yes.webp" data-frame-no="/PitchAcademy/assets/img/poses/try-no.webp">
+    <div class="wrap try-inner">
+      <div class="section-head reveal">
+        <p class="eyebrow">직접 들어 보세요</p>
+        <h2>지금 귀를 시험해 볼까요?</h2>
+        <p class="lead">두 음을 차례로 듣고 어떤 음정인지 골라 보세요. 앱의 음정 문제를 세 문제만 맛볼 수 있어요.</p>
+        <p class="try-sound"><svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>소리가 나요. 음량과 무음 모드를 확인해 주세요.</p>
+      </div>
+      <div class="try-card reveal">
+        <div class="try-stage"><img src="/PitchAcademy/assets/img/poses/try-idle.webp" alt="" width="600" height="450" loading="lazy"></div>
+        <div class="try-live">
+          <p class="try-progress"></p>
+          <button type="button" class="try-play"><span class="ico" aria-hidden="true">▶</span> <span class="lbl">듣기</span></button>
+          <div class="try-options">
+            <button type="button" data-iv="maj3" disabled>장3도</button>
+            <button type="button" data-iv="p4" disabled>완전4도</button>
+            <button type="button" data-iv="p5" disabled>완전5도</button>
+          </div>
+          <p class="try-feedback" aria-live="polite"></p>
+          <button type="button" class="try-next" hidden>다음 문제 <span aria-hidden="true">→</span></button>
+          <div class="try-done" hidden>
+            <p class="try-done-text" tabindex="-1" role="status"></p>
+            <p class="try-more">앱에서는 이런 문제를 스테이지마다 이어서 훈련해요.</p>
+            <div class="store-btns"><span class="store-soon">출시 예정</span></div>
+            <button type="button" class="try-retry"><span aria-hidden="true">↻</span> 다시 하기</button>
+          </div>
+        </div>
+        <p class="try-fallback">체험은 JavaScript와 소리 재생을 지원하는 브라우저에서 동작해요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="band">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">피치 아카데미</p>
+        <h2>듣기부터 부르기까지, <span class="nw">한 앱에서</span></h2>
+      </div>
+      <div class="fcards stack">
+      <div class="stack-slot" style="--i:0">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">01 · 청음</p>
+            <h3>절대음감·상대음감, 키우고 싶은 음감을 골라 훈련해요</h3>
+            <p class="fcard-desc">처음엔 1분 청음 테스트로 내게 맞는 시작 지점을 찾아요</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/ko/feat-ear.webp" alt="청음 문제를 푸는 화면" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:1">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">02 · 악보·리듬</p>
+            <h3>악보 읽기 기초부터 차근차근</h3>
+            <p class="fcard-desc">오선 읽기부터 소리에 맞춰 두드리는 리듬까지</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/ko/feat-staff.webp" alt="악보 읽기 화면" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:2">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">03 · 노래·받아쓰기</p>
+            <h3>부르고, 반복해 듣고, 곡을 받아 적어요</h3>
+            <p class="fcard-desc">마이크로 음정을 확인하는 시창, 반복 듣기 앨범</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/ko/feat-create.webp" alt="악보를 보고 부르는 시창 연습 화면" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      <div class="stack-slot" style="--i:3">
+        <article class="fcard">
+          <div class="fcard-copy">
+            <p class="fcard-num">04 · 여우 소리</p>
+            <h3>게임처럼, 매일 조금씩</h3>
+            <p class="fcard-desc">학습 경로와 하트, 주간 리그로 매일 이어 가요</p>
+          </div>
+          <div class="fcard-shot"><img src="/PitchAcademy/assets/img/shots/ko/game-map.webp" alt="학습 경로 화면" width="720" height="1564" loading="lazy"></div>
+        </article>
+      </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="audience" class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">누구를 위한 앱</p>
+      <h2>이런 분께 맞아요</h2>
+    </div>
+    <div class="aud reveal">
+      <article><p class="aud-num">01</p><h3>입시·전공 준비생</h3><p>청음 시험에 나오는 음정·화음·선율·화음 진행을 단계별 스테이지로 쌓아 가요.</p></article>
+      <article><p class="aud-num">02</p><h3>취미 연주자·노래하는 사람</h3><p>악보를 보고 바로 부르는 시창 연습으로 음정을 잡고, 좋아하는 진행을 반복해서 들어요.</p></article>
+      <article><p class="aud-num">03</p><h3>음악을 처음 배우는 사람</h3><p>음악을 몰라도 1분 청음 테스트로 시작해, 여우 소리와 짧은 스테이지를 매일 이어 가요.</p></article>
+    </div>
+  </section>
+
+  <section id="faq" class="band">
+    <div class="wrap faq">
+      <div class="faq-head section-head reveal">
+        <p class="eyebrow">궁금한 점</p>
+        <h2>자주 묻는 질문</h2>
+        <p class="lead">더 궁금한 점이 있으면 언제든 메일로 물어봐 주세요.</p>
+        <a class="faq-mail" href="mailto:tigerstone1263@gmail.com">메일 보내기 ↗</a>
+      </div>
+      <div class="faq-list reveal">
+        <details><summary>무료로 쓸 수 있나요?</summary><p>네. 모든 훈련을 무료로 시작할 수 있어요. 하트를 다 쓰면 광고를 보거나 잠시 기다리면 다시 차고, 구독하면 하트 걱정도 광고도 없이 이용할 수 있어요.</p></details>
+        <details><summary>음악을 전혀 몰라도 시작할 수 있나요?</summary><p>네. 처음에 1분 청음 테스트로 시작 지점을 정해 주고, 악보 읽기도 기초 코스부터 시작해요.</p></details>
+        <details><summary>절대음감 훈련과 상대음감 훈련은 무엇이 다른가요?</summary><p>절대음감 훈련은 기준음 없이 들리는 음의 이름을 맞히는 연습이고, 상대음감 훈련은 기준음과의 관계(음정)로 음을 알아듣는 연습이에요. 처음에 키우고 싶은 음감을 고르고, 설정에서 언제든 바꿀 수 있어요. 바꿔도 학습 경로와 진도는 그대로예요.</p></details>
+        <details><summary>기기를 바꾸면 기록이 사라지나요?</summary><p>앱에서 계정을 연결해 두면 새 기기에서 로그인해 기록을 이어 갈 수 있어요.</p></details>
+        <details><summary>구독은 어떻게 해지하나요?</summary><p>App Store 또는 Google Play의 구독 관리에서 언제든 해지할 수 있어요. 앱 안의 상점 화면에서도 구독 관리로 이동할 수 있어요.</p></details>
+        <details><summary>문의는 어디로 하나요?</summary><p><a href="mailto:tigerstone1263@gmail.com">tigerstone1263@gmail.com</a>으로 메일을 보내 주세요.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" class="wrap">
+    <div class="cta-card reveal">
+      <img class="cta-sori" src="/PitchAcademy/assets/img/sori.webp" alt="" width="440" height="431" loading="lazy">
+      <h2><span class="nw">청음부터</span> <span class="nw">시창까지,</span><br><span class="nw">음감 훈련을</span> <span class="nw">앱 하나로</span></h2>
+      <div class="store-btns"><span class="store-soon">출시 예정</span></div>
+      <p class="store-note">곧 Android · iOS에서 만나요</p>
+      
+    </div>
+  </section>
+</main>
+
+<footer id="footer" class="footer">
+  <div class="wrap footer-inner">
+    <nav class="footer-links" aria-label="사이트 정보">
+      <a href="/PitchAcademy/PrivacyPolicy">개인정보처리방침</a>
+      <a href="/PitchAcademy/TermsOfService">이용약관</a>
+      <a href="mailto:tigerstone1263@gmail.com">문의하기</a>
+    </nav>
+    <nav class="lang-switch" aria-label="Language">
+      <a href="/PitchAcademy/?lang=ko" hreflang="ko" lang="ko" data-lang="ko" aria-current="true">한국어</a>
+      <a href="/PitchAcademy/en/" hreflang="en" lang="en" data-lang="en" >English</a>
+      <a href="/PitchAcademy/zh/" hreflang="zh-Hans" lang="zh-Hans" data-lang="zh" >中文</a>
+    </nav>
+    <p class="trademark">Apple, Apple 로고, App Store는 미국 및 기타 국가에서 등록된 Apple Inc.의 상표입니다. Google Play 및 Google Play 로고는 Google LLC의 상표입니다.</p>
+    <p class="copyright">© TigerStone1263</p>
+  </div>
+</footer>
+
+</body>
+</html>
